@@ -1,9 +1,0 @@
-[ bound = 500, input_order ]
-
-m4_include(`ex1.gli')m4_dnl
-
-cstate(p3, sys, e11) = c.
-
-ctxt(p3, C, vc) => C = ker.
-
-m4_include(`thy.gli')m4_dnl
