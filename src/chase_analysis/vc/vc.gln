@@ -1,0 +1,17 @@
+[ bound = 500, input_order ]
+
+% Assume adversary avoids detection at our main measurement
+% event. This is a measurement of sys 
+l(V) = msp(4, M, 4, sys, X)
+ => corrupt_at(4, sys, V).
+
+% Assume no dependencies 
+depends(4, C, 4, sys) => false.
+
+% No recent assumptions 
+
+% No deep assumptions 
+
+m4_include(`ex1.gli')m4_dnl
+
+m4_include(`thy.gli')m4_dnl
