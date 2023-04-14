@@ -20,8 +20,8 @@ prec(V, V1) & l(V1) = cor(P,C) & ms_evt(V)
 % Assume no deep corruptions 
 l(V) = cor(p3, M) => false.
 
-m4_include(`vc-ker-rtm-par.gli')m4_dnl
+m4_include(`a-vc-sys-par.gli')m4_dnl
 
-m4_include(`vc-ker-rtm-par_dist.gli')m4_dnl
+m4_include(`a-vc-sys-par_dist.gli')m4_dnl
 
 m4_include(`thy.gli')m4_dnl
