@@ -10,6 +10,8 @@ In this folder lives some examples related to virus checking measurements motiva
 
 # Measurements 
 
+The files are names according to the measurement targets in the copland phrase. For example, `sys1` takes a measurement of the system. `vc-sys` takes a measurement of the virus checker and the system. 
+
 ## sys1 
 
 This measurement is one remote call to the virus checker to take a measurement of the system. 
@@ -21,13 +23,73 @@ Protocol: `*target: @p4 (vc p4 sys)`
 This measurement is two ASP calls. One to measure the virus checker and one to use the virus checker to measure the system. Chase analysis is performed on the measurements in series and in parallel.  
 
 Protocol (seq) : `*target: @p3 [a1 p4 vc +<+ @p4 vc p4 sys]`
+
 Protocol (par) : `*target: @p3 [(a1 p4 vc) +~+ @p4 (vc p4 sys)]`
 
-## a-vc-sys
+## a1-vc-sys
 
-This measurement is three ASP calls. First, from the root of trust (TPM) take a measurement of a. Then, from a measure the virus checker. Finally, use the virus checker to measure the system. Chase analysis is performed on the measurements in series and in parallel.  
+This measurement is three ASP calls. First, from the root of trust (TPM) take a measurement of a1. Then, from a1 measure the virus checker. Finally, use the virus checker to measure the system. Chase analysis is performed on the measurements in series and in parallel.  
 
+Protocol (seq) : `*target: @p1 [(rtm p3 a1) +<+ @p3 [(a1 p4 vc) +<+ @p4 (vc p4 sys)]]`
 
+Protocol (par) : `*target: @p1 [(rtm p3 a1) +~+ @p3 [(a1 p4 vc) +~+ @p4 (vc p4 sys)]]`
 
+## a2-ker-sys
 
+This protocol uses the root of trust to measure a2. a2 then measures the kernel. The virus checker measures the system. 
 
+Protocol (seq): `*target: @p1 [rtm p3 a2 +<+ @p3 [a2 p4 ker +<+ @p4 (vc p4 sys)]]`
+
+Protocol (par): `*target: @p1 [(rtm p3 a2) +~+ @p3 [(a2 p4 ker) +~+ @p4 (vc p4 sys)]]`
+
+## a1-a2-vc-ker-sys 
+
+This protocol combines the measurement operations in a1-vc-sys and a2-ker-sys. 
+
+Protocol: `*target: @p1 ( rtm p3 a1 +~+ rtm p3 a2)  +<+ @p3 ( a1 p4 vc +~+ a2 p4 ker ) +<+ @p4 ((ker p4 vc) +<+ (vc p4 sys1 ))`
+
+## ker_vc-sys
+
+This protocol calls the kernel to measure the virus checker and the virus checker to measure the system. This is different from the "Confining" paper where the virus checker was previously measured by a1. Here it is measured by the kernel.  
+
+Protocol (seq): `*target: @p4 [ker p4 vc +<+ @p4 vc p4 sys]`
+
+Protocol (par): `*target: @p4 [(ker p4 vc) +~+ @p4 (vc p4 sys)]`
+
+## rtm_ker-sys
+
+This protocol calls the root of trust (rtm) to measure the kernel and the virus checker to measure the system.
+
+Protocol (seq): `*target: @p1 [rtm p4 ker +<+ @p4 vc p4 sys]`
+
+Protocol (par): `*target: @p1 [rtm p4 ker +~+ @p4 vc p4 sys]`
+
+## rtm_ker-vc-sys
+
+The protocol uses the rtm to measure the kernel. The kernel to measurement the virus checker. And the virus checker to measure the system. 
+
+Protocol (seq): `*target: @p1 [(rtm p4 ker) +<+ @p4 [(ker p4 vc) +<+ @p4 (vc p4 sys)]]` 
+
+Protocol (par): `*target: @p1 [(rtm p4 ker) +~+ @p4 [(ker p4 vc) +~+ @p4 (vc p4 sys)]]`
+
+# Specifications 
+
+In all models, we assume the adversary goes undetected at the main measurement event. This is written as follows:
+
+`l(V) = msp(p4, M, p4, sys, X) => corrupt_at(p4, sys, V).`
+
+For dependencies, this analysis assumes the system and virus checker depend on the kernel. We assume the root of trust (rtm) has no dependencies. This appears as follows:
+
+% Assume sys and vc depend on kernel \\
+depends(p4, C, p4, sys) => C = ker.\\
+depends(p4, C, p4, vc) => C = ker.\\
+% rtm has no dependencies \\
+depends(p1, C, p1, rtm) => false.\\
+
+If we want to assume recently measured components cannot be corrupted, we would write the following line. We do not make this assumption.  
+
+`%prec(V, V1) & l(V1) = cor(P,C) & ms_evt(V) => false.`
+
+We assume the root of trust, at place `p1` cannot be corrupted. This would be a deep corruption. We prevent this by writing the following line. 
+
+`l(V) = cor(p1, M) => false.`
