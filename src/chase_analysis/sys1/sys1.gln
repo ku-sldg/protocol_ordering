@@ -1,0 +1,23 @@
+[ bound = 500, limit = 5000, input_order ]
+
+% Assume adversary avoids detection at our main measurement
+% event. This is a measurement of sys 
+l(V) = msp(p4, M, p4, sys, X)
+ => corrupt_at(p4, sys, V).
+
+% Assume dependencies 
+depends(p4, C, p4, sys) => C = ker.
+depends(p4, C, p4, vc) => C = ker.
+% rtm has no dependencies 
+depends(p1, C, p1, rtm) => false.
+
+% No recent assumptions 
+
+% No attacks on the root of trust 
+l(V) = cor(p1, M) => false.
+
+m4_include(`sys1.gli')m4_dnl
+
+m4_include(`sys1_dist.gli')m4_dnl
+
+m4_include(`thy.gli')m4_dnl
