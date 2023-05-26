@@ -14,13 +14,13 @@ depends(p1, C, p1, rtm) => false.
 
 % Assume no recent corruptions
 %prec(V, V1) & l(V1) = cor(P,C) & ms_evt(V)
-%  => false.
+%=> false.
 
 % Assume no deep corruptions 
 l(V) = cor(p1, M) => false.
 
-m4_include(`vc-sys-seq.gli')m4_dnl
+m4_include(`vc-sys-par.gli')m4_dnl
 
-m4_include(`vc-sys-seq_dist.gli')m4_dnl
+m4_include(`vc-sys-par_dist.gli')m4_dnl
 
 m4_include(`thy.gli')m4_dnl
