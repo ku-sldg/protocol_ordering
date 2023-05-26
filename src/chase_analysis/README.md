@@ -1,6 +1,6 @@
 # Virus checking analysis
 
-In this folder lives some examples related to virus checking measurements motivated by Paul Rowe's "Confining the Adversary" paper.
+This folder contains examples related to virus checking measurements presented in Paul Rowe's "Confining the Adversary" paper. With these protocols, we seek to use the CHASE model finder to determine protocol vulnerabilities in the context of an adversary. Ultimately, we aim to distinguish protocols that may be less advantageous to an adversary therefore "better" for a relying party/target. 
 
 # To run 
 
