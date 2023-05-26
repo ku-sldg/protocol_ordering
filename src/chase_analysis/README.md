@@ -6,7 +6,7 @@ In this folder lives some examples related to virus checking measurements motiva
 
 1. Download most recent (as of 4.12.23) version of copland collection 
 2. cd into any folder to run that test case 
-3. To run chase analysis on some phrase in `filename.cop` type `make filename_chase.xhtml` to generate xhtml output of the chase analysis
+3. To run chase analysis on some phrase written the file `filename.cop` type `make filename_chase.xhtml` to generate xhtml output of the chase analysis
 
 # Measurements 
 
@@ -20,7 +20,7 @@ Protocol: `*target: @p4 (vc p4 sys)`
 
 ## vc-sys 
 
-This measurement is two ASP calls. One to measure the virus checker and one to use the virus checker to measure the system. Chase analysis is performed on the measurements in series and in parallel.  
+These Copland phrases include a1 measuring the virus checker and the virus checker measuring the system. Chase analysis is performed on the measurements in series and in parallel.  
 
 Protocol (seq) : `*target: @p3 [a1 p4 vc +<+ @p4 vc p4 sys]`
 
@@ -28,7 +28,7 @@ Protocol (par) : `*target: @p3 [(a1 p4 vc) +~+ @p4 (vc p4 sys)]`
 
 ## a1-vc-sys
 
-This measurement is three ASP calls. First, from the root of trust (TPM) take a measurement of a1. Then, from a1 measure the virus checker. Finally, use the virus checker to measure the system. Chase analysis is performed on the measurements in series and in parallel.  
+This measurement is three ASP calls including: call root of trust (rtm) to measure a1, use a1 measure the virus checker, and use the virus checker to measure the system. Chase analysis is performed on the measurements in series and in parallel.  
 
 Protocol (seq) : `*target: @p1 [(rtm p3 a1) +<+ @p3 [(a1 p4 vc) +<+ @p4 (vc p4 sys)]]`
 
@@ -36,7 +36,7 @@ Protocol (par) : `*target: @p1 [(rtm p3 a1) +~+ @p3 [(a1 p4 vc) +~+ @p4 (vc p4 s
 
 ## a2-ker-sys
 
-This protocol uses the root of trust to measure a2. a2 then measures the kernel. The virus checker measures the system. 
+This protocol includes three measurement operations: it uses the root of trust to measure a2, a2 to measure the kernel, and the virus checker to measure the system. 
 
 Protocol (seq): `*target: @p1 [rtm p3 a2 +<+ @p3 [a2 p4 ker +<+ @p4 (vc p4 sys)]]`
 
@@ -80,11 +80,11 @@ In all models, we assume the adversary goes undetected at the main measurement e
 
 For dependencies, this analysis assumes the system and virus checker depend on the kernel. We assume the root of trust (rtm) has no dependencies. This appears as follows:
 
-% Assume sys and vc depend on kernel \\
-depends(p4, C, p4, sys) => C = ker.\\
-depends(p4, C, p4, vc) => C = ker.\\
-% rtm has no dependencies \\
-depends(p1, C, p1, rtm) => false.\\
+    % Assume sys and vc depend on kernel 
+    depends(p4, C, p4, sys) => C = ker.
+    depends(p4, C, p4, vc) => C = ker.
+    % rtm has no dependencies 
+    depends(p1, C, p1, rtm) => false.
 
 If we want to assume recently measured components cannot be corrupted, we would write the following line. We do not make this assumption.  
 
