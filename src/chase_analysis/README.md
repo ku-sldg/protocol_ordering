@@ -5,11 +5,11 @@ In this folder lives some examples related to virus checking measurements motiva
 # To run 
 
 1. Download most recent (as of 4.12.23) version of copland collection
-2. Follow direction copland-collection README.md for installation
-3. cd into any folder to run that test case 
-4. To run chase analysis on some phrase written the file `filename.cop` type `make filename_chase.xhtml` to generate xhtml output of the chase analysis
+2. Follow directions written inside copland-collection README.md for installation
+3. Once installation is complete, cd into any folder to run that test case 
+4. To run chase analysis on the Copland phrases written in `filename.cop` type `make filename_chase.xhtml` to generate xhtml output of the chase analysis
 
-* Alternatively, once all tools are downloaded, cd into any folder and type `./run.sh` to use the premade script to run the analysis. 
+* Alternatively, once all tools are downloaded, cd into any folder and type `./run.sh` to use the premade script to run the analysis on all phrases present in the folder. 
 
 # Measurements 
 
