@@ -4,9 +4,12 @@ In this folder lives some examples related to virus checking measurements motiva
 
 # To run 
 
-1. Download most recent (as of 4.12.23) version of copland collection 
-2. cd into any folder to run that test case 
-3. To run chase analysis on some phrase written the file `filename.cop` type `make filename_chase.xhtml` to generate xhtml output of the chase analysis
+1. Download most recent (as of 4.12.23) version of copland collection
+2. Follow direction copland-collection README.md for installation
+3. cd into any folder to run that test case 
+4. To run chase analysis on some phrase written the file `filename.cop` type `make filename_chase.xhtml` to generate xhtml output of the chase analysis
+
+* Alternatively, once all tools are downloaded, cd into any folder and type `./run.sh` to use the premade script to run the analysis. 
 
 # Measurements 
 
@@ -88,7 +91,7 @@ For dependencies, this analysis assumes the system and virus checker depend on t
 
 If we want to assume recently measured components cannot be corrupted, we would write the following line. We do not make this assumption.  
 
-`%prec(V, V1) & l(V1) = cor(P,C) & ms_evt(V) => false.`
+`prec(V, V1) & l(V1) = cor(P,C) & ms_evt(V) => false.`
 
 We assume the root of trust, at place `p1` cannot be corrupted. This would be a deep corruption. We prevent this by writing the following line. 
 
