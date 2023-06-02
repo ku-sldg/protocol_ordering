@@ -6,8 +6,8 @@ l(V) = msp(p4, M, p4, sys, X)
  => corrupt_at(p4, sys, V).
 
 % Assume dependencies 
-depends(p4, C, p4, sys) => C = ker.
-depends(p4, C, p4, vc) => C = ker.
+depends(P, C, p4, sys) => P = p4 & C = ker.
+depends(P, C, p4, vc) => P = p4 & C = ker.
 % rtm has no dependencies 
 depends(p1, C, p1, rtm) => false.
 
