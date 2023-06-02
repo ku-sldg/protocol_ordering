@@ -144,8 +144,10 @@ l(V) = msp(p4, M, p4, sys, X)
  =&gt; corrupt_at(p4, sys, V).
 
 % Assume dependencies
-depends(p4, C, p4, sys) =&gt; C = ker.
-depends(p4, C, p4, vc) =&gt; C = ker.
+% depends(p4, C, p4, sys) =&gt; C = ker.
+% depends(p4, C, p4, vc) =&gt; C = ker.
+depends(P, C, p4, sys) =&gt; P = p4 &amp; C = ker.
+depends(P, C, p4, vc) =&gt; P = p4 &amp; C = ker.
 % rtm has no dependencies 
 depends(p1, C, p1, rtm) =&gt; false.
 
