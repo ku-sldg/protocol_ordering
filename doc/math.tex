@@ -1,18 +1,23 @@
-\begin{theorem}[Theorem]
-    This is a sample theorem. The run-in heading is set in bold, while
-    the following text appears in italics. Definitions, lemmas,
-    propositions, and corollaries are styled the same way.
-\end{theorem}
+\section{Necessary Background}
+
+\begin{definition}[Homomorphism]
+    A (graph) homomorphism $\eta : G \to H$ between graphs $G = (N_G, E_G, l_G)$ and $H = (N_H, E_H, l_H)$ is a function $\eta : N_G \to N_H$ on the nodes such that for every edge $(n_1, n_2) \in E_G$, $(\eta(n_1), \eta(n_2)) \in E_H$, and for every node $n \in N_G$, $l_G(n) = l_H(n)$.  \cite{Rowe:2021:OnOrdering}
+\end{definition}
+
+\begin{definition}[Supports/Covers]
+    Given two sets of graphs S and T, we say that S supports T iff for every $H \in T$, there is some $G \in S$, such that $G \leq H$. We  say that T covers S iff for every $G \in S$ there is some $H \in T$ such that $G \leq H. $\cite{Rowe:2021:OnOrdering}
+\end{definition}
+
+
+
+%\begin{theorem}[Theorem]
+    % This is a sample theorem. 
+%\end{theorem}
     %
     % the environments 'definition', 'lemma', 'proposition', 'corollary',
     % 'remark', and 'example' are defined in the LLNCS documentclass as well.
     %
-\begin{definition}[Definition]
-    Definitions look a great deal like theorems.  The run-in heading is
-    bold and text is italics.\cite{Rowe:2021:OnOrdering}
-\end{definition}
-
-\begin{proof}
-Proofs, examples, and remarks have the initial word in italics,
-while the following text appears in normal font.
-\end{proof}
+% \begin{proof}
+% Proofs, examples, and remarks have the initial word in italics,
+% while the following text appears in normal font.
+% \end{proof}
