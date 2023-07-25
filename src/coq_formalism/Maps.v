@@ -5,11 +5,15 @@ https://softwarefoundations.cis.upenn.edu/qc-current/TImp.html
 Author:  Adam Petz, ampetz@ku.edu
  *)
 
-Require Import EqClass.
+(* From graph Require Import EqClass.*)
 
 Require Import List.
 Import ListNotations.
 Require Import Coq.Arith.EqNat Coq.Program.Tactics PeanoNat.
+
+Class EqClass (A : Type) :=
+  { eqb : A -> A -> bool ;
+    eqb_leibniz : forall x y, eqb x y = true <-> x = y }.
 
 (* Require Import StructTactics. *)
 
