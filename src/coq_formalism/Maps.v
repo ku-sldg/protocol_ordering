@@ -11,7 +11,7 @@ Require Import List.
 Import ListNotations.
 Require Import Coq.Arith.EqNat Coq.Program.Tactics PeanoNat.
 
-Require Import StructTactics.
+(* Require Import StructTactics. *)
 
 (* ================================================================= *)
 (** ** List-Based Maps *)
@@ -71,6 +71,11 @@ Fixpoint invert_map {A B : Type} `{HA : EqClass A, HB : EqClass B} (m : MapC A B
   | [] => []
   | (k', v') :: m' => (v', k') :: (invert_map m')
   end.
+
+
+(******************************
+
+COMMENTING OUT MAPD
 
 (* A two-way implementation of list maps, where you can lookup from a key, or value *)
 Definition MapD (A:Type) (B:Type) `{H : EqClass A} `{H1 : EqClass B} := list (A * B).
@@ -201,5 +206,5 @@ Proof.
           destruct n. exists x0. econstructor. apply H1.
          }
          right. auto.
-Qed.
+Qed. *) 
     
