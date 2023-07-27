@@ -1,6 +1,6 @@
 # Overview 
 
-Interesting code can be found in the file `protocol_order.v`. Other files are just random musings. 
+Interesting code can be found in the file `protocol_order.v`. Other files are just random musings or theorems from Rowe's paper. 
 
 # Dependencies 
 
