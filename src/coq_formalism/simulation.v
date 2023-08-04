@@ -8,6 +8,7 @@
     Date: August 2, 2023 *)
 
 Require Import Coq.Relations.Relation_Definitions.
+Require Import Coq.Classes.RelationClasses.
 Set Implicit Arguments.
 
 Context {label L: Set}.  
@@ -81,12 +82,13 @@ Definition weakSimulation (S1 S2 : LTS') (R: S1.(st) -> S2.(st) -> Prop) :=
     (forall p q, R p q -> forall p' a, S1.(step') p p' /\ S1.(l) p = inl a -> 
      exists q1 q2 q', silentstar S2 q q1 /\ S2.(step') q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q'). 
 
+(* use weak simulation as a partial order *)
 Notation "x <= y" := (weakSimulation x y) (at level 70).
 
 (* Prove that a weak simulation is reflexive *)
 Lemma  WS_refl : forall x, exists r , (x <= x) r.
 Proof.
-    intros. exists eq. 
+    intros. exists eq.  
     unfold weakSimulation. split.
     + intros. exists s; eauto.
     + split.
@@ -97,31 +99,49 @@ Proof.
     +++ inversion H0; eauto.
     +++ inversion H0; eauto.
     +++ apply star_refl.         
-Qed. 
+Qed.
+
+Print eq. 
+Print transitivity.
+
+Definition transitive {X: Type} (R: relation X) :=
+  forall a b c : X, (R a b) -> (R b c) -> (R a c).
 
 Lemma  WB_trans : forall x y z,       
-                    ( exists r1, weakBisimulation x y r1 ) -> 
-                    ( exists r2, weakBisimulation y z r2 ) -> 
-                      exists r3, weakBisimulation x z r3.
-Proof. Admitted. 
+                    ( exists r1, (x <= y) r1 ) -> 
+                    ( exists r2, (y <= z) r2 ) -> 
+                      exists r3, (x <= z) r3.
+Proof. 
+    intros. 
+    destruct H as [Rxy Hxy].
+    destruct H0 as [Ryz Hyz].
+    destruct Hxy as [Hxy_inital Hxy].
+    destruct Hxy as [Hxy_slient Hxy_ns].
+    destruct Hxy_inital.
 
-(* need to define equal... maybe isomorphism as equivalence ...? *)
+
+
+
+    exists transitivity. (Rxy Rxy). 
+    exists (transitive eq). 
+    eexists.
+    unfold weakSimulation;  repeat split.
+    + intros.    
+     Admitted. 
+
+(* need to define equal... and prove that it's an equivalence relation 
+ * maybe isomorphism as equivalence ...?
+ * Here: https://github.com/coq-contribs/ccs/blob/master/Trans_Sys.v 
+ * different equivalence's are defined over transition systems  *)
 
 Lemma WB_antisym : forall x y, 
                     ( exists r1, weakBisimulation x y r1 ) -> 
                     ( exists r2, weakBisimulation y x r2 ) -> 
                       x = y.
 
+(* Three cases for graph comparison 
+ * 1. <= /\ = -> = 
+ * 2. <= /\ <> -> < 
+ * 3. incomparable *)
 
-
-
-
-
-(* Define transitive reflexive closure *)
-Inductive trc {A} (R : A -> A -> Prop) : A -> A -> Prop :=
-| TrcRefl : forall x, trc R x x
-| TrcTrans : forall x y z, R x y -> trc R y z -> trc R x z.
-
-(* Might be useful to define reachable states *)
-Inductive reachable {state} (sys : LTS state) (st : state) : Prop :=
-| Reachable : forall st0, sys.(initial) st0 -> trc sys.(step) st0 _ st -> reachable sys st.
+(* Consider sets of graph comparison *)
