@@ -72,12 +72,11 @@ Inductive silentstar (lts : LTS') : lts.(st) -> lts.(st) -> Prop :=
  * There are three cases.  *)
 Definition weakSimulation (S1 S2 : LTS') (R: S1.(st) -> S2.(st) -> Prop) := 
 
+    (* initial case *)
     (forall (s : S1.(st)), S1.(initial') s -> 
     (exists (r : S2.(st)), S2.(initial') r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
-    (exists (r : S2.(st)), S2.(initial')r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
-    exists (r' : S2.(st)), (silentstar S2 r r' /\ S2.(l) r' = S1.(l) s )))
-    
-    
+    (exists (r : S2.(st)), S2.(initial') r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
+     exists (r' : S2.(st)), (silentstar S2 r r' /\ S2.(l) r' = S1.(l) s ))) 
     /\ 
 
     (* if there is a silent step in S1 then there exists some related silent step in S2 *)
@@ -98,7 +97,7 @@ Proof.
     (* exists r : st x -> st x -> Prop, *) 
     exists eq.  
     unfold weakSimulation. split.
-    + intros. Admitted. (*  exists s; eauto.
+    + intros. left. exists s; eauto.
     + split.
     ++ intros. exists p'. split; eauto.
     +++ apply star_trans with (s' := p'); try (rewrite <- H; destruct H0 as [H0 H1]; eauto). apply star_refl.
@@ -107,7 +106,7 @@ Proof.
     +++ inversion H0; eauto.
     +++ inversion H0; eauto.
     +++ apply star_refl.         
-Qed. *)
+Qed. 
 
 Print eq.
 (* Inductive eq (A : Type) (x : A) : A -> Prop :=  eq_refl : x = x. *) 
@@ -115,10 +114,6 @@ Print transitivity.
 
 Definition transitive {X: Type} (R: relation X) :=
   forall a b c : X, (R a b) -> (R b c) -> (R a c).
-
-Inductive clos_trans : LTS' -> LTS' -> Prop :=
-| t_step (x y : LTS') r : (x <= y) r -> clos_trans x y
-| t_trans ( x y z : LTS') : clos_trans x y -> clos_trans y z -> clos_trans x z.
 
 Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
 | rc : forall a b c, R1 a b -> R2 b c -> relation_comp R1 R2 a c.
@@ -140,83 +135,115 @@ Proof.
     destruct Hxy as [Hxy_initial Hxy].
     destruct Hxy as [Hxy_silent Hxy_ns].
     destruct Hyz as [Hyz_initial Hyz].
-    destruct Hyz as [Hyz_silent Hyz_ns].
-    split. 
-    + clear Hxy_ns Hyz_ns Hxy_silent Hyz_silent. intros x' initial_x_x'. 
-      specialize Hxy_initial with x'. 
-    ++ destruct Hxy_initial.
-    +++  eauto.
-    +++ destruct H as [y' H].  specialize Hyz_initial with y'. destruct Hyz_initial.
-    ++++ inversion H; eauto.
-    ++++ destruct H0 as [z' H0]. left. exists z'; repeat split.
-    +++++ destruct H0; eauto.
-    +++++ apply rc with (b := y').
-    ++++++ destruct H. destruct H1. eauto.
-    ++++++ destruct H0. destruct H1. eauto.
-    +++++ destruct H as [H H']. destruct H' as [H' H''].
-        destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
-        rewrite H''. eauto.
-    ++++ destruct H0 as [z' H0]. right; exists z'; repeat split.
-    +++++ destruct H0. eauto.
-    +++++ apply rc with (b := y'). 
-    ++++++ destruct H as [H H']. destruct H' as [H' H'']. eauto.
-    ++++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0'']. eauto.
-    +++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
-        destruct H0'' as [H0'' H0''']. eauto.
-    +++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
-    destruct H0'' as [H0'' H0''']. destruct H0''' as [z'' H0'''].
-    exists z''. split.
-    ++++++ destruct H0'''. eauto.
-    ++++++ destruct H0'''. rewrite H2. destruct H as [H H']. destruct H' as [H' H'']. eauto.
-    +++ destruct H as [y' H].  specialize Hyz_initial with y'. destruct Hyz_initial. left. destruct H. exists z'; repeat split.
-    +++ destruct H0; eauto.
-    +++ apply rc with (b := y').
-    ++++ destruct H. destruct H1. eauto.
-    ++++ destruct H0. destruct H1. eauto.
-    +++ destruct H as [H H']. destruct H' as [H' H''].
-        destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
-        rewrite H''. eauto.
-    ++ destruct H0 as [z' H0]. right; exists z'; repeat split.
-    +++ destruct H0. eauto.
-    +++ apply rc with (b := y'). 
-    ++++ destruct H as [H H']. destruct H' as [H' H'']. eauto.
-    ++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0'']. eauto.
-    +++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
-        destruct H0'' as [H0'' H0''']. eauto.
-    +++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
-    destruct H0'' as [H0'' H0''']. destruct H0''' as [z'' H0'''].
-    exists z''. split.
-    ++++ destruct H0'''. eauto.
-    ++++ destruct H0'''. rewrite H2. destruct H as [H H']. destruct H' as [H' H'']. eauto.
-        eauto. eauto.     
+    destruct Hyz as [Hyz_silent Hyz_ns]. 
+    repeat split. 
+    + (* clear Hxy_ns Hyz_ns Hxy_silent Hyz_silent. *)
+      intros x' initial_x_x'. 
+      specialize Hxy_initial with x'. destruct Hxy_initial; eauto;
+      destruct H as [y' H];  specialize Hyz_initial with y'; destruct Hyz_initial;
+      destruct H; eauto; destruct H1 as [H1 H2];
+      destruct H0 as [z' H3]; destruct H3 as [H3 H4]; destruct H4 as [H4 H5].
+    ++ left. exists z'; repeat split; eauto.
+    +++ apply rc with (b := y'); eauto.
+    +++ rewrite H2. eauto.
+    ++ right. exists z'; repeat split; eauto.
+    +++ apply rc with (b := y'); eauto. 
+    +++ destruct H5 as [H5 H6]; eauto.
+    +++ destruct H5 as [H5 H6]; eauto.
+        destruct H6 as [z'' H6].
+        destruct H6 as [H6 H7].
+        exists z''; split; eauto. rewrite H7. eauto.
+    ++ destruct H2. destruct H2 as [y'' H2]. destruct H2.
+       right. exists z'. repeat split; eauto.
+    +++ apply rc with (b := y'); eauto.
+    +++ rewrite <- H5. eauto.
+    +++ induction H2. 
+    ++++ exists z'; split.
+    +++++ apply star_refl.
+    +++++ rewrite <- H5. eauto.
+    ++++ apply Hyz_silent with (p' := s') in H4; try (split; eauto).
+         destruct H4 as [z'' H4]. destruct H4 as [H4 H9]. 
+         exists z''; split.
+    +++++ eauto.
+    +++++ clear H0.  rewrite <- H6. clear H6.
+          destruct (l y s') as [a|].
+    ++++++ apply Hyz_ns with (p' := s') (a := a) in H9.
+    +++++++ destruct H9. destruct H0. destruct H0. destruct H0.
+          destruct H6. destruct H10.
+          destruct H4. subst.   destruct H9.   
+         apply IHsilentstar. inversion H0.
 
+
+
+
+
+          exists z''. split; eauto. rewrite <- H6.
+          destruct (l y s') as [a |].
+    ++++++ clear H0 H7. inversion H4; subst.        
+
+
+
+
+    +++ induction H2.
+    ++++
     
     
+    
+    
+    exists z'; split.
+    +++++ apply star_refl.
+    +++++ rewrite <- H5. eauto.
+    ++++ apply IHsilentstar. clear IHsilentstar.
+          rewrite <- H6. 
+        specialize Hyz_silent with y'' z'.  inversion H2; subst.  
+    
+    
+    exists z'. split.
+    ++++   
 
 
 
 
-    exists (relation_comp Rxy Ryz).
-    destruct Hxy as [Hxy_initial Hxy].
-    destruct Hxy as [Hxy_silent Hxy_ns].
-    destruct Hyz as [Hyz_initial Hyz].
-    destruct Hyz as [Hyz_silent Hyz_ns].
-    split. 
-    + clear Hxy_ns Hyz_ns Hxy_silent Hyz_silent.
-      intros x' initial_x_x'. specialize Hxy_initial with x'. destruct Hxy_initial as [y' Hxy_initial]. eauto. 
-      specialize Hyz_initial with y'.
-      destruct Hxy_initial. destruct Hyz_initial.
-      destruct H0.      
 
 
-    exists transitivity.
-    exists (fun x => gyz (fxy (x))).
-    exists eq_trans.
-    exists (transitive weakSimulation) .
 
-    destruct Hxy as [Hxy_initial Hxy].
-    destruct Hxy as [Hxy_slient Hxy_ns].
-    destruct Hxy_initial.
+
+
+
+
+        specialize H6 with r'.
+        destruct H6 as [H6 H7].
+        eauto.
+    +++ destruct H5 as [H5 H6]. specialize H6 with r'.
+        destruct H6 as [H6 H7].
+        rewrite H7. eauto.
+    ++ right. exists z'. repeat split; eauto.
+    +++ apply rc with (b := y'); eauto.
+    +++ destruct H2. rewrite <- H5. eauto.
+    +++ eapply star_trans.    destruct H5 as [H5 H6]; eauto. 
+
+
+
+        destruct H6 as [z'' H6].
+        destruct H6 as [H6 H7].
+        exists z''; split.
+    ++++ eauto.
+    ++++ rewrite H7. eauto.
+    ++ destruct H2. destruct H2 as [y'' H2]. destruct H2 as [H2 H6].
+       induction H2.
+       (* silentstar y y' y'' *)
+    +++ left. exists z'. repeat split; eauto.
+    ++++ apply rc with (b := s); subst; eauto.
+    ++++ rewrite <- H6. subst. eauto.
+    +++ apply IHsilentstar; eauto.
+    ++++  
+    
+    
+    
+    subst. right. exists z'. repeat split; eauto.
+    ++++ apply rc with (b := y'); subst; eauto.
+    ++++ rewrite <- H5. eauto.
+    ++++ exists  discriminate.     
  
      Admitted. 
 
