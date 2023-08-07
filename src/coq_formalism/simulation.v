@@ -8,6 +8,7 @@
     Date: August 2, 2023 *)
 
 Require Import Coq.Relations.Relation_Definitions.
+Require Import Coq.Relations.Relation_Operators.
 Require Import Coq.Classes.RelationClasses.
 Set Implicit Arguments.
 
@@ -53,7 +54,7 @@ Definition bisimulation {state1 state2} (S1: LTS state1) (S2: LTS state2) (R : s
 Inductive sl := 
 | silentlabel.
 
-Record LTS' := {
+Record LTS' : Type := {
     st : Set ; 
     inital : st -> Prop ; 
     step' : st -> st -> Prop ;
@@ -88,7 +89,9 @@ Notation "x <= y" := (weakSimulation x y) (at level 70).
 (* Prove that a weak simulation is reflexive *)
 Lemma  WS_refl : forall x, exists r , (x <= x) r.
 Proof.
-    intros. exists eq.  
+    intros.
+    (* exists r : st x -> st x -> Prop, *) 
+    exists eq.  
     unfold weakSimulation. split.
     + intros. exists s; eauto.
     + split.
@@ -101,32 +104,58 @@ Proof.
     +++ apply star_refl.         
 Qed.
 
-Print eq. 
+Print eq.
+(* Inductive eq (A : Type) (x : A) : A -> Prop :=  eq_refl : x = x. *) 
 Print transitivity.
 
 Definition transitive {X: Type} (R: relation X) :=
   forall a b c : X, (R a b) -> (R b c) -> (R a c).
 
-Lemma  WB_trans : forall x y z,       
+Inductive clos_trans : LTS' -> LTS' -> Prop :=
+| t_step (x y : LTS') r : (x <= y) r -> clos_trans x y
+| t_trans ( x y z : LTS') : clos_trans x y -> clos_trans y z -> clos_trans x z.
+
+Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
+| rc : forall a b c, R1 a b -> R2 b c -> relation_comp R1 R2 a c.
+
+
+
+Lemma  WB_trans : forall (x y z : LTS'),       
                     ( exists r1, (x <= y) r1 ) -> 
                     ( exists r2, (y <= z) r2 ) -> 
                       exists r3, (x <= z) r3.
 Proof. 
-    intros. 
+    intros.
     destruct H as [Rxy Hxy].
     destruct H0 as [Ryz Hyz].
+    exists (relation_comp Rxy Ryz).
+    split.
+
+    exists silentstar.
+
+
+    destruct Hxy as [Hxy_inital Hxy].
+    destruct Hxy as [Hxy_slient Hxy_ns].
+    destruct Hyz as [Hyz_inital Hyz].
+    destruct Hyz as [Hyz_slient Hyz_ns].
+
+    eexists. split. 
+    + clear Hxy_slient Hxy_ns Hyz_slient Hyz_ns.
+      intros. specialize Hxy_inital with s. destruct Hxy_inital as [y' Hxy_inital]. eauto. 
+      specialize Hyz_inital with y'.
+      destruct Hxy_inital. destruct Hyz_inital.
+      destruct H0.      
+
+
+    exists transitivity.
+    exists (fun x => gyz (fxy (x))).
+    exists eq_trans.
+    exists (transitive weakSimulation) .
+
     destruct Hxy as [Hxy_inital Hxy].
     destruct Hxy as [Hxy_slient Hxy_ns].
     destruct Hxy_inital.
-
-
-
-
-    exists transitivity. (Rxy Rxy). 
-    exists (transitive eq). 
-    eexists.
-    unfold weakSimulation;  repeat split.
-    + intros.    
+ 
      Admitted. 
 
 (* need to define equal... and prove that it's an equivalence relation 
