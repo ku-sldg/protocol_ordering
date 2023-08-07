@@ -49,14 +49,14 @@ Definition bisimulation {state1 state2} (S1: LTS state1) (S2: LTS state2) (R : s
     exists q', (S1.(step) q l q') /\ R q' p').
 
  
-(* Redefine Label transition system to include silent labels *)
+(* Redefine Labeled Transition System to include silent labels *)
 
 Inductive sl := 
 | silentlabel.
 
 Record LTS' : Type := {
     st : Set ; 
-    inital : st -> Prop ; 
+    initial' : st -> Prop ; 
     step' : st -> st -> Prop ;
     l : st -> L + sl
   }.
@@ -71,9 +71,14 @@ Inductive silentstar (lts : LTS') : lts.(st) -> lts.(st) -> Prop :=
 (* Defining a weak simulation. This is a one-way relation between two LTS'.
  * There are three cases.  *)
 Definition weakSimulation (S1 S2 : LTS') (R: S1.(st) -> S2.(st) -> Prop) := 
-    (* inital condition. All start states in one graph must be present in the other. *)
-    (forall (s : S1.(st)), S1.(inital) s -> 
-    exists (r : S2.(st)), R s r /\ S1.(l) s = S2.(l) r) /\ 
+
+    (forall (s : S1.(st)), S1.(initial') s -> 
+    (exists (r : S2.(st)), S2.(initial') r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
+    (exists (r : S2.(st)), S2.(initial')r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
+    exists (r' : S2.(st)), (silentstar S2 r r' /\ S2.(l) r' = S1.(l) s )))
+    
+    
+    /\ 
 
     (* if there is a silent step in S1 then there exists some related silent step in S2 *)
     ( forall p q, R p q -> forall p', S1.(step') p p' /\ S1.(l) p = inr silentlabel  -> 
@@ -93,7 +98,7 @@ Proof.
     (* exists r : st x -> st x -> Prop, *) 
     exists eq.  
     unfold weakSimulation. split.
-    + intros. exists s; eauto.
+    + intros. Admitted. (*  exists s; eauto.
     + split.
     ++ intros. exists p'. split; eauto.
     +++ apply star_trans with (s' := p'); try (rewrite <- H; destruct H0 as [H0 H1]; eauto). apply star_refl.
@@ -102,7 +107,7 @@ Proof.
     +++ inversion H0; eauto.
     +++ inversion H0; eauto.
     +++ apply star_refl.         
-Qed.
+Qed. *)
 
 Print eq.
 (* Inductive eq (A : Type) (x : A) : A -> Prop :=  eq_refl : x = x. *) 
@@ -118,7 +123,10 @@ Inductive clos_trans : LTS' -> LTS' -> Prop :=
 Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
 | rc : forall a b c, R1 a b -> R2 b c -> relation_comp R1 R2 a c.
 
+Definition R (X : Type) := X -> X -> Prop.
 
+Definition rel_dot n m p (x: n -> m -> Prop) (y: m -> p -> Prop): n -> p -> Prop :=
+  fun i j => exists2 k, x i k & y k j.
 
 Lemma  WB_trans : forall (x y z : LTS'),       
                     ( exists r1, (x <= y) r1 ) -> 
@@ -129,21 +137,75 @@ Proof.
     destruct H as [Rxy Hxy].
     destruct H0 as [Ryz Hyz].
     exists (relation_comp Rxy Ryz).
-    split.
+    destruct Hxy as [Hxy_initial Hxy].
+    destruct Hxy as [Hxy_silent Hxy_ns].
+    destruct Hyz as [Hyz_initial Hyz].
+    destruct Hyz as [Hyz_silent Hyz_ns].
+    split. 
+    + clear Hxy_ns Hyz_ns Hxy_silent Hyz_silent. intros x' initial_x_x'. 
+      specialize Hxy_initial with x'. 
+    ++ destruct Hxy_initial.
+    +++  eauto.
+    +++ destruct H as [y' H].  specialize Hyz_initial with y'. destruct Hyz_initial.
+    ++++ inversion H; eauto.
+    ++++ destruct H0 as [z' H0]. left. exists z'; repeat split.
+    +++++ destruct H0; eauto.
+    +++++ apply rc with (b := y').
+    ++++++ destruct H. destruct H1. eauto.
+    ++++++ destruct H0. destruct H1. eauto.
+    +++++ destruct H as [H H']. destruct H' as [H' H''].
+        destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
+        rewrite H''. eauto.
+    ++++ destruct H0 as [z' H0]. right; exists z'; repeat split.
+    +++++ destruct H0. eauto.
+    +++++ apply rc with (b := y'). 
+    ++++++ destruct H as [H H']. destruct H' as [H' H'']. eauto.
+    ++++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0'']. eauto.
+    +++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
+        destruct H0'' as [H0'' H0''']. eauto.
+    +++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
+    destruct H0'' as [H0'' H0''']. destruct H0''' as [z'' H0'''].
+    exists z''. split.
+    ++++++ destruct H0'''. eauto.
+    ++++++ destruct H0'''. rewrite H2. destruct H as [H H']. destruct H' as [H' H'']. eauto.
+    +++ destruct H as [y' H].  specialize Hyz_initial with y'. destruct Hyz_initial. left. destruct H. exists z'; repeat split.
+    +++ destruct H0; eauto.
+    +++ apply rc with (b := y').
+    ++++ destruct H. destruct H1. eauto.
+    ++++ destruct H0. destruct H1. eauto.
+    +++ destruct H as [H H']. destruct H' as [H' H''].
+        destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
+        rewrite H''. eauto.
+    ++ destruct H0 as [z' H0]. right; exists z'; repeat split.
+    +++ destruct H0. eauto.
+    +++ apply rc with (b := y'). 
+    ++++ destruct H as [H H']. destruct H' as [H' H'']. eauto.
+    ++++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0'']. eauto.
+    +++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
+        destruct H0'' as [H0'' H0''']. eauto.
+    +++ destruct H0 as [H0 H0']. destruct H0' as [H0' H0''].
+    destruct H0'' as [H0'' H0''']. destruct H0''' as [z'' H0'''].
+    exists z''. split.
+    ++++ destruct H0'''. eauto.
+    ++++ destruct H0'''. rewrite H2. destruct H as [H H']. destruct H' as [H' H'']. eauto.
+        eauto. eauto.     
 
-    exists silentstar.
+    
+    
 
 
-    destruct Hxy as [Hxy_inital Hxy].
-    destruct Hxy as [Hxy_slient Hxy_ns].
-    destruct Hyz as [Hyz_inital Hyz].
-    destruct Hyz as [Hyz_slient Hyz_ns].
 
-    eexists. split. 
-    + clear Hxy_slient Hxy_ns Hyz_slient Hyz_ns.
-      intros. specialize Hxy_inital with s. destruct Hxy_inital as [y' Hxy_inital]. eauto. 
-      specialize Hyz_inital with y'.
-      destruct Hxy_inital. destruct Hyz_inital.
+
+    exists (relation_comp Rxy Ryz).
+    destruct Hxy as [Hxy_initial Hxy].
+    destruct Hxy as [Hxy_silent Hxy_ns].
+    destruct Hyz as [Hyz_initial Hyz].
+    destruct Hyz as [Hyz_silent Hyz_ns].
+    split. 
+    + clear Hxy_ns Hyz_ns Hxy_silent Hyz_silent.
+      intros x' initial_x_x'. specialize Hxy_initial with x'. destruct Hxy_initial as [y' Hxy_initial]. eauto. 
+      specialize Hyz_initial with y'.
+      destruct Hxy_initial. destruct Hyz_initial.
       destruct H0.      
 
 
@@ -152,9 +214,9 @@ Proof.
     exists eq_trans.
     exists (transitive weakSimulation) .
 
-    destruct Hxy as [Hxy_inital Hxy].
+    destruct Hxy as [Hxy_initial Hxy].
     destruct Hxy as [Hxy_slient Hxy_ns].
-    destruct Hxy_inital.
+    destruct Hxy_initial.
  
      Admitted. 
 
