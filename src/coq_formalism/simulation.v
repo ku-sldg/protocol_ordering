@@ -12,6 +12,8 @@ Require Import Coq.Relations.Relation_Operators.
 Require Import Coq.Classes.RelationClasses.
 Set Implicit Arguments.
 
+Module TransitionSystem. 
+
 Context {label L: Set}.  
 
 (* First, define Labeled Transition System
@@ -19,73 +21,129 @@ Context {label L: Set}.
  * define a transition relation and initial state.
  * A label may either be a label or the silent label.  *)
 
-Record LTS (state : Type) : Type := {
-    initial : state;
-    step : state -> label -> state -> Prop 
+Record TS (state : Type) : Type := {
+    initial_ts : state;
+    step_ts : state -> label -> state -> Prop 
 }.
 
-Check LTS.
-(* Check LTS.(step). *)
+Check TS.
+(* Check TS.(step_ts). *)
 
 Definition relation (X : Type) := X -> X -> Prop.
 
 (* bisimilarity relation for two states 
 * type of this relation should be state -> state -> Prop *)
-Definition BR_state {state} (sys : LTS state) (R: relation state) : Prop := 
-    forall q p, R q p /\ forall l q', (sys.(step) q l q') -> 
-    (exists p', (sys.(step) p l p') /\ R q' p').
+Definition BR_state {state} (sys : TS state) (R: relation state) : Prop := 
+    forall q p, R q p /\ forall l q', (sys.(step_ts) q l q') -> 
+    (exists p', (sys.(step_ts) p l p') /\ R q' p').
 
 (* simulation is one way *)
-Definition simulation {state} (S1 S2 : LTS state) (R : relation state) : Prop := 
-    forall q p, R q p /\ forall q' l, S1.(step) q l q' -> 
-    exists p', (S2.(step) p l p') /\ R q' p'.
+Definition simulation {state} (S1 S2 : TS state) (R : relation state) : Prop := 
+    forall q p, R q p /\ forall q' l, S1.(step_ts) q l q' -> 
+    exists p', (S2.(step_ts) p l p') /\ R q' p'.
 
 (* strong bisimulation is two way *)
-Definition bisimulation {state1 state2} (S1: LTS state1) (S2: LTS state2) (R : state1 -> state2 -> Prop) : Prop := 
-    R S1.(initial) S2.(initial) /\
-    ( forall q p, R q p /\ forall q' l, S1.(step) q l q' -> 
-    exists p', (S2.(step) p l p') /\ R q' p' ) /\
-    ( forall q p, R q p /\ forall p' l, S2.(step) p l p' -> 
-    exists q', (S1.(step) q l q') /\ R q' p').
+Definition bisimulation {state1 state2} (S1: TS state1) (S2: TS state2) (R : state1 -> state2 -> Prop) : Prop := 
+    R S1.(initial_ts) S2.(initial_ts) /\
+    ( forall q p, R q p /\ forall q' l, S1.(step_ts) q l q' -> 
+    exists p', (S2.(step_ts) p l p') /\ R q' p' ) /\
+    ( forall q p, R q p /\ forall p' l, S2.(step_ts) p l p' -> 
+    exists q', (S1.(step_ts) q l q') /\ R q' p').
 
+End TransitionSystem.
+
+Module LabeledTransitionSystem.
+
+Context {label L: Set}. 
  
 (* Redefine Labeled Transition System to include silent labels *)
-
 Inductive sl := 
 | silentlabel.
 
-Record LTS' : Type := {
+Record LTS : Type := {
     st : Set ; 
-    initial' : st -> Prop ; 
-    step' : st -> st -> Prop ;
+    initial : st -> Prop ; 
+    step : st -> st -> Prop ;
     l : st -> L + sl
   }.
 
 (* the transitive reflexive closure of silent transitions *)
-Inductive silentstar (lts : LTS') : lts.(st) -> lts.(st) -> Prop := 
+Inductive silentstar (lts : LTS) : lts.(st) -> lts.(st) -> Prop := 
 | star_refl : forall (s : lts.(st)), silentstar lts s s
-| star_trans : forall (s s' s'' : lts.(st)), lts.(step') s s' -> 
+| star_trans : forall (s s' s'' : lts.(st)), lts.(step) s s' -> 
                 lts.(l) s = inr silentlabel -> 
                 silentstar lts s' s'' ->  silentstar lts s s''.
 
-(* Defining a weak simulation. This is a one-way relation between two LTS'.
+(* Defining a weak simulation with traditional inital case. *)
+Definition weakSimulation' (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) := 
+
+(* initial case. The roots are related by R *)
+(forall (s : S1.(st)), S1.(initial) s -> 
+(exists (r : S2.(st)), S2.(initial) r -> R s r /\ S1.(l) s = S2.(l) r)) /\ 
+
+(* if there is a silent step in S1 then there exists some related silent step in S2 *)
+( forall p q, R p q -> forall p', S1.(step) p p' /\ S1.(l) p = inr silentlabel  -> 
+exists q', silentstar S2 q q' /\ R p' q') /\ 
+
+(* if there is some labeled step in S1 then there exists some labeled transition in S2 that may include silent states *)
+(forall p q, R p q -> forall p' a, S1.(step) p p' /\ S1.(l) p = inl a -> 
+    exists q1 q2 q', silentstar S2 q q1 /\ S2.(step) q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q').
+
+(* use weak simulation as a partial order *)
+Notation "x =w y" := (weakSimulation' x y) (at level 70).
+
+Lemma  WS_refl' : forall x, exists r , (x =w x) r.
+Proof.
+    intros. exists eq. unfold "=w". intros; repeat split.
+    + intros. exists s. intros. split; eauto.
+    + intros. exists p'. split; eauto. destruct H0 as [H1 H2]. apply star_trans with (s' := p').
+    ++ rewrite <- H; eauto.
+    ++ rewrite <- H; eauto.
+    ++ apply star_refl.
+    + intros. exists p; exists p'; exists p'; repeat split.
+    +++ rewrite H; apply star_refl.
+    +++ inversion H0; eauto.
+    +++ inversion H0; eauto.
+    +++ apply star_refl.
+Qed.   
+
+Definition rel_dot n m p (x: n -> m -> Prop) (y: m -> p -> Prop): n -> p -> Prop :=
+  fun i j => exists2 k, x i k & y k j.
+
+Lemma  WS_trans' : forall (x y z : LTS),       
+                    ( exists r1, (x =w y) r1 ) -> 
+                    ( exists r2, (y =w z) r2 ) -> 
+                      exists r3, (x =w z) r3.
+Proof.
+    intros x y z. intros Hxy Hyz. destruct Hxy as [Rxy Hxy].
+    destruct Hyz as [Ryz Hyz]. exists (rel_dot Rxy Ryz).
+    unfold weakSimulation'. repeat split.
+    + intros x' x_init. destruct Hxy as [Hxy Hxy_other].
+      destruct Hyz as [Hyz Hyz_other]. 
+      clear Hxy_other Hyz_other.
+      specialize Hxy with x'. destruct Hxy as [y1 Hxy]. eauto.
+      specialize Hyz with y1.
+      destruct Hyz. destruct Hxy.
+      Abort. 
+
+(* Defining a weak simulation. This is a one-way relation between two LTS.
  * There are three cases.  *)
-Definition weakSimulation (S1 S2 : LTS') (R: S1.(st) -> S2.(st) -> Prop) := 
+Definition weakSimulation (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) := 
 
     (* initial case *)
-    (forall (s : S1.(st)), S1.(initial') s -> 
-    (exists (r : S2.(st)), S2.(initial') r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
-    (exists (r : S2.(st)), S2.(initial') r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
+    (forall (s : S1.(st)), S1.(initial) s -> 
+    (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
+    (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
      exists (r' : S2.(st)), (silentstar S2 r r' /\ S2.(l) r' = S1.(l) s ))) 
     /\ 
 
     (* if there is a silent step in S1 then there exists some related silent step in S2 *)
-    ( forall p q, R p q -> forall p', S1.(step') p p' /\ S1.(l) p = inr silentlabel  -> 
+    ( forall p q, R p q -> forall p', S1.(step) p p' /\ S1.(l) p = inr silentlabel  -> 
     exists q', silentstar S2 q q' /\ R p' q') /\ 
     
     (* if there is some labeled step in S1 then there exists some labeled transition in S2 that may include silent states *)
-    (forall p q, R p q -> forall p' a, S1.(step') p p' /\ S1.(l) p = inl a -> 
-     exists q1 q2 q', silentstar S2 q q1 /\ S2.(step') q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q'). 
+    (forall p q, R p q -> forall p' a, S1.(step) p p' /\ S1.(l) p = inl a -> 
+     exists q1 q2 q', silentstar S2 q q1 /\ S2.(step) q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q'). 
 
 (* use weak simulation as a partial order *)
 Notation "x <= y" := (weakSimulation x y) (at level 70).
@@ -123,7 +181,7 @@ Definition R (X : Type) := X -> X -> Prop.
 Definition rel_dot n m p (x: n -> m -> Prop) (y: m -> p -> Prop): n -> p -> Prop :=
   fun i j => exists2 k, x i k & y k j.
 
-Lemma  WB_trans : forall (x y z : LTS'),       
+Lemma  WB_trans : forall (x y z : LTS),       
                     ( exists r1, (x <= y) r1 ) -> 
                     ( exists r2, (y <= z) r2 ) -> 
                       exists r3, (x <= z) r3.
@@ -131,31 +189,42 @@ Proof.
     intros.
     destruct H as [Rxy Hxy].
     destruct H0 as [Ryz Hyz].
-    exists (relation_comp Rxy Ryz).
+    exists (rel_dot Rxy Ryz).
     destruct Hxy as [Hxy_initial Hxy].
     destruct Hxy as [Hxy_silent Hxy_ns].
     destruct Hyz as [Hyz_initial Hyz].
-    destruct Hyz as [Hyz_silent Hyz_ns]. 
+    destruct Hyz as [Hyz_silent Hyz_ns].
+    unfold weakSimulation. 
     repeat split. 
-    + (* clear Hxy_ns Hyz_ns Hxy_silent Hyz_silent. *)
+    + (* initial case *)
       intros x' initial_x_x'. 
       specialize Hxy_initial with x'. destruct Hxy_initial; eauto;
       destruct H as [y' H];  specialize Hyz_initial with y'; destruct Hyz_initial;
       destruct H; eauto; destruct H1 as [H1 H2];
       destruct H0 as [z' H3]; destruct H3 as [H3 H4]; destruct H4 as [H4 H5].
+    (* initial y y' , Rxy x' y' , l x x' = l y y'
+       initial z z' , Ryz y' z' , l y y' = l z z' *)
     ++ left. exists z'; repeat split; eauto.
-    +++ apply rc with (b := y'); eauto.
+    +++ unfold rel_dot. exists y'; eauto.
     +++ rewrite H2. eauto.
+    (* now... z' is a silent label 
+       l z z' = inr silentlabel /\
+       (exists r' : st z, silentstar z z' r' /\ l z r' = l y y') *)
     ++ right. exists z'; repeat split; eauto.
-    +++ apply rc with (b := y'); eauto. 
+    +++ unfold rel_dot. exists y'; eauto. 
     +++ destruct H5 as [H5 H6]; eauto.
     +++ destruct H5 as [H5 H6]; eauto.
         destruct H6 as [z'' H6].
         destruct H6 as [H6 H7].
         exists z''; split; eauto. rewrite H7. eauto.
-    ++ destruct H2. destruct H2 as [y'' H2]. destruct H2.
+    (* here is where we struggle. 
+       now... y' is a silent label 
+       l y y' = inr silentlabel /\
+       (exists r' : st y, silentstar y y' r' /\ l y r' = l x x')
+    *)
+    ++ admit. (*  destruct H2. destruct H2 as [y'' H2]. destruct H2.
        right. exists z'. repeat split; eauto.
-    +++ apply rc with (b := y'); eauto.
+    +++ unfold rel_dot. exists y'; eauto.
     +++ rewrite <- H5. eauto.
     +++ induction H2. 
     ++++ exists z'; split.
@@ -167,85 +236,26 @@ Proof.
     +++++ eauto.
     +++++ clear H0.  rewrite <- H6. clear H6.
           destruct (l y s') as [a|].
-    ++++++ apply Hyz_ns with (p' := s') (a := a) in H9.
+    ++++++ apply Hyz_ns with (p' := s'') (a := a) in H9; try (split; eauto).
     +++++++ destruct H9. destruct H0. destruct H0. destruct H0.
           destruct H6. destruct H10.
           destruct H4. subst.   destruct H9.   
-         apply IHsilentstar. inversion H0.
-
-
-
-
-
-          exists z''. split; eauto. rewrite <- H6.
-          destruct (l y s') as [a |].
-    ++++++ clear H0 H7. inversion H4; subst.        
-
-
-
-
-    +++ induction H2.
-    ++++
-    
-    
-    
-    
-    exists z'; split.
-    +++++ apply star_refl.
-    +++++ rewrite <- H5. eauto.
-    ++++ apply IHsilentstar. clear IHsilentstar.
-          rewrite <- H6. 
-        specialize Hyz_silent with y'' z'.  inversion H2; subst.  
-    
-    
-    exists z'. split.
-    ++++   
-
-
-
-
-
-
-
-
-
-
-
-        specialize H6 with r'.
-        destruct H6 as [H6 H7].
-        eauto.
-    +++ destruct H5 as [H5 H6]. specialize H6 with r'.
-        destruct H6 as [H6 H7].
-        rewrite H7. eauto.
-    ++ right. exists z'. repeat split; eauto.
-    +++ apply rc with (b := y'); eauto.
-    +++ destruct H2. rewrite <- H5. eauto.
-    +++ eapply star_trans.    destruct H5 as [H5 H6]; eauto. 
-
-
-
-        destruct H6 as [z'' H6].
-        destruct H6 as [H6 H7].
-        exists z''; split.
-    ++++ eauto.
-    ++++ rewrite H7. eauto.
-    ++ destruct H2. destruct H2 as [y'' H2]. destruct H2 as [H2 H6].
-       induction H2.
-       (* silentstar y y' y'' *)
-    +++ left. exists z'. repeat split; eauto.
-    ++++ apply rc with (b := s); subst; eauto.
-    ++++ rewrite <- H6. subst. eauto.
-    +++ apply IHsilentstar; eauto.
-    ++++  
-    
-    
-    
-    subst. right. exists z'. repeat split; eauto.
-    ++++ apply rc with (b := y'); subst; eauto.
-    ++++ rewrite <- H5. eauto.
-    ++++ exists  discriminate.     
+         apply IHsilentstar. inversion H0. *)
+    (* now z' and y' are silent labels 
+       l z z' = inr silentlabel /\
+       (exists r' : st z, silentstar z z' r' /\ l z r' = l y y')
+       l y y' = inr silentlabel /\
+       (exists r' : st y, silentstar y y' r' /\ l y r' = l x x')
+    *)
+    ++ right. 
+        
  
      Admitted. 
+
+(* potentially we need to say more about the finite set?? 
+ * WB for LTS weighted over simirings: https://arxiv.org/pdf/1310.4106.pdf 
+ * verification on infinite structures : 
+   https://www.sciencedirect.com/science/article/abs/pii/B9780444828309500278 *)
 
 (* need to define equal... and prove that it's an equivalence relation 
  * maybe isomorphism as equivalence ...?
@@ -263,3 +273,5 @@ Lemma WB_antisym : forall x y,
  * 3. incomparable *)
 
 (* Consider sets of graph comparison *)
+
+(* check out: Algorithms for Computing Weak Bisimulation Equivalence for algorithms in practice *)
