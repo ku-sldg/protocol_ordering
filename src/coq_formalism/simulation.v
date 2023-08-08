@@ -79,7 +79,7 @@ Definition weakSimulation' (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) :=
 
 (* initial case. The roots are related by R *)
 (forall (s : S1.(st)), S1.(initial) s -> 
-(exists (r : S2.(st)), S2.(initial) r -> R s r /\ S1.(l) s = S2.(l) r)) /\ 
+(exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S1.(l) s = S2.(l) r)) /\ 
 
 (* if there is a silent step in S1 then there exists some related silent step in S2 *)
 ( forall p q, R p q -> forall p', S1.(step) p p' /\ S1.(l) p = inr silentlabel  -> 
@@ -123,8 +123,18 @@ Proof.
       clear Hxy_other Hyz_other.
       specialize Hxy with x'. destruct Hxy as [y1 Hxy]. eauto.
       specialize Hyz with y1.
-      destruct Hyz. destruct Hxy.
-      Abort. 
+      destruct Hyz as [z1 Hyz]. destruct Hxy. eauto.
+      exists z1. repeat split.
+    ++ destruct Hyz; eauto.
+    ++ unfold rel_dot. destruct Hxy as [Hxy1 Hxy2]. destruct Hxy2 as [Hxy2 Hxy3].
+       destruct Hyz as [Hyz1 Hyz2]. destruct Hyz2 as [Hyz2 Hyz3].
+       exists y1; eauto.
+    ++ destruct Hxy as [Hxy1 Hxy2]. destruct Hxy2 as [Hxy2 Hxy3].
+       destruct Hyz as [Hyz1 Hyz2]. destruct Hyz2 as [Hyz2 Hyz3].
+       rewrite <- Hyz3. eauto.
+    + admit.
+    + admit.
+Admitted.   
 
 (* Defining a weak simulation. This is a one-way relation between two LTS.
  * There are three cases.  *)
@@ -252,7 +262,7 @@ Proof.
  
      Admitted. 
 
-(* potentially we need to say more about the finite set?? 
+(* potentially we need to say more about the states. Maybe a finite set?? 
  * WB for LTS weighted over simirings: https://arxiv.org/pdf/1310.4106.pdf 
  * verification on infinite structures : 
    https://www.sciencedirect.com/science/article/abs/pii/B9780444828309500278 *)
