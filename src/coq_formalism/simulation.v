@@ -132,9 +132,18 @@ Proof.
     ++ destruct Hxy as [Hxy1 Hxy2]. destruct Hxy2 as [Hxy2 Hxy3].
        destruct Hyz as [Hyz1 Hyz2]. destruct Hyz2 as [Hyz2 Hyz3].
        rewrite <- Hyz3. eauto.
+    (* this completes the initial case. *)
     + admit.
     + admit.
 Admitted.   
+
+(* Original initial case 
+    (* initial case *)
+    (forall (s : S1.(st)), S1.(initial) s -> 
+    (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
+    (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
+     exists (r' : S2.(st)), (silentstar S2 r r' /\ S2.(l) r' = S1.(l) s ))) 
+*)
 
 (* Defining a weak simulation. This is a one-way relation between two LTS.
  * There are three cases.  *)
@@ -143,8 +152,8 @@ Definition weakSimulation (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) :=
     (* initial case *)
     (forall (s : S1.(st)), S1.(initial) s -> 
     (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
-    (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
-     exists (r' : S2.(st)), (silentstar S2 r r' /\ S2.(l) r' = S1.(l) s ))) 
+    (exists (r : S2.(st)), S2.(initial) r /\ S2.(l) r = inr silentlabel /\ 
+     exists (r' : S2.(st)), (silentstar S2 r r' /\ R s r' /\ S2.(l) r' = S1.(l) s ))) 
     /\ 
 
     (* if there is a silent step in S1 then there exists some related silent step in S2 *)
@@ -188,9 +197,6 @@ Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Pr
 
 Definition R (X : Type) := X -> X -> Prop.
 
-Definition rel_dot n m p (x: n -> m -> Prop) (y: m -> p -> Prop): n -> p -> Prop :=
-  fun i j => exists2 k, x i k & y k j.
-
 Lemma  WB_trans : forall (x y z : LTS),       
                     ( exists r1, (x <= y) r1 ) -> 
                     ( exists r2, (y <= z) r2 ) -> 
@@ -220,19 +226,28 @@ Proof.
     (* now... z' is a silent label 
        l z z' = inr silentlabel /\
        (exists r' : st z, silentstar z z' r' /\ l z r' = l y y') *)
-    ++ right. exists z'; repeat split; eauto.
+    ++ right. exists z'. repeat split; eauto.
+       destruct H5 as [z'' H5].
+       exists z''. repeat split; destruct H5 as [H5 H6]; destruct H6 as [H6 H7].
+    +++ eauto.
     +++ unfold rel_dot. exists y'; eauto. 
-    +++ destruct H5 as [H5 H6]; eauto.
-    +++ destruct H5 as [H5 H6]; eauto.
-        destruct H6 as [z'' H6].
-        destruct H6 as [H6 H7].
-        exists z''; split; eauto. rewrite H7. eauto.
+    +++ rewrite H7; eauto.
     (* here is where we struggle. 
        now... y' is a silent label 
        l y y' = inr silentlabel /\
-       (exists r' : st y, silentstar y y' r' /\ l y r' = l x x')
-    *)
-    ++ admit. (*  destruct H2. destruct H2 as [y'' H2]. destruct H2.
+       (exists r' : st y, silentstar y y' r' /\ l y r' = l x x') *)
+    ++ right. destruct H2 as [y'' H2].
+       destruct H2 as [H2 H6]. destruct H6 as [H6 H7].
+       exists z'. repeat split; eauto.
+    +++ rewrite <- H5; eauto.
+    +++ apply Hyz_silent with (p' := y'') in H4.
+        destruct H4 as [z'' H4]. destruct H4 as [H4 H8].
+        exists z''. repeat split.
+    ++++ eauto.
+    ++++ unfold rel_dot. exists y''; eauto.
+    ++++ admit.
+    ++++ split; eauto. admit.  
+    (*  destruct H2. destruct H2 as [y'' H2]. destruct H2.
        right. exists z'. repeat split; eauto.
     +++ unfold rel_dot. exists y'; eauto.
     +++ rewrite <- H5. eauto.
