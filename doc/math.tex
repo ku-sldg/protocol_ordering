@@ -1,23 +1,16 @@
-\section{Necessary Background}
+\section{Mathematical Concepts }
 
 \begin{definition}[Homomorphism]
     A (graph) homomorphism $\eta : G \to H$ between graphs $G = (N_G, E_G, l_G)$ and $H = (N_H, E_H, l_H)$ is a function $\eta : N_G \to N_H$ on the nodes such that for every edge $(n_1, n_2) \in E_G$, $(\eta(n_1), \eta(n_2)) \in E_H$, and for every node $n \in N_G$, $l_G(n) = l_H(n)$.  \cite{Rowe:2021:OnOrdering}
 \end{definition}
 
+A homomorphism is a relation between two graphs, $G$ and $H$, where two graphs are homomorphic if there exists some function which maps the nodes of $G$ to the nodes of $H$ such that all edges in $G$ have a corresponding edge in $H$ and all labels in $G$ have related labels in $H$. To prove two graphs are homomorphic, one must prove there exists a function not necessarily that every function produces a homomorphism. Therefore, to prove a homomorphism does not exists, one must prove no functions exists. 
+
 \begin{definition}[Supports/Covers]
     Given two sets of graphs S and T, we say that S supports T iff for every $H \in T$, there is some $G \in S$, such that $G \leq H$. We  say that T covers S iff for every $G \in S$ there is some $H \in T$ such that $G \leq H. $\cite{Rowe:2021:OnOrdering}
 \end{definition}
 
+Rowe defines supports and covers to introduce a relation over sets of graphs. Supports states that, for every graph in $T$, there exists some homomorphism from a graph in $S$ to a graph in $T$. Conversely, covers says that, for every graph in $S$, there exists a homomorphism to some graph in T. We imagine we can apply the ideas of supports and covers to compare sets of graphs using relations besides homomorphisms. 
 
+Through our study, we found that a homomorphism was not the correct way to capture the relationship between attack graphs. 
 
-%\begin{theorem}[Theorem]
-    % This is a sample theorem. 
-%\end{theorem}
-    %
-    % the environments 'definition', 'lemma', 'proposition', 'corollary',
-    % 'remark', and 'example' are defined in the LLNCS documentclass as well.
-    %
-% \begin{proof}
-% Proofs, examples, and remarks have the initial word in italics,
-% while the following text appears in normal font.
-% \end{proof}
