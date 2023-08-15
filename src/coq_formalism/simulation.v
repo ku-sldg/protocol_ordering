@@ -395,6 +395,8 @@ Proof.
  * Here: https://github.com/coq-contribs/ccs/blob/master/Trans_Sys.v 
  * different equivalence's are defined over transition systems  *)
 
+(* consider redefining bisimulation like this... http://lmf.di.uminho.pt/ac-1718/slides/AC1718-2-LTS.pdf *)
+
 Lemma WB_antisym : forall x y, 
                     ( exists r1, weakBisimulation x y r1 ) -> 
                     ( exists r2, weakBisimulation y x r2 ) -> 
