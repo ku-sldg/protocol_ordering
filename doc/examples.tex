@@ -1,1 +1,45 @@
-Here are the examples. 
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{N}{@{}m{0pt}@{}}
+
+We motivate this work specifically in the context of attack trees. 
+
+\subsection{Chase Model Finder}
+
+sys: *target: @p4 (vc p4 sys)
+
+%\begin{figure}[htpb]
+%    \centering 
+%    \input{examples/sys1.tex}
+%    \label{fig:sys1}
+%\end{figure}
+
+\begin{figure}
+\begin{center}
+    \begin{tabular}{ M{3.75cm} | M{5cm} }
+            sys & vc sys seq  \\
+            \hline
+            \hline
+            \\ \input{examples/sys1.tex} & \input{examples/vc-sys-seq1.tex}  \\ [50pt]
+            \\ \input{examples/sys2.tex} & \input{examples/vc-sys-seq2.tex}  \\ [50pt]  
+             & \input{examples/vc-sys-seq3.tex}  \\ [50pt]  
+            \\  & \input{examples/vc-sys-seq4.tex}  \\ [50pt] 
+        \end{tabular}
+    \end{center}
+    \caption{All attack graphs for two protocols}
+\end{figure}
+
+
+\begin{figure}
+    \begin{center}
+        \begin{tabular}{ M{3.75cm} | M{3.75cm} | M{3.75cm} }
+                sys & vc sys seq & ker vc sys seq \\
+                \hline
+                \hline
+                \\ \input{examples/sys1.tex} & \input{examples/vc-sys-seq1.tex} & cell3 \\ [50pt]
+                \\ \input{examples/sys2.tex} & \input{examples/vc-sys-seq2.tex} & cell6 \\ [50pt]  
+                 & \input{examples/vc-sys-seq3.tex} & cell9 \\ [50pt]  
+                \\  & \input{examples/vc-sys-seq4.tex} & cell6 \\ [50pt] 
+            \end{tabular}
+        \end{center}
+        \caption{All attack graphs for two protocols}
+    \end{figure}
