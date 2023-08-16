@@ -25,20 +25,28 @@ We also may need to consider properties of functions. A function from set $X$ to
 \subsection{Mathematical Structures}
 
 % Graphs 
+In this work, we are mostly concerned with directed, labeled, acyclic graphs as defined below. 
+
+\begin{definition}[Directed graph]
+    A directed, labeled, acyclic graph is a tuple $ G = (N, E, \ell)$ where $N$ is a finite set of nodes, $E$ is a finite set of edges represented as an edge relation $( N \times N)$, and $\ell$ is an node labeling function $\ell : N \rightarrow L$. 
+\end{definition}
 
 % Transition systems 
-
 \begin{definition}[Transition System]
     A transition system is a pair $(S,T)$ where $S$ is the set of states and $T$ is the transition relation between states $ ( S \times S )$. We say some state $p$ transitions to $q$ if and only if $(p,q) \in T$. \\ The transition from $p$ to $q$ is denoted $ p \rightarrow q $.
 \end{definition}
 
-% Labeled transition systems 
+One may easily see that transition systems resemble graphs. In this way, we may say that two transition systems are equivalence if they are isomorphic (there exists a bijection between the states and transitions).  
+\todo{what difference between directed graphs and labeled transition systems?} 
 
+If the transitions have labeled, then the transition system becomes a labeled transition system. 
+
+% Labeled transition systems 
 \begin{definition}[Labeled Transition System]
     A labeled transition system is a tuple $(S, L, T)$ where $S$ is the set of states, $L$ is the set of labels, and $T$ is the transition relation between states $ ( S \times L \times S )$. We say some state $p$ transitions to $q$ with label $a$ if and only if $(p,a,q) \in T$. \\ The transition from $p$ to $q$ with label $a$ is denoted $ p \xrightarrow{a} q $.
 \end{definition}
 
-A Kripke structure is a variation of transition systems. In this model, the nodes are reachable states and the edges are teh state transitions. The labeleing function of a Kripke structure maps the nodes to the set of properties that hold within the state. 
+A Kripke structure is another variation of transition systems. In this model, the nodes are reachable states and the edges are the state transitions. The labeleing function of a Kripke structure maps the nodes to the set of properties that hold within the state. 
 
 \begin{definition}[Kripke Structure]
     A Kripke structure is a 4-tuple $(S, I, L, T)$ where $S$ is the set of states, $I$ is the set of initial states, $L$ is a labeling from $S \rightarrow Prop$,  and $T$ is the transition relation between states $ ( S \times S )$. The transition relation is left-total meaning $\forall s \in S, \exists s' \in S$ such that $(s,s') \in R$ 
@@ -53,6 +61,8 @@ A Kripke structure is a variation of transition systems. In this model, the node
 
 A homomorphism is a relation between two graphs, $G$ and $H$, where two graphs are homomorphic if there exists some function which maps the nodes of $G$ to the nodes of $H$ such that all edges in $G$ have a corresponding edge in $H$ and all labels in $G$ have related labels in $H$. To prove two graphs are homomorphic, one must prove there exists a function not necessarily that every function produces a homomorphism. Therefore, to prove a homomorphism does not exists, one must prove no functions exists. 
 
+A homomorphism bestows a preorder i.e. it is reflexive and transitive. If the homomorphism is injective, then the preorder is a partial order (up to an isomorphism). This is because injective homomorphisms imply an isomorphism. 
+
 \begin{definition}[Supports/Covers]
     Given two sets of graphs S and T, we say that S supports T iff for every $H \in T$, there is some $G \in S$, such that $G \leq H$. We  say that T covers S iff for every $G \in S$ there is some $H \in T$ such that $G \leq H. $\cite{Rowe:2021:OnOrdering}
 \end{definition}
@@ -61,14 +71,26 @@ Rowe defines supports and covers to introduce a relation over sets of graphs. Su
 
 Through our study, we found that a homomorphism was not the correct way to capture the relationship between attack graphs. 
 
-\subsection{Bisimulation}
+% Bisimulation
 
-Bisimulation aims to capture what it means for two processes to be equivalent \cite{sangiorgi_2011}. We represent behavior of the system through labeled transition systems which are akin to labeled, directed graphs. 
+Bisimulation is a means of determining process equivalence \cite{sangiorgi_2011}. With this, we can state two processes are equal if they have the same behavior. 
+
+\begin{definition}[Bisimulation]
+    A relation $R$ is a bisimulation if, whenever P $\Re$ Q, for all $\mu$ we have: 
+    \begin{itemize}
+        \item forall $P'$ with $P \rightarrow P'$, exists $Q'$ such that Q $\rightarrow$ $Q'$ and P' $\Re$ Q'
+        \item forall $Q'$ with $Q \rightarrow Q'$, exists $P'$ such that P $\rightarrow$ $P'$ and P' $\Re$ Q'
+    \end{itemize}
+    
+\end{definition}
 
 % properties of bisimulation 
 
-\subsection{Variants of bisimulation}
+% Variants of bisimulation -- weak bisimulation 
 
+\begin{definition}[Weak Bisimulation]
+    
+\end{definition}
 
 
 
