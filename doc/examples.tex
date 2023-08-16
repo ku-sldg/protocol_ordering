@@ -5,7 +5,21 @@ We motivate this work specifically in the context of attack trees.
 
 \subsection{Chase Model Finder}
 
-sys: *target: @p4 (vc p4 sys)
+\begin{center}
+    \begin{tabular}{ M{2.75cm} | c }
+     Protocol Name & Actual protocol  \\
+     \hline 
+     \hline    
+     sys & *target: @p4 (vc p4 sys)  \\ 
+     \hline
+     vc sys seq & *target: @p3 [(a1 p4 vc) $+<+$ @p4 (vc p4 sys)]   \\
+     \hline   
+     ker vc sys seq & *target: @p4 [(ker p4 vc) $+<+$ @p4 (vc p4 sys)] \\ 
+     \hline 
+     rtm ker vc sys seq & *target: @p1 [(rtm p4 ker) $+<+$ @p4 [(ker p4 vc) $+<+$ @p4 (vc p4 sys)]] 
+    \end{tabular}
+    \end{center}
+
 
 %\begin{figure}[htpb]
 %    \centering 
@@ -28,10 +42,11 @@ sys: *target: @p4 (vc p4 sys)
     \caption{All attack graphs for two protocols}
 \end{figure}
 
+We hypothesize that measuring more system components is better. Therefore, we wish to say vc sys seq supports sys. 
 
 \begin{figure}
     \begin{center}
-        \begin{tabular}{ M{3.75cm} | M{3.75cm} | M{3.75cm} }
+        \begin{tabular}{ M{3.75cm} | M{4.75cm} | M{3.75cm} }
                 sys & vc sys seq & ker vc sys seq \\
                 \hline
                 \hline
