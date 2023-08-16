@@ -1,4 +1,51 @@
-\section{Mathematical Concepts }
+\section{Mathematical Concepts}
+
+\subsection{Basics}
+
+Critical to our study is various relations $R$ on a set $X$. We specifically consider the following relations: 
+
+\begin{itemize}
+    \item \emph{reflexive} -- forall $ x \in X$, $R$ x x
+    \item \emph{symmetric} -- forall $ x , y\in X$, $R$ x y $\rightarrow$ $R$ y x
+    \item \emph{transitive} -- forall $ x , y , z\in X$, $R$ x y $\rightarrow$ $R$ y z $\rightarrow$ $R$ x z
+    \item \emph{antisymmetric} -- forall $ x , y\in X$, $R$ x y \& $R$ y x $\rightarrow$ x = y
+    \item an \emph{equivalence} relation is reflexive, symmetric, and transitive 
+    \item a \emph{partial order} is reflexive, antisymmetric, and transitive 
+    \item a \emph{preorder} is reflexive and transitive
+\end{itemize}
+
+We also may need to consider properties of functions. A function from set $X$ to set $Y$ is written $f : X \rightarrow Y$. Here $X$ is the domain while $Y$ is the codomain. A function may also be considered a relation for pairs $(x,y)$ where $f(x) = y$. \emph{Partial} functions may be undefined for elements in the domain while a \emph{total} function is defined for all elements of the domain. We can say various things about properties of functions. We say a function $f : X \rightarrow Y$ is 
+
+\begin{itemize}
+    \item \emph{injective} -- forall $ x , y \in X$, $f(x) = f(y)$ $\rightarrow$  $x= y$
+    \item \emph{surjective} -- forall $y \in Y$, there exists some $x \in X$ with  $f(x) = y$
+    \item a \emph{bijective} function is both injective (one-to-one) and surjective (onto) 
+\end{itemize}
+
+\subsection{Mathematical Structures}
+
+% Graphs 
+
+% Transition systems 
+
+\begin{definition}[Transition System]
+    A transition system is a pair $(S,T)$ where $S$ is the set of states and $T$ is the transition relation between states $ ( S \times S )$. We say some state $p$ transitions to $q$ if and only if $(p,q) \in T$. \\ The transition from $p$ to $q$ is denoted $ p \rightarrow q $.
+\end{definition}
+
+% Labeled transition systems 
+
+\begin{definition}[Labeled Transition System]
+    A labeled transition system is a tuple $(S, L, T)$ where $S$ is the set of states, $L$ is the set of labels, and $T$ is the transition relation between states $ ( S \times L \times S )$. We say some state $p$ transitions to $q$ with label $a$ if and only if $(p,a,q) \in T$. \\ The transition from $p$ to $q$ with label $a$ is denoted $ p \xrightarrow{a} q $.
+\end{definition}
+
+A Kripke structure is a variation of transition systems. In this model, the nodes are reachable states and the edges are teh state transitions. The labeleing function of a Kripke structure maps the nodes to the set of properties that hold within the state. 
+
+\begin{definition}[Kripke Structure]
+    A Kripke structure is a 4-tuple $(S, I, L, T)$ where $S$ is the set of states, $I$ is the set of initial states, $L$ is a labeling from $S \rightarrow Prop$,  and $T$ is the transition relation between states $ ( S \times S )$. The transition relation is left-total meaning $\forall s \in S, \exists s' \in S$ such that $(s,s') \in R$ 
+    
+\end{definition}
+
+\subsection{Properties over structures}
 
 \begin{definition}[Homomorphism]
     A (graph) homomorphism $\eta : G \to H$ between graphs $G = (N_G, E_G, l_G)$ and $H = (N_H, E_H, l_H)$ is a function $\eta : N_G \to N_H$ on the nodes such that for every edge $(n_1, n_2) \in E_G$, $(\eta(n_1), \eta(n_2)) \in E_H$, and for every node $n \in N_G$, $l_G(n) = l_H(n)$.  \cite{Rowe:2021:OnOrdering}
@@ -13,4 +60,15 @@ A homomorphism is a relation between two graphs, $G$ and $H$, where two graphs a
 Rowe defines supports and covers to introduce a relation over sets of graphs. Supports states that, for every graph in $T$, there exists some homomorphism from a graph in $S$ to a graph in $T$. Conversely, covers says that, for every graph in $S$, there exists a homomorphism to some graph in T. We imagine we can apply the ideas of supports and covers to compare sets of graphs using relations besides homomorphisms. 
 
 Through our study, we found that a homomorphism was not the correct way to capture the relationship between attack graphs. 
+
+\subsection{Bisimulation}
+
+Bisimulation aims to capture what it means for two processes to be equivalent \cite{sangiorgi_2011}. We represent behavior of the system through labeled transition systems which are akin to labeled, directed graphs. 
+
+% properties of bisimulation 
+
+\subsection{Variants of bisimulation}
+
+
+
 
