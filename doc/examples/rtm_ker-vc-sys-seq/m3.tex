@@ -1,0 +1,51 @@
+\begin{tikzpicture}[->,>=stealth']
+
+    \node[rectangle,
+          draw,
+          fill = green!30,
+          minimum width = 2cm, 
+          minimum height = 0.5cm
+          ] (ms4) at (0,0) {};
+    \node[] at (ms4.center) {ms4};
+
+
+    \node[rectangle,
+        draw,
+        fill = yellow!30,
+        minimum width = 1.5cm, 
+        minimum height = 0.5cm
+        ] (sys) at (1,1) {};
+    \node[] at (sys.center) {sys};
+
+    \node[rectangle,
+        draw,
+        fill = yellow!30,
+        minimum width = 1.5cm, 
+        minimum height = 0.5cm
+        ] (ker) at (-1,2) {};
+    \node[] at (ker.center) {ker};
+
+    \node[rectangle,
+        draw,
+        minimum width = 1.5cm, 
+        minimum height = 0.5cm
+        ] (ms1) at (-1,3) {};
+    \node[] at (ms1.center) {ms};
+
+    \node[rectangle,
+        draw,
+        minimum width = 1.5cm, 
+        minimum height = 0.5cm
+        ] (ms2) at (-1,1) {};
+    \node[] at (ms2.center) {ms'};
+
+
+    \path[every node/.style={font=\sffamily\small}]
+    %host1 path
+    (ms1) edge [] node [right] {} (ker.north)
+    (ker) edge [] node [right] {} (ms2.north)
+    (ms2) edge [] node [right] {} (ms4.north) 
+    (sys) edge [] node [right] {} (ms4.north) ;
+
+
+\end{tikzpicture}
