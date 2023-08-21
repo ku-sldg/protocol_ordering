@@ -1,3 +1,5 @@
+(* stuck in this file proving transitivity *)
+
 (******************************
     Looking into the following simulations relations 
     - Bisimulation 
@@ -30,6 +32,13 @@ Record LTS : Type := {
 (* some state is an initial state if there does not exists any state which steps to that state *)
 Hypothesis LTS_init : forall lts st2, lts.(initial) st2 <-> forall st1, ~ lts.(step) st1 st2.  
 
+(* The transition system is left total *)
+Hypothesis left_total : forall lts s, exists s', lts.(step) s s'.
+
+(* labels are decidable *)
+Hypothesis label_dec : forall a b: L, {a = b} + {a <> b}.
+
+
 (**********************************************
 * SILENTSTAR AND SILENTPLUS 
 **********************************************)
@@ -37,9 +46,9 @@ Hypothesis LTS_init : forall lts st2, lts.(initial) st2 <-> forall st1, ~ lts.(s
 (* the transitive reflexive closure of silent transitions *)
 Inductive silentstar (lts : LTS) : lts.(st) -> lts.(st) -> Prop := 
 | star_refl : forall (s : lts.(st)), silentstar lts s s
-| star_trans : forall (s s' s'' : lts.(st)), lts.(step) s s' -> 
-                lts.(l) s = inr silentlabel -> 
-                silentstar lts s' s'' ->  silentstar lts s s''.
+| star_trans : forall (s s' : lts.(st)), 
+                (lts.(step) s s' /\ lts.(l) s = inr silentlabel) -> 
+                forall s'', silentstar lts s' s'' ->  silentstar lts s s''.
 
 (* silentplus takes one or more steps *)
 Inductive silentplus (lts : LTS) : lts.(st) -> lts.(st) -> Prop := 
@@ -65,8 +74,8 @@ Theorem silentstar_trans : forall (lts : LTS) x y ,
 Proof.
   intros lts x y. intros H. intros z. induction H.
   + eauto.
-  + intros. apply IHsilentstar in H2. eapply star_trans.
-    eauto. eauto. eauto.
+  + intros. destruct H. apply IHsilentstar in H1. eapply star_trans.
+    eauto. eauto.
 Qed.
 
 (* If you step from one silent state to a labeled state the you must 
@@ -83,9 +92,9 @@ Proof.
  + rewrite H0 in H1. inversion H1.
  + destruct (l lts s') as [b | ] eqn:Heq.
  (* s' is labeled *)
- ++ inversion H3; subst.
+ ++ inversion H. inversion H2; subst.
  +++ exists s; repeat split; intuition; try econstructor.
- +++ rewrite Heq in H5. inversion H5.
+ +++ rewrite Heq in H5. inversion H5. inversion H8.
  (* s' is silent *)
  ++ destruct s0; intuition.
     destruct H5 as [int1].
@@ -111,17 +120,17 @@ Proof.
  (* base case : state steps to itself but it cannot be 
   * labeled and unlabeled at the same time *)
  + rewrite H0 in H1. inversion H1.
- + destruct H3.
- ++ left; eauto.
+ + destruct H2.
+ ++ left; eauto.  intuition.
  ++ intuition.
  (* prove with hypothesis s0 steps to s''*)
  +++ right. exists s0; repeat split; eauto.
  ++++ eapply star_trans; eauto.
       eapply star_refl.
  (* now with hypothesis there is some intermediate step *)
- +++ destruct H6. right; intuition.
+ +++ destruct H2. right; intuition.
      exists s0; repeat split; eauto.
-     eapply star_trans with (s' := x); eauto.
+     eapply star_trans with (s' := s'); eauto.
 Qed.    
 
 (* if you've taken 0 or more steps from a silent state to a labeled state
@@ -134,8 +143,8 @@ Lemma silentstar_slientplus : forall LTS sil lab a,
 Proof.
   intros. induction H.
   + rewrite H1 in H0. inversion H0.
-  + destruct H3.
-  ++ apply star_single with (a := a); eauto.
+  + destruct H2.
+  ++ apply star_single with (a := a); eauto; intuition.
   ++ eapply star_tran with (s' := s0); eauto; intuition.
 Qed. 
 
@@ -145,6 +154,20 @@ Lemma silentplus_silentstar : forall LTS s s',
 Proof.
   intros. induction H; intuition; apply star_trans with (s' := s'); intuition; econstructor.
 Qed. 
+
+(* somethings not right because we should be able 
+   to prove this. 
+Lemma silentstar_imples_step : forall LTS q,
+ LTS.(l) q = inr silentlabel ->
+ forall x, silentstar LTS sil x ->
+ step LTS sil sil.
+Proof.
+  intros. induction H.
+  + admit. 
+  + destruct H3.
+  ++ apply star_single with (a := a); eauto.
+  ++ eapply star_tran with (s' := s0); eauto; intuition.
+Qed. *)
 
 (**********************************************
 * REASONING ABOUT PROPERTIES OVER LTS   
@@ -189,12 +212,13 @@ Definition weakSimulation (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) :=
     /\ 
 
     (* if there is a silent step in S1 then there exists some related silent step in S2 *)
-    ( forall p q, R p q -> forall p', S1.(step) p p' /\ S1.(l) p = inr silentlabel  -> 
-    exists q', silentstar S2 q q' /\ R p' q' /\ S1.(l) p' = S2.(l) q') /\ 
+    ( forall p q, R p q -> forall p', S1.(step) p p' /\ S1.(l) p = inr silentlabel -> 
+    ( exists q', silentstar S2 q q' /\ R p' q' /\ S1.(l) p' = S2.(l) q') )
+    /\ 
     
     (* if there is some labeled step in S1 then there exists some labeled transition in S2 that may include silent states *)
     (forall p q, R p q -> forall p' a, S1.(step) p p' /\ S1.(l) p = inl a -> 
-     exists q1 q2 q', silentstar S2 q q1 /\ S2.(step) q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q' /\ S1.(l) p' = S2.(l) q' ). 
+     exists q1 q2 q', silentstar S2 q q1 /\ S2.(step) q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q'). 
 
 (* use weak simulation as a partial order *)
 Notation "x <= y" := (weakSimulation x y) (at level 70).
@@ -215,18 +239,21 @@ Proof.
     ++ intros. exists p'. split; eauto.
     +++ apply star_trans with (s' := p'); try (rewrite <- H; destruct H0 as [H0 H1]; eauto). apply star_refl.
     ++ intros. exists p. exists p'. exists p'; repeat split.
-    +++ rewrite H. apply star_refl.
+    +++ rewrite <- H; econstructor.
     +++ inversion H0; eauto.
-    +++ inversion H0; eauto.
+    +++ inversion H0; eauto. 
     +++ apply star_refl. 
-Qed.   
+Qed. 
 
 (* two ways of defining relational composition *)
-Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
-| rc : forall a b c, R1 a b -> R2 b c -> relation_comp R1 R2 a c.
+(* Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
+| rc : forall a b c, R1 a b -> R2 b c -> relation_comp R1 R2 a c. *)
 
 Definition rel_dot n m p (x: n -> m -> Prop) (y: m -> p -> Prop): n -> p -> Prop :=
   fun i j => exists2 k, x i k & y k j.
+
+Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
+| rc : forall a c, (exists b, R1 a b /\ R2 b c) -> relation_comp R1 R2 a c.
 
 (* Prove that weak simulation is transitive *)
 Theorem  WS_trans : forall (x y z : LTS),       
@@ -336,52 +363,26 @@ Proof.
         intros x1 z1 Hxy x2 H.
         destruct H.
         destruct Hxy as [y1 Hxy].
-        destruct (l X x2) as [a | ] eqn : l_x2.
-      ++ (* case where x2 is labeled *)
-         apply xy_sil with (p' := x2) in Hxy; intuition.
-         destruct Hxy as [y2]; intuition.
-         apply yz_sil with (p' := y2) in H1.
-      +++ destruct H1 as [z2]; intuition.
-          exists z2; repeat split; intuition.
-      ++++ exists y2; eauto.
-      ++++ rewrite <- H7; rewrite <- H5; eauto.
-      +++ rewrite <- H0. rewrite xy_initial. admit.
+        assert (H' : step X x1 x2 /\ l X x1 = inr silentlabel). { split; eauto. }
+        apply xy_sil with (q := y1) in H'; intuition.
+        destruct H' as [y2]; intuition.
+        destruct (l X x2) as [a |] eqn:l_x2.
+      ++ (* x2 is labeled *) 
+        destruct (l Y y1) as [b |] eqn:l_y1.
+      +++ (* y1 is labeled *)
+          induction H3 as [y1 | ].
+      ++++ destruct (label_dec a b); subst. 
+      +++++  destruct left_total with (lts := Y) (s := y1) as [y2].
+             apply yz_ns with (p' := y1) (a := b) in H1; eauto.
+           destruct H1 as [z2 H1]; destruct H1 as [z3 H1]; destruct H1 as [z' H1]; intuition.
+           exists z'; intuition; eauto.
+      ++++++ admit.
+      ++++++ exists y1; eauto.
+      ++++++   
+           
       +++    
         
-      
-      
-      destruct (l Y y1) as [a' | ] eqn : l_y1.
-         
-
-
-         
-        apply xy_sil with (p' := x2) in Hxy; intuition.
-        destruct Hxy as [y2]; intuition.
-        destruct (l Y y1) as [ a | ].
-      ++  
-
-
-
-        apply yz_sil with (p' := y2) in H1; intuition.
-      
-
-
-
-        destruct (l X x2) as [ a | ] eqn: l_x2. 
-      (* x2 is some label *)
-      ++ apply xy_ns with (p' := x2 ) (a := a) in H1.
-         destruct H1 as [y2]. y3 y4]. 
-
-
-
-
-        apply xy_sil with (p' := x2) in H1.
-        destruct H1 as [y2]; intuition.
-        destruct (l Y y2) as [ a | ].
-        ++  
-
-
-        
+  
  
      Admitted. 
 
