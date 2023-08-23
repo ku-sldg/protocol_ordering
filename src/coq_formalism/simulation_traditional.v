@@ -157,7 +157,7 @@ Qed.
 
 Ltac dest_sp H v := destruct H as [v]; intuition.
 
-Theorem  sim_trans' : forall P Q, 
+Theorem  sim_trans : forall P Q, 
                     (exists r1, similarity P Q r1) -> 
                     forall R, (exists r2, similarity Q R r2) -> 
                     (exists r3, similarity P R r3).
@@ -198,4 +198,77 @@ Proof.
      apply trc_trans with (y := r2); eauto.
 Qed.  
 
-End WeakSimulation. 
+Ltac destruct_all q2 q3 q' H1 := destruct H1 as [q2 H1];  destruct H1 as [q3 H1];  destruct H1 as [q']; intuition.
+
+Ltac exists_all q1 q2 q' := exists q1; exists q2; exists q'.
+
+(* define similarity with steps for labeled case and steps for silent case *)
+Definition similarity' (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
+  (forall P Q, R P Q -> forall P' l, S1.(step_labeled) P l P' -> (exists Q1 Q2 Q', trc S2.(step_silent) Q Q1 /\ S2.(step_labeled) Q1 l Q2 /\ trc S2.(step_silent) Q2 Q' /\ R P' Q')) 
+  /\ 
+  (forall P Q, R P Q -> forall P', S1.(step_silent) P P' -> (exists Q', trc S2.(step_silent) Q Q' /\ R P' Q')).
+
+Theorem  sim_trans' : forall P Q, 
+(exists r1, similarity' P Q r1) -> 
+forall R, (exists r2, similarity' Q R r2) -> 
+(exists r3, similarity' P R r3).
+Proof.
+  intros.
+  destruct H as [RPQ]; intuition.
+  destruct H0 as [RQR]; intuition.
+  exists (relation_comp RPQ RQR).
+  unfold similarity in *.
+  destruct H as [PQ_lab PQ_sil].
+  destruct H0 as [QR_lab QR_sil].
+  split; intros p1 q1 H p2.
+  + (* labeled case *) 
+    intros. 
+    destruct H as [p1 r1].
+    destruct H as [q1]; intuition.
+    eapply PQ_lab with (P' := p2) in H0; intuition; eauto.
+    destruct_all q2 q3 q' H0.
+    generalize dependent r1.
+(*    generalize dependent q'. *)
+    clear H1.
+    
+    
+  (* induction H0.
+  ++ intros. 
+     induction H3. 
+  +++ intros. eapply QR_lab in H2; eauto.
+     destruct_all r2 r3 r' H2.
+     exists_all r2 r3 r'; intuition.
+     econstructor; exists x0; eauto.
+  +++ eapply QR_lab in H2; eauto.
+      destruct_all r2 r3 r' H2.
+      eapply QR_sil in H7; eauto.
+      destruct H7; intuition.
+ 
+      if you proceed by induction on first trc then you are stuck with an unuseable induction hypothesis 
+ 
+      *)
+
+
+
+
+
+    (* try with induction on the second trc *)
+    induction H3.
+  ++ intros.  generalize dependent r1.
+     induction H0.
+  (* 0 trc steps... q2 =l=> q3 *)
+  +++ intros. eapply QR_lab in H2; eauto. destruct_all r2 r3 r' H2.
+      exists_all r2 r3 r'. intuition; eauto. econstructor; intuition; eauto.
+  (* silent step from q0 => q1 =trc=> q2 =l=> q3 *)
+  +++ intuition. apply QR_sil with (P' := y) in H3; intuition.
+      destruct H3 as [r2]; intuition.
+      specialize H2 with r2. intuition.  
+      destruct_all r3 r4 r' H3.
+      exists_all r3 r4 r'; intuition.
+      apply trc_trans with (y := r2); eauto.
+  ++ intuition. generalize dependent r1. induction H0.
+  +++ intuition.  eapply QR_lab in H2; eauto.
+      destruct_all r2 r3 r' H2.
+      (* stuck in the same spot again... the issue is when the second trc is transitive 
+         because you get a weird hypothesis about the labeled step ... *)
+
