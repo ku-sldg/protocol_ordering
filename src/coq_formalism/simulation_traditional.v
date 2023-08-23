@@ -7,6 +7,7 @@
 *)
 
 Require Import Coq.Classes.RelationClasses.
+Require Import Coq.Program.Equality.
 
 Module StrongSimulation.
 
@@ -72,7 +73,43 @@ Record LTS : Type := {
 (* transitive reflexive closure of the states *)
 Inductive trc {A} (R : A -> A -> Prop) : A -> A -> Prop :=
 | TrcRefl : forall x, trc R x x
-| TrcFront : forall x y z, R x y -> trc R y z -> trc R x z.
+| TrcFront : forall x y, R x y -> forall z, trc R y z -> trc R x z.
+
+Theorem trc_trans :  forall {A} (R : A -> A -> Prop) x y, trc R x y
+-> forall z, trc R y z
+  -> trc R x z.
+Proof.
+  intros. induction H.
+  + assumption.
+  + eapply TrcFront.
+  ++ eassumption.
+  ++ apply IHtrc. eauto.
+Qed.  
+
+Inductive silentplus (lts : LTS) : lts.(st) -> lts.(st) -> Prop := 
+| star_single : forall (s s' : lts.(st)), lts.(step_silent) s s' ->  
+                                            silentplus lts s s'
+| star_tran : forall (s s' s'' : lts.(st)), 
+                lts.(step_silent) s s' -> 
+                silentplus lts s' s'' ->  silentplus lts s s''.
+
+Lemma trc_slientplus : forall LTS x y,
+                              LTS.(step_silent) x y ->
+                              trc LTS.(step_silent) x y ->
+                              silentplus LTS x y.
+Proof.
+  intros. induction H0.
+  + econstructor; eauto.
+  + econstructor. eauto.
+Qed.     
+
+Lemma trc_slientplus' : forall LTS y z,
+                              trc LTS.(step_silent) y z ->
+                              silentplus LTS y z.
+Proof.
+  intros. induction H.
+  + econstructor; eauto.
+Abort. 
 
 (* define similarity with steps for labeled case and steps for silent case *)
 Definition similarity (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
@@ -95,9 +132,34 @@ Qed.
 Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
 | rc : forall a c, (exists b, R1 a b /\ R2 b c) -> relation_comp R1 R2 a c.
 
-Theorem  sim_trans : forall P Q R, 
+Lemma last_step : forall lts x y,
+    trc (step_silent lts) x y  -> 
+    x = y \/ exists int, trc (step_silent lts) x int /\ step_silent lts int y.
+Proof.
+  intros.
+  induction H.
+  + left. reflexivity.
+  + inversion IHtrc.
+  ++ subst. right. exists x; split; eauto; econstructor.
+  ++ right. destruct H1 as [x' [H1 H2]].
+     exists x'. split; auto.
+     eapply TrcFront; eauto.
+Qed.
+
+Lemma last_step_is_in_trc : forall lts x y z, 
+  trc (step_silent lts) x y -> 
+  step_silent lts y z -> 
+  trc (step_silent lts) x z.
+Proof. 
+  intros.
+  induction H; eapply TrcFront; eauto; econstructor.
+Qed. 
+
+Ltac dest_sp H v := destruct H as [v]; intuition.
+
+Theorem  sim_trans' : forall P Q, 
                     (exists r1, similarity P Q r1) -> 
-                    (exists r2, similarity Q R r2) -> 
+                    forall R, (exists r2, similarity Q R r2) -> 
                     (exists r3, similarity P R r3).
 Proof.
   intros.
@@ -117,19 +179,23 @@ Proof.
     destruct H2 as [r2]; intuition.
     exists r2; intuition.
     eapply rc; eauto.
-  + (* silent case *) 
-    intros.
+  + (* silent case *)
+    intros.  
     destruct H as [p1 r1].
     destruct H as [q1]; intuition.
-    eapply PQ_sil in H1; intuition; eauto.
-    destruct H1 as [q2]; intuition. 
-    induction H1 as [q1 | q1 q2 q3].
-  ++ (* q1 takes 0 steps *)
-      exists r1. intuition; econstructor.
-      exists q1; intuition.
-  ++ (* q1 takes at least 1 step *) 
-     apply QR_sil with (Q := r1) in H; intuition.
-     destruct H as [r2]; intuition.
-     induction H4 as [r1 | r1 r2 r3].
-  +++ apply IHtrc; eauto.
-Abort. 
+    eapply PQ_sil  with (P' := p2) in H0; eauto.
+    destruct H0 as [q2]; intuition.
+    (* must do something here are trc q1 q2 *)
+    generalize dependent r1.
+    clear H1.  
+    induction H0.
+  ++ intros. exists r1; repeat econstructor; eauto.  
+  ++ intuition. apply QR_sil with (P' := y) in H2; eauto.
+     destruct H2 as [r2]; intuition.
+     specialize H1 with r2. intuition. 
+     destruct H2 as [r3]; intuition.
+     exists r3. intuition.
+     apply trc_trans with (y := r2); eauto.
+Qed.  
+
+End WeakSimulation. 
