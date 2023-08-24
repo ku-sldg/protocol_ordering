@@ -4,7 +4,10 @@
     Looking into the following simulations relations 
     - Bisimulation 
     - Weak Bisimulation 
-    - Branching Bisimulation 
+
+    Assumptions 
+    1. Measurement events are not predicatable by an adversary
+    2. Adversary does not know future measurement events 
     
     By: Anna Fritz
     Date: August 2, 2023 *)
@@ -148,6 +151,21 @@ Proof.
   ++ eapply star_tran with (s' := s0); eauto; intuition.
 Qed. 
 
+(* if you silent star from y1 to y2 and both 
+ * states are labeled then you have taken a step. *)
+ Lemma silentstar_label_step : forall Y y1 y2 a b,
+ silentstar Y y1 y2 ->
+ inl a = l Y y2 ->
+ l Y y1 = inl b ->
+ step Y y1 y2.
+Proof.
+  intros. induction H.
+  + rewrite H1 in H0. inversion H0.
+  + destruct H2.
+  ++ apply star_single with (a := a); eauto; intuition.
+  ++ eapply star_tran with (s' := s0); eauto; intuition.
+Qed. 
+
 Lemma silentplus_silentstar : forall LTS s s', 
  silentplus LTS s s' -> 
  silentstar LTS s s'.
@@ -256,12 +274,12 @@ Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Pr
 | rc : forall a c, (exists b, R1 a b /\ R2 b c) -> relation_comp R1 R2 a c.
 
 (* Prove that weak simulation is transitive *)
-Theorem  WS_trans : forall (x y z : LTS),       
+Theorem  WS_trans : forall (x y : LTS),       
                     ( exists r1, (x <= y) r1 ) -> 
-                    ( exists r2, (y <= z) r2 ) -> 
+                    forall z, ( exists r2, (y <= z) r2 ) -> 
                       exists r3, (x <= z) r3.
 Proof. 
-    intros X Y Z H H0. 
+    intros X Y H Z H0. 
     destruct H as [ Rxy WBxy ].
     destruct H0 as [ Ryz WByz ].
     exists (rel_dot Rxy Ryz).
@@ -363,24 +381,21 @@ Proof.
         intros x1 z1 Hxy x2 H.
         destruct H.
         destruct Hxy as [y1 Hxy].
-        assert (H' : step X x1 x2 /\ l X x1 = inr silentlabel). { split; eauto. }
-        apply xy_sil with (q := y1) in H'; intuition.
-        destruct H' as [y2]; intuition.
-        destruct (l X x2) as [a |] eqn:l_x2.
-      ++ (* x2 is labeled *) 
+        eapply xy_sil in Hxy; eauto.
+        destruct Hxy as [y2]; intuition.
+        clear H. clear H0. 
+        (* before it gets messy *)
         destruct (l Y y1) as [b |] eqn:l_y1.
-      +++ (* y1 is labeled *)
-          induction H3 as [y1 | ].
-      ++++ destruct (label_dec a b); subst. 
-      +++++  destruct left_total with (lts := Y) (s := y1) as [y2].
-             apply yz_ns with (p' := y1) (a := b) in H1; eauto.
-           destruct H1 as [z2 H1]; destruct H1 as [z3 H1]; destruct H1 as [z' H1]; intuition.
-           exists z'; intuition; eauto.
-      ++++++ admit.
-      ++++++ exists y1; eauto.
-      ++++++   
-           
-      +++    
+      ++ (* y1 is labeled *)
+          destruct (l X x2) as [a |] eqn: l_x2.
+          (* x2 and y1 are labeled *)
+      +++ 
+      assert (H' : silentplus Y y1 y2 ). 
+      { apply silentstar_slientplus with (a := b).  assumption. eauto. eauto. }
+      
+      induction H3.
+         
+
         
   
  
