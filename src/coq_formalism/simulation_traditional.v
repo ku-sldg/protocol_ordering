@@ -112,14 +112,14 @@ Proof.
 Abort. 
 
 (* define similarity with steps for labeled case and steps for silent case... this definition is wrong as it does not take into consideration silent transitions for the labeled case  *)
-Definition similarity (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
+Definition similarity_incorrect (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
   (forall P Q, R P Q -> forall P' l, S1.(step_labeled) P l P' -> (exists Q', S2.(step_labeled) Q l Q' /\ R P' Q')) 
   /\ 
   (forall P Q, R P Q -> forall P', S1.(step_silent) P P' -> (exists Q', trc S2.(step_silent) Q Q' /\ R P' Q')).
   
-Theorem sim_refl : forall lts, exists r, similarity lts lts r.
+Theorem sim_refl : forall lts, exists r, similarity_incorrect lts lts r.
 Proof.
-  intros. exists eq. unfold similarity; split; intuition.
+  intros. exists eq. unfold similarity_incorrect; split; intuition.
   (* labeled case *)
   + exists P'; intuition. rewrite <- H; eauto.
   (* silent case *)
@@ -162,15 +162,15 @@ Ltac dest_sp H v := destruct H as [v]; intuition.
 
 (* prove the incorrect def is transitive *)
 Theorem  sim_trans_incorrect : forall P Q, 
-                    (exists r1, similarity P Q r1) -> 
-                    forall R, (exists r2, similarity Q R r2) -> 
-                    (exists r3, similarity P R r3).
+                    (exists r1, similarity_incorrect P Q r1) -> 
+                    forall R, (exists r2, similarity_incorrect Q R r2) -> 
+                    (exists r3, similarity_incorrect P R r3).
 Proof.
   intros.
   destruct H as [RPQ]; intuition.
   destruct H0 as [RQR]; intuition.
   exists (relation_comp RPQ RQR).
-  unfold similarity in *.
+  unfold similarity_incorrect in *.
   destruct H as [PQ_lab PQ_sil].
   destruct H0 as [QR_lab QR_sil].
   split; intros p1 q1 H p2.
@@ -211,72 +211,111 @@ CORRECT SIMILARITY DEFINITION
 *****************************)
 
 (* define similarity with steps for labeled case and steps for silent case *)
-Definition similarity' (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
+Definition similarity (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
   (forall P Q, R P Q -> forall P' l, S1.(step_labeled) P l P' -> (exists Q1 Q2 Q', trc S2.(step_silent) Q Q1 /\ S2.(step_labeled) Q1 l Q2 /\ trc S2.(step_silent) Q2 Q' /\ R P' Q')) 
   /\ 
   (forall P Q, R P Q -> forall P', S1.(step_silent) P P' -> (exists Q', trc S2.(step_silent) Q Q' /\ R P' Q')).
 
-Theorem  sim_trans' : forall P Q, 
-(exists r1, similarity' P Q r1) -> 
-forall R, (exists r2, similarity' Q R r2) -> 
-(exists r3, similarity' P R r3).
+Lemma step_labeled_helper : forall Q x0 l x y, step_labeled Q x0 l x /\ step_silent Q x y -> step_labeled Q x0 l y.
+Proof.
+Abort.
+(* this is what we would need to prove.. but it's not true. So need to rethink. *) 
+
+
+Theorem  sim_trans : forall P Q, 
+(exists r1, similarity P Q r1) -> 
+forall R, (exists r2, similarity Q R r2) -> 
+(exists r3, similarity P R r3).
+Proof.
+intros.
+destruct H as [RPQ]; intuition.
+destruct H0 as [RQR]; intuition.
+exists (relation_comp RPQ RQR).
+unfold similarity in *.
+destruct H as [PQ_lab PQ_sil].
+destruct H0 as [QR_lab QR_sil].
+split; intros p1 q1 H p2.
++ (* labeled case *) 
+  intros. 
+  destruct H as [p1 r1].
+  destruct H as [q1]; intuition.
+  eapply PQ_lab with (P' := p2) in H0; intuition; eauto.
+  destruct_all q2 q3 q' H0.
+  clear H1. 
+  generalize dependent r1.
+  generalize dependent q3.
+  generalize dependent q'.
+  (* q1 -*-> q2 =l=> q3 -*-> q' *)
+  induction H0.
+++ (* x =l=> q3 -*-> q' *)
+   intros. eapply QR_lab in H; eauto.
+   destruct_all r2 r3 r' H.
+   generalize dependent r'.
+   induction H3.
++++ exists_all r2 r3 r'; intuition; eauto.
+    econstructor; eauto.
++++ intuition.     
+    eapply QR_sil in H7; eauto.
+    destruct H7 as [r'']; eauto; intuition.
+    specialize H4 with r''.
+    destruct H4.
+    eapply trc_trans; eauto.
+    eauto.
+    eauto.
+++ intros. 
+   eapply QR_sil in H; eauto.
+   destruct H as [r2]; intuition.
+   specialize IHtrc with q' q3 r2.
+   intuition. 
+   destruct_all r3 r4 r' H7.
+   exists_all r3 r4 r'; intuition.
+   eapply trc_trans; eauto.
+   + (* silent case *)
+   intros.  
+   destruct H as [p1 r1].
+   destruct H as [q1]; intuition.
+   eapply PQ_sil  with (P' := p2) in H0; eauto.
+   destruct H0 as [q2]; intuition.
+   (* must do something here are trc q1 q2 *)
+   generalize dependent r1.
+   clear H1.  
+   induction H0.
+ ++ intros. exists r1; repeat econstructor; eauto.  
+ ++ intuition. apply QR_sil with (P' := y) in H2; eauto.
+    destruct H2 as [r2]; intuition.
+    specialize H1 with r2. intuition. 
+    destruct H2 as [r3]; intuition.
+    exists r3. intuition.
+    apply trc_trans with (y := r2); eauto.
+Qed.
+
+End WeakSimulation.
+
+
+(* maybe this proof will help up understand wehre to go. *)
+Module le_playground. 
+
+Inductive le : nat -> nat -> Prop :=
+| le_n (n : nat) : le n n
+| le_S (n m : nat) : le n m -> le n (S m).
+
+Inductive clos_trans {X: Type} (R: X -> X -> Prop) : X -> X -> Prop :=
+| t_step (x y : X) :
+    R x y ->
+    clos_trans R x y
+| t_trans (x y z : X) :
+    clos_trans R x y ->
+    clos_trans R y z ->
+    clos_trans R x z.
+
+Lemma le_trans : forall n m, le n m -> forall p, le m p -> le n p.
 Proof.
   intros.
-  destruct H as [RPQ]; intuition.
-  destruct H0 as [RQR]; intuition.
-  exists (relation_comp RPQ RQR).
-  unfold similarity in *.
-  destruct H as [PQ_lab PQ_sil].
-  destruct H0 as [QR_lab QR_sil].
-  split; intros p1 q1 H p2.
-  + (* labeled case *) 
-    intros. 
-    destruct H as [p1 r1].
-    destruct H as [q1]; intuition.
-    eapply PQ_lab with (P' := p2) in H0; intuition; eauto.
-    destruct_all q2 q3 q' H0.
-    generalize dependent r1.
-(*    generalize dependent q'. *)
-    clear H1.
-    
-    
-  (* induction H0.
-  ++ intros. 
-     induction H3. 
-  +++ intros. eapply QR_lab in H2; eauto.
-     destruct_all r2 r3 r' H2.
-     exists_all r2 r3 r'; intuition.
-     econstructor; exists x0; eauto.
-  +++ eapply QR_lab in H2; eauto.
-      destruct_all r2 r3 r' H2.
-      eapply QR_sil in H7; eauto.
-      destruct H7; intuition.
- 
-      if you proceed by induction on first trc then you are stuck with an unuseable induction hypothesis 
- 
-      *)
-
-
-
-
-
-    (* try with induction on the second trc *)
-    induction H3.
-  ++ intros.  generalize dependent r1.
-     induction H0.
-  (* 0 trc steps... q2 =l=> q3 *)
-  +++ intros. eapply QR_lab in H2; eauto. destruct_all r2 r3 r' H2.
-      exists_all r2 r3 r'. intuition; eauto. econstructor; intuition; eauto.
-  (* silent step from q0 => q1 =trc=> q2 =l=> q3 *)
-  +++ intuition. apply QR_sil with (P' := y) in H3; intuition.
-      destruct H3 as [r2]; intuition.
-      specialize H2 with r2. intuition.  
-      destruct_all r3 r4 r' H3.
-      exists_all r3 r4 r'; intuition.
-      apply trc_trans with (y := r2); eauto.
-  ++ intuition. generalize dependent r1. induction H0.
-  +++ intuition.  eapply QR_lab in H2; eauto.
-      destruct_all r2 r3 r' H2.
-      (* stuck in the same spot again... the issue is when the second trc is transitive 
-         because you get a weird hypothesis about the labeled step ... *)
-
+  generalize dependent H.
+  generalize dependent n.
+  induction H0.
+  + intros. eauto.
+  + intros. eapply le_S. eapply IHle. eauto.
+Qed.
+(* takeaways: didn't need to destruct both hypothesis but did need to 
+   generalize the first and other variables not used. *)    
