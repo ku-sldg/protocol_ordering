@@ -111,7 +111,7 @@ Proof.
   + econstructor; eauto.
 Abort. 
 
-(* define similarity with steps for labeled case and steps for silent case *)
+(* define similarity with steps for labeled case and steps for silent case... this definition is wrong as it does not take into consideration silent transitions for the labeled case  *)
 Definition similarity (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
   (forall P Q, R P Q -> forall P' l, S1.(step_labeled) P l P' -> (exists Q', S2.(step_labeled) Q l Q' /\ R P' Q')) 
   /\ 
@@ -132,6 +132,7 @@ Qed.
 Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
 | rc : forall a c, (exists b, R1 a b /\ R2 b c) -> relation_comp R1 R2 a c.
 
+(* reframming trc definition to say that the last step is silent *)
 Lemma last_step : forall lts x y,
     trc (step_silent lts) x y  -> 
     x = y \/ exists int, trc (step_silent lts) x int /\ step_silent lts int y.
@@ -146,6 +147,8 @@ Proof.
      eapply TrcFront; eauto.
 Qed.
 
+(* the last step of a transition is in the transitive
+ * reflexive closure *)
 Lemma last_step_is_in_trc : forall lts x y z, 
   trc (step_silent lts) x y -> 
   step_silent lts y z -> 
@@ -157,7 +160,8 @@ Qed.
 
 Ltac dest_sp H v := destruct H as [v]; intuition.
 
-Theorem  sim_trans : forall P Q, 
+(* prove the incorrect def is transitive *)
+Theorem  sim_trans_incorrect : forall P Q, 
                     (exists r1, similarity P Q r1) -> 
                     forall R, (exists r2, similarity Q R r2) -> 
                     (exists r3, similarity P R r3).
@@ -198,9 +202,13 @@ Proof.
      apply trc_trans with (y := r2); eauto.
 Qed.  
 
+(* random Ltac that is useful for the labeled case *)
 Ltac destruct_all q2 q3 q' H1 := destruct H1 as [q2 H1];  destruct H1 as [q3 H1];  destruct H1 as [q']; intuition.
-
 Ltac exists_all q1 q2 q' := exists q1; exists q2; exists q'.
+
+(*****************************
+CORRECT SIMILARITY DEFINITION 
+*****************************)
 
 (* define similarity with steps for labeled case and steps for silent case *)
 Definition similarity' (S1 S2: LTS) (R : S1.(st) -> S2.(st) -> Prop) :=
