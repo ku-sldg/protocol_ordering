@@ -41,6 +41,8 @@ Hypothesis left_total : forall lts s, exists s', lts.(step) s s'.
 (* labels are decidable *)
 Hypothesis label_dec : forall a b: L, {a = b} + {a <> b}.
 
+(* states are decidable *)
+Hypothesis state_dec : forall LTS (a b:LTS.(st)), {a = b} + {a <> b}.
 
 (**********************************************
 * SILENTSTAR AND SILENTPLUS 
@@ -153,17 +155,15 @@ Qed.
 
 (* if you silent star from y1 to y2 and both 
  * states are labeled then you have taken a step. *)
- Lemma silentstar_label_step : forall Y y1 y2 a b,
+ Lemma silentstar_label_step : forall Y y1 y2 b,
  silentstar Y y1 y2 ->
- inl a = l Y y2 ->
  l Y y1 = inl b ->
- step Y y1 y2.
+ exists y2, step Y y1 y2.
 Proof.
-  intros. induction H.
-  + rewrite H1 in H0. inversion H0.
-  + destruct H2.
-  ++ apply star_single with (a := a); eauto; intuition.
-  ++ eapply star_tran with (s' := s0); eauto; intuition.
+  intros.
+  destruct (left_total Y y1) as [y2'].
+  exists y2'.
+  eauto.
 Qed. 
 
 Lemma silentplus_silentstar : forall LTS s s', 
@@ -263,15 +263,13 @@ Proof.
     +++ apply star_refl. 
 Qed. 
 
-(* two ways of defining relational composition *)
-(* Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
-| rc : forall a b c, R1 a b -> R2 b c -> relation_comp R1 R2 a c. *)
-
+(* defining relational composition *)
 Definition rel_dot n m p (x: n -> m -> Prop) (y: m -> p -> Prop): n -> p -> Prop :=
   fun i j => exists2 k, x i k & y k j.
 
-Inductive relation_comp {A B C : Type} (R1 : A -> B -> Prop ) (R2 : B -> C -> Prop ) : A -> C -> Prop :=
-| rc : forall a c, (exists b, R1 a b /\ R2 b c) -> relation_comp R1 R2 a c.
+(* random Ltac that is useful for the labeled case *)
+Ltac destruct_all q2 q3 q' H1 := destruct H1 as [q2 H1];  destruct H1 as [q3 H1];  destruct H1 as [q']; intuition.
+Ltac exists_all q1 q2 q' := exists q1; exists q2; exists q'.
 
 (* Prove that weak simulation is transitive *)
 Theorem  WS_trans : forall (x y : LTS),       
@@ -279,114 +277,127 @@ Theorem  WS_trans : forall (x y : LTS),
                     forall z, ( exists r2, (y <= z) r2 ) -> 
                       exists r3, (x <= z) r3.
 Proof. 
-    intros X Y H Z H0. 
-    destruct H as [ Rxy WBxy ].
-    destruct H0 as [ Ryz WByz ].
-    exists (rel_dot Rxy Ryz).
-    unfold weakSimulation; repeat split.
-    (* initial case *)
-    + destruct WBxy as [xy_initial xy_other].
-      destruct WByz as [yz_initial yz_other].
-      destruct xy_other as [xy_sil xy_ns].
-      destruct yz_other as [yz_sil yz_ns].
-      intros x1.
-      intros init_x1.
-      specialize xy_initial with x1. 
-      destruct xy_initial; auto.
-      (* y an initial state with same label as x *)
-      ++ destruct H as [y1 H].
-         specialize yz_initial with y1.
-         destruct yz_initial. 
-      +++ destruct H; eauto.
-      +++ destruct H0 as [z1 H0].
-          left. exists z1. repeat split.
-      ++++ destruct H0; eauto.
-      ++++ destruct H; destruct H0. destruct H1; destruct H2.
-           exists y1; eauto.
-      ++++ destruct H; destruct H0. destruct H1; destruct H2.
-           rewrite H3; eauto.
-      +++ destruct H0 as [z1 H0]. right.
-          exists z1. repeat split.
-      ++++ destruct H0; eauto.
-      ++++ destruct H; destruct H0. destruct H1; destruct H2.
-           exists y1; eauto.
-      ++++ destruct H; destruct H0. destruct H1; destruct H2.
-           destruct H4; eauto.
-      ++++ destruct H0. destruct H1. destruct H2. destruct H3 as [z2 H3].
-           exists z2. split. 
-      +++++ inversion H3; eauto.
-      +++++ inversion H3. repeat (destruct H).
-            destruct H6. rewrite H7; eauto. 
-      (* exists some y with a silent label so there must be some y' that has the same label as x*)
-      ++ destruct H as [y1 H].
-         destruct H. 
-         apply yz_initial in H.
-         destruct H; eauto.
-      (* left case of initial where labels (y and z) are the same *)
-      +++ right. intuition.
-          destruct H as [z1].
-          exists z1. intuition.
-      ++++ exists y1; eauto.
-      ++++ rewrite <- H5; eauto.
-      ++++ destruct H3 as [y2]. destruct H3. 
-           destruct (l Y y2) as [a | sil] eqn:l_y2.
-      +++++ assert (H' : silentplus Y y1 y2 ). 
-            { apply silentstar_slientplus with (a := a).  assumption. eauto. eauto. }
-            clear H1 H2. generalize dependent z1. 
-            induction H'.
-      ++++++ intros. (* H5 : Ryz s z1 *)  
-             apply yz_sil with (p' := s') in H5; repeat split; eauto. 
-             destruct H5 as [z2]. intuition. exists z2; repeat split; eauto. 
-             rewrite <- H9. rewrite <- H4; eauto.
-      ++++++ intros. apply yz_sil with (p' := s') in H5; repeat split; eauto. 
-             destruct H5 as [z2]. intuition.
-             apply silentplus_silentstar in H'. intuition.
-             specialize H8 with z2. intuition. destruct H8 as [z3].
-             exists z3; repeat split.
-             destruct H8.
-             apply silentstar_trans with (y := z2); eauto.
-             destruct H8; eauto.
-      +++++ destruct sil. exists z1. repeat split; eauto.
-      ++++++ apply star_refl.
-      ++++++ rewrite <- H5. rewrite H0;  eauto.
-      (* right case of initial where z may take silent transitions *) 
-      +++ right. intuition.
-          destruct H as [z1].
-          exists z1. intuition.
-      ++++ exists y1; eauto.
-      ++++ destruct H3 as [y2]. destruct H3. 
-          destruct (l Y y2) as [a | sil] eqn:l_y2.
-      +++++ assert (H' : silentplus Y y1 y2 ). 
-            { apply silentstar_slientplus with (a := a).  assumption. eauto. eauto. }
-            clear H1 H2 H4 H6. generalize dependent z1. 
-            induction H'.
-      ++++++ intros.  apply yz_sil with (p' := s') in H4; repeat split; eauto. 
-             destruct H4 as [z2]. intuition. 
-             exists z2; repeat split; eauto. 
-             rewrite <- H8. rewrite l_y2. eauto.   
-      ++++++ intros.  apply yz_sil with (p' := s') in H4; repeat split; eauto. 
-             destruct H4 as [z2]. intuition.
-             apply silentplus_silentstar in H'. intuition.
-             specialize H7 with z2. intuition. destruct H9 as [z3].
-             exists z3; repeat split. destruct H7. 
-             apply silentstar_trans with (y := z2); eauto.
-             destruct H7; eauto.
-      +++++ destruct sil. exists z1. repeat split; eauto.
-      ++++++ apply star_refl.
-      ++++++ rewrite <- H5. eauto.
-      + destruct WBxy as [xy_initial xy_other].
-        destruct WByz as [yz_initial yz_other].
-        destruct xy_other as [xy_sil xy_ns].
-        destruct yz_other as [yz_sil yz_ns]. 
-        intros x1 z1 Hxy x2 H.
-        destruct H.
-        destruct Hxy as [y1 Hxy].
-        eapply xy_sil in Hxy; eauto.
-        destruct Hxy as [y2]; intuition.
-        clear H. clear H0. 
-        (* before it gets messy *)
-        destruct (l Y y1) as [b |] eqn:l_y1.
-      ++ (* y1 is labeled *)
+  intros X Y H Z H0. 
+  destruct H as [ Rxy WBxy ].
+  destruct H0 as [ Ryz WByz ].
+  exists (rel_dot Rxy Ryz).
+  unfold weakSimulation; repeat split.
+  (* initial case *)
+  + destruct WBxy as [xy_initial xy_other].
+    destruct WByz as [yz_initial yz_other].
+    destruct xy_other as [xy_sil xy_ns].
+    destruct yz_other as [yz_sil yz_ns].
+    intros x1.
+    intros init_x1.
+    specialize xy_initial with x1. 
+    destruct xy_initial; auto.
+    (* y an initial state with same label as x *)
+  ++ destruct H as [y1 H].
+      specialize yz_initial with y1.
+      destruct yz_initial. 
+  +++ destruct H; eauto.
+  +++ destruct H0 as [z1 H0].
+      left. exists z1. repeat split.
+  ++++ destruct H0; eauto.
+  ++++ destruct H; destruct H0. destruct H1; destruct H2.
+        exists y1; eauto.
+  ++++ destruct H; destruct H0. destruct H1; destruct H2.
+        rewrite H3; eauto.
+  +++ destruct H0 as [z1 H0]. right.
+      exists z1. repeat split.
+  ++++ destruct H0; eauto.
+  ++++ destruct H; destruct H0. destruct H1; destruct H2.
+        exists y1; eauto.
+  ++++ destruct H; destruct H0. destruct H1; destruct H2.
+        destruct H4; eauto.
+  ++++ destruct H0. destruct H1. destruct H2. destruct H3 as [z2 H3].
+        exists z2. split. 
+  +++++ inversion H3; eauto.
+  +++++ inversion H3. repeat (destruct H).
+        destruct H6. rewrite H7; eauto. 
+  (* exists some y with a silent label so there must be some y' that has the same label as x*)
+  ++ destruct H as [y1 H].
+      destruct H. 
+      apply yz_initial in H.
+      destruct H; eauto.
+  (* left case of initial where labels (y and z) are the same *)
+  +++ right. intuition.
+      destruct H as [z1].
+      exists z1. intuition.
+  ++++ exists y1; eauto.
+  ++++ rewrite <- H5; eauto.
+  ++++ destruct H3 as [y2]. destruct H3. 
+        destruct (l Y y2) as [a | sil] eqn:l_y2.
+  +++++ assert (H' : silentplus Y y1 y2 ). 
+        { apply silentstar_slientplus with (a := a).  assumption. eauto. eauto. }
+        clear H1 H2. generalize dependent z1. 
+        induction H'.
+  ++++++ intros. (* H5 : Ryz s z1 *)  
+          apply yz_sil with (p' := s') in H5; repeat split; eauto. 
+          destruct H5 as [z2]. intuition. exists z2; repeat split; eauto. 
+          rewrite <- H9. rewrite <- H4; eauto.
+  ++++++ intros. apply yz_sil with (p' := s') in H5; repeat split; eauto. 
+          destruct H5 as [z2]. intuition.
+          apply silentplus_silentstar in H'. intuition.
+          specialize H8 with z2. intuition. destruct H8 as [z3].
+          exists z3; repeat split.
+          destruct H8.
+          apply silentstar_trans with (y := z2); eauto.
+          destruct H8; eauto.
+  +++++ destruct sil. exists z1. repeat split; eauto.
+  ++++++ apply star_refl.
+  ++++++ rewrite <- H5. rewrite H0;  eauto.
+  (* right case of initial where z may take silent transitions *) 
+  +++ right. intuition.
+      destruct H as [z1].
+      exists z1. intuition.
+  ++++ exists y1; eauto.
+  ++++ destruct H3 as [y2]. destruct H3. 
+      destruct (l Y y2) as [a | sil] eqn:l_y2.
+  +++++ assert (H' : silentplus Y y1 y2 ). 
+        { apply silentstar_slientplus with (a := a).  assumption. eauto. eauto. }
+        clear H1 H2 H4 H6. generalize dependent z1. 
+        induction H'.
+  ++++++ intros.  apply yz_sil with (p' := s') in H4; repeat split; eauto. 
+          destruct H4 as [z2]. intuition. 
+          exists z2; repeat split; eauto. 
+          rewrite <- H8. rewrite l_y2. eauto.   
+  ++++++ intros.  apply yz_sil with (p' := s') in H4; repeat split; eauto. 
+          destruct H4 as [z2]. intuition.
+          apply silentplus_silentstar in H'. intuition.
+          specialize H7 with z2. intuition. destruct H9 as [z3].
+          exists z3; repeat split. destruct H7. 
+          apply silentstar_trans with (y := z2); eauto.
+          destruct H7; eauto.
+  +++++ destruct sil. exists z1. repeat split; eauto.
+  ++++++ apply star_refl.
+  ++++++ rewrite <- H5. eauto.
+  + destruct WBxy as [xy_initial xy_other].
+    destruct WByz as [yz_initial yz_other].
+    destruct xy_other as [xy_sil xy_ns].
+    destruct yz_other as [yz_sil yz_ns]. 
+    intros x1 z1 Hxy x2 H.
+    destruct H.
+    destruct Hxy as [y1 Hxy].
+    eapply xy_sil in Hxy; eauto.
+    destruct Hxy as [y2]; intuition.
+    clear H. clear H0. 
+    (* before it gets messy *)
+    destruct (l Y y1) as [b |] eqn:l_y1.
+  ++ (* y1 is labeled *)
+     destruct (left_total Y y1) as [y2'].
+     destruct (state_dec Y y2 y2'); subst.
+     eapply yz_ns in H1; eauto.
+  +++ 
+     destruct_all z2 z3 z' H1.
+     admit.
+  +++ 
+  
+
+
+
+          
+
           destruct (l X x2) as [a |] eqn: l_x2.
           (* x2 and y1 are labeled *)
       +++ 
