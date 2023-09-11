@@ -216,13 +216,20 @@ Definition invariantFor (sys : LTS) (invariant : sys.(st) -> Prop) :=
 * DEFINING WEAK SIMULATION  
 **********************************************)
 
+(* Three cases for graph comparison 
+ * 1. <= /\ = -> = 
+ * 2. <= /\ <> -> < 
+ * 3. incomparable 
+ 
+ * We prove our definition of weak simulation is a partial order *)
+
 (* Our definition of weak simulation. 
  * This is a one-way relation between two LTS.
  * There are three cases.  *)
-Definition weakSimulation (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) := 
+Definition weakSimulation_incorrect (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) := 
 
     (* initial case 
-     * with added detail to reason about silent labels *)
+     * if initial state is labeled... it should have a corresposing initial case  *)
     (forall (s : S1.(st)), S1.(initial) s -> 
     (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
     (exists (r : S2.(st)),  S2.(initial) r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
@@ -239,7 +246,7 @@ Definition weakSimulation (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) :=
      exists q1 q2 q', silentstar S2 q q1 /\ S2.(step) q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q'). 
 
 (* use weak simulation as a partial order *)
-Notation "x <= y" := (weakSimulation x y) (at level 70).
+Notation "x <= y" := (weakSimulation_incorrect x y) (at level 70).
 
 (**********************************************
 * PROPERTIES OF WEAK SIMULATION    
@@ -251,7 +258,7 @@ Proof.
      intros.
     (* exists r : st x -> st x -> Prop, *) 
     exists eq.  
-    unfold weakSimulation. split.
+    unfold weakSimulation_incorrect. split.
     + intros. left. exists s; eauto.
     + split.
     ++ intros. exists p'. split; eauto.
@@ -271,7 +278,9 @@ Definition rel_dot n m p (x: n -> m -> Prop) (y: m -> p -> Prop): n -> p -> Prop
 Ltac destruct_all q2 q3 q' H1 := destruct H1 as [q2 H1];  destruct H1 as [q3 H1];  destruct H1 as [q']; intuition.
 Ltac exists_all q1 q2 q' := exists q1; exists q2; exists q'.
 
-(* Prove that weak simulation is transitive *)
+(* Prove that weak simulation is transitive... 
+  the definition is incorrect yet the proof works for
+  the initial case so I will keep it around for now  *)
 Theorem  WS_trans : forall (x y : LTS),       
                     ( exists r1, (x <= y) r1 ) -> 
                     forall z, ( exists r2, (y <= z) r2 ) -> 
@@ -281,7 +290,7 @@ Proof.
   destruct H as [ Rxy WBxy ].
   destruct H0 as [ Ryz WByz ].
   exists (rel_dot Rxy Ryz).
-  unfold weakSimulation; repeat split.
+  unfold weakSimulation_incorrect; repeat split.
   (* initial case *)
   + destruct WBxy as [xy_initial xy_other].
     destruct WByz as [yz_initial yz_other].
@@ -390,27 +399,52 @@ Proof.
      eapply yz_ns in H1; eauto.
   +++ 
      destruct_all z2 z3 z' H1.
+     (* impossible to prove this case bc of the way its defined *)
      admit.
-  +++ 
+Abort. 
   
 
+(* this is the correct definition of weak simulation *)
+Definition weakSimulation (S1 S2 : LTS) (R: S1.(st) -> S2.(st) -> Prop) := 
 
+    (* initial case 
+     * with added detail to reason about silent labels *)
+    (forall (s : S1.(st)), S1.(initial) s -> 
+    (exists (r : S2.(st)), S2.(initial) r /\ R s r /\ S1.(l) s = S2.(l) r) \/ 
+    (exists (r : S2.(st)),  S2.(initial) r /\ R s r /\ S2.(l) r = inr silentlabel /\ 
+     exists (r' : S2.(st)), (silentstar S2 r r' /\ S2.(l) r' = S1.(l) s )))
+    /\ 
 
-          
+    (* if there is a silent step in S1 then there exists some related silent step in S2 *)
+    ( forall p q, R p q -> forall p', S1.(step) p p' /\ S1.(l) p = inr silentlabel -> 
+    ( exists q', silentstar S2 q q' /\ R p' q') )
+    /\ 
+    
+    (* if there is some labeled step in S1 then there exists some labeled transition in S2 that may include silent states *)
+    (forall p q, R p q -> forall p' a, S1.(step) p p' /\ S1.(l) p = inl a -> 
+     exists q1 q2 q', silentstar S2 q q1 /\ S2.(step) q1 q2 /\ S2.(l) q1 = inl a /\ silentstar S2 q2 q' /\ R p' q'). 
 
-          destruct (l X x2) as [a |] eqn: l_x2.
-          (* x2 and y1 are labeled *)
-      +++ 
-      assert (H' : silentplus Y y1 y2 ). 
-      { apply silentstar_slientplus with (a := b).  assumption. eauto. eauto. }
-      
-      induction H3.
-         
+Notation "x <=' y" := (weakSimulation x y) (at level 70).
 
-        
-  
- 
-     Admitted. 
+Theorem  WS_trans : forall (x y : LTS),       
+( exists r1, (x <=' y) r1 ) -> 
+forall z, ( exists r2, (y <=' z) r2 ) -> 
+  exists r3, (x <=' z) r3.
+Proof.
+  intros X Y H Z H0. 
+  destruct H as [ Rxy WBxy ].
+  destruct H0 as [ Ryz WByz ].
+  exists (rel_dot Rxy Ryz).
+  unfold weakSimulation; repeat split.
+  (* initial case *)
+  + admit.
+Admitted.  
+
+End LabeledTransitionSystem.
+
+(*************************
+         NOTES 
+*************************)
 
 (* potentially we need to say more about the states. Maybe a finite set?? 
  * WB for LTS weighted over simirings: https://arxiv.org/pdf/1310.4106.pdf 
@@ -423,16 +457,6 @@ Proof.
  * different equivalence's are defined over transition systems  *)
 
 (* consider redefining bisimulation like this... http://lmf.di.uminho.pt/ac-1718/slides/AC1718-2-LTS.pdf *)
-
-Lemma WB_antisym : forall x y, 
-                    ( exists r1, weakBisimulation x y r1 ) -> 
-                    ( exists r2, weakBisimulation y x r2 ) -> 
-                      x = y.
-
-(* Three cases for graph comparison 
- * 1. <= /\ = -> = 
- * 2. <= /\ <> -> < 
- * 3. incomparable *)
 
 (* Consider sets of graph comparison *)
 
