@@ -355,19 +355,23 @@ Proof.
     eqDec_step_right (m, m') (m', m4).
     eqDec_step_right (m, m') (s, m4).
     simpl.
-    eqDec_state_right m m'.
-    eqDec_state_right m m4.
+    eqDec_state_right c m.
+    eqDec_state_right v m.
+    eqDec_state_right m' m.
+    eqDec_state_right m4 m.
+    eqDec_state_right s m.
     simpl.
     eqDec_step_right (m', m4) (c, m').
     eqDec_step_right (m', m4) (v, m').
     eqDec_step_left (m', m4) (m', m4).
     eqDec_step_right (m', m4) (s, m4).
     simpl.
+    eqDec_state_right c m'.
     eqDec_state_left m' m'.
-    eqDec_state_right m' m4.
+    eqDec_state_right v m'.
+    eqDec_state_right s m'.
+    eqDec_state_right m4 m'.
     reflexivity.
 Qed.
 
 End m5c.
-
-
