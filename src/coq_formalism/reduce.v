@@ -98,9 +98,20 @@ Section Reducer.
     Definition reduce1 (Steps : list (G.(state _ _) * G.(state _ _))) : list (G.(state _ _) * G.(state _ _)) :=
     find_measurement Steps Steps.
 
+    (* We cannot define a recursive fixpoint because of 
+     * Coq's termination checker since it's not obvious 
+     * the list is getting smaller. Instead, we must write 
+     * an inductively defined proposition to express that 
+     * the graphs eventually reduce. This definition relies
+     * on reduce1 to state that if reduce1 returns itself 
+     * then the graph cannot be further reduced. If reduce1
+     * does not return itself, then the reduction call is
+     * recursed. *)
     Inductive reducer : list (G.(state _ _) * G.(state _ _)) -> list (G.(state _ _) * G.(state _ _)) -> Prop :=
     | reduce_done : forall x, reduce1 x = x -> reducer x x
     | reduce_more : forall x y, reduce1 x <> x -> reducer (reduce1 x) y -> reducer x y. 
+
+    (* maybe it might be useful to prove the reducer is transitive? *)
 
 End Reducer.
 
@@ -343,6 +354,10 @@ Ltac eqDec_state_left st1 st2 :=
 Ltac eqDec_state_right st1 st2 :=
     destruct (eqDec_state st1 st2) as [H|H]; [inversion H | clear H].
 
+Definition m5c_steps := m5c.(steps _ _).
+Definition m5c_reduced := ((c, m4) :: (v, m4) :: (s, m4) :: nil).
+
+(* must call reduce1 twice here *)
 Lemma example_m5c' : 
     (reduce1 eqDec_state (reduce1 eqDec_state m5c.(steps _ _))) =
     ((c, m4) :: (v, m4) :: (s, m4) :: nil).
@@ -373,5 +388,56 @@ Proof.
     eqDec_state_right m4 m'.
     reflexivity.
 Qed.
+
+Lemma example_m5c_reducer : 
+reducer eqDec_state m5c_steps m5c_reduced.
+Proof.
+    econstructor.
+    + unfold m5c_steps. simpl. unfold reduce1. simpl. 
+      eqDec_step_right (m, m') (c, m').
+      eqDec_step_left (m, m') (m, m').
+      eqDec_step_right (m, m') (v, m').
+      eqDec_step_right (m, m') (m', m4).
+      eqDec_step_right (m, m') (s, m4).
+      simpl.
+      eqDec_state_right c m.
+      eqDec_state_right m m'.
+      eqDec_state_right m' m.
+      eqDec_state_right v m.
+      eqDec_state_right m4 m.
+      eqDec_state_right s m.
+      intros contra. inversion contra.
+    + econstructor.
+    ++ unfold m5c_steps. simpl. unfold reduce1. simpl.
+        eqDec_step_right (m, m') (c, m').
+        eqDec_step_left (m, m') (m, m').
+        eqDec_step_right (m, m') (v, m').
+        eqDec_step_right (m, m') (m', m4).
+        eqDec_step_right (m, m') (s, m4).
+        unfold replace_measurement.
+        eqDec_state_right c m.
+        eqDec_state_right m' m.
+        eqDec_state_right v m.
+        eqDec_state_right m4 m.
+        eqDec_state_right s m.
+        simpl.
+        eqDec_step_right (m', m4) (c, m').
+        eqDec_step_right (m', m4) (v, m').
+        eqDec_step_left (m', m4) (m', m4).
+        eqDec_step_right (m', m4) (s, m4).
+        simpl.
+        eqDec_state_right c m'.
+        eqDec_state_left m' m'.
+        eqDec_state_right v m'.
+        eqDec_state_right s m'.
+        eqDec_state_right m4 m'.
+        intros contra. inversion contra.
+    ++ unfold m5c_steps. rewrite example_m5c'.
+       econstructor. unfold reduce1.
+       simpl. reflexivity.
+    Qed.
+
+      
+      
 
 End m5c.
