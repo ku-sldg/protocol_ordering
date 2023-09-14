@@ -414,7 +414,6 @@ Definition steps_m5c : list (state_m5c * state_m5c) :=
     (s, m4) ::
     nil.
 
-
 Definition m5c : attackgraph measurement corruption := 
 {|
     state := state_m5c ;
@@ -422,21 +421,21 @@ Definition m5c : attackgraph measurement corruption :=
     label := label_m5c
 |}.
 
-Definition steps_m5b : list (state_m5c * state_m5c) := 
-    (c, m') ::
+(* remove c to m' to have a proper subset *)
+Definition steps_m5c' : list (state_m5c * state_m5c) := 
+    (m, m') ::
     (v, m') ::
     (m', m4) ::
     (s, m4) ::
     nil.
 
-
-Definition m5b : attackgraph measurement corruption := 
+(* new graph that would be proper subset *)
+Definition m5c' : attackgraph measurement corruption := 
 {|
     state := state_m5c ;
-    steps := steps_m5b ;
+    steps := steps_m5c' ;
     label := label_m5c
 |}.
-
 
 Lemma eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
 Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
@@ -454,9 +453,22 @@ Ltac eqDec_state_left st1 st2 :=
     destruct (eqDec_state st1 st2) as [H|H]; [clear H | contradiction].
 Ltac eqDec_state_right st1 st2 :=
     destruct (eqDec_state st1 st2) as [H|H]; [inversion H | clear H].
-
+    
 Definition m5c_steps := m5c.(steps _ _).
+Definition m5c'_steps := m5c'.(steps _ _).
 Definition m5c_reduced := ((c, m4) :: (v, m4) :: (s, m4) :: nil).
+
+(* Proof that m5c' is a proper subset of m5c *)
+Theorem m5c'_propersub_m5c : proper_subset m5c'_steps m5c_steps.
+Proof.
+    unfold proper_subset. split.
+    + simpl. auto.
+    + simpl. unfold not. intros. inversion H. inversion H0.
+      inversion H0. inversion H1.
+      inversion H1. inversion H2.
+      inversion H2. inversion H3.
+      auto.
+Qed.
 
 (* must call reduce1 twice here *)
 Lemma example_m5c' : 
