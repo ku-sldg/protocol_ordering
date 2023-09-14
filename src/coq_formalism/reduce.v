@@ -8,6 +8,9 @@ Assumptions
 By: Sarah Johnson and Anna Fritz
 Date: Sept 11, 2023 *)
 
+(* TODO: prove the isomorphism is an equivalence relation 
+         - equivalence to only take into consideration states in the steps *)
+
 Require Import Coq.Lists.List.
 
 (* Attack graph is parameterized over measurement and corruption events *)
@@ -41,6 +44,12 @@ Section Reducer.
         + destruct eqDec_state with (x:=stx') (y:=sty').
         ++ right. intros contra. rewrite pair_equal_spec in contra. destruct contra. contradiction.
         ++ right. intros contra. rewrite pair_equal_spec in contra. destruct contra. contradiction.
+    Qed.
+
+    (* list of steps are decidably equal *)
+    Lemma eqDec_list_steps: forall (x y : list (G.(state _ _) * G.(state _ _))), {x = y} + {x <> y}.
+    Proof.
+        apply list_eq_dec. apply eqDec_step.
     Qed.
 
     Fixpoint replace_measurement_incomplete (Steps : list (G.(state _ _) * G.(state _ _))) (st st' : (G.(state _ _))) : 
@@ -109,23 +118,7 @@ Section Reducer.
      * recursed. *)
     Inductive reducer : list (G.(state _ _) * G.(state _ _)) -> list (G.(state _ _) * G.(state _ _)) -> Prop :=
     | reduce_done : forall x, reduce1 x = x -> reducer x x
-    | reduce_more : forall x y, reduce1 x <> x -> reducer (reduce1 x) y -> reducer x y. 
-
-    (* Maybe it's useful to prove properties over reducer?  *)
-
-    Theorem reduce1_nil : reduce1 nil = nil.
-    Proof.
-        auto.
-    Qed.
-    
-
-    (* if x reduces to y then x is at least the same as y. *)
-    Theorem reducer_asymmetric : forall x y, reducer x y -> ~ reducer y x.
-    Proof.
-        intros. induction H.
-        (* reduce_done case... this is impossible because y = y *)
-        + unfold not. intros.      
-    Abort.
+    | reduce_more : forall x y, reduce1 x <> x -> reducer (reduce1 x) y -> reducer x y.  
 
     Theorem  reducer_trans : forall x y, reducer x y -> forall z, reducer y z -> reducer x z.
     Proof.
@@ -133,8 +126,80 @@ Section Reducer.
         + eauto.
         + intros. apply reduce_more; eauto.
     Qed.
-      
+    (* want reducer to be more similiar to equivalence *)  
+
 End Reducer.
+
+(**************************
+    STRICTLY LESS THAN 
+ **************************)
+
+Section Comparison. 
+
+Context {measurement : Type}.
+Context {corruption : Type}.
+(* need two attack graphs for comparison now *)
+Context {G : attackgraph measurement corruption}.
+Context {G2 : attackgraph measurement corruption}.
+
+(* Labels and States must have decidable equality *)
+Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
+Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+Hypothesis eqDec_state : forall (x y : G.(state _ _)), {x = y} + {x <> y}.
+
+Print eqDec_step.
+
+Fixpoint existsb ( A : Type) (f : A -> Prop) (l:list A) : Prop := 
+    match l with 
+      | nil => False
+      | a::l => f a \/ existsb A f l
+    end.
+
+    (* fun st2 => G2.(label _ _) st2 = inr c *) 
+
+(* corruption events of x are a subset of corruption events in y *)
+Fixpoint subset {G1 G2 : attackgraph measurement corruption} 
+                (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop :=
+  match x with 
+  | nil => True
+  | (st, _ ) :: xs => match (G1.(label _ _) st) with 
+                     | inr c => existsb _ (fun step => match step with 
+                                                       | (st2, _ ) => G2.(label _ _) st2 = inr c
+                                                       end) y                
+                     (* existsb _ (fun st2 => G2.(label _ _) st2 = inr c) (fst (split y)) *)
+                     | _ => subset xs y 
+                     end
+  end.
+
+  Definition proper_subset (x: list (G.(state _ _) * G.(state _ _))) (y:list (G2.(state _ _) * G2.(state _ _))) := subset x y /\ ~ subset y x. 
+
+(* We say a is strictly less than b (a < b) if 
+ * 1. b has more corruption events 
+ * OR 
+ * 2. b has more time constrained corruption events  *)
+
+ (* define strictly less for corruption events as a proper subset relation *) 
+
+
+End Comparison.
+
+(**************************
+    EQUIVALENCE
+ **************************)
+
+Section Equivalence. 
+
+(* We aim to say two graphs are equivalent if thier reduced forms are isomorphic *)
+
+End Equivalence. 
+
+
+(*   Class strict_partial_order {X : Type} (R : relation X) := {
+    irreflexive := forall a : X, ~ R a a ; 
+    asymmetric := forall a b : X, R a b -> ~ R b a ;
+    transitive := forall a b c: X, R a b -> R b c -> R a c 
+  }. 
+  *)
 
 Module m3b.
 
@@ -354,6 +419,21 @@ Definition m5c : attackgraph measurement corruption :=
 {|
     state := state_m5c ;
     steps := steps_m5c ;
+    label := label_m5c
+|}.
+
+Definition steps_m5b : list (state_m5c * state_m5c) := 
+    (c, m') ::
+    (v, m') ::
+    (m', m4) ::
+    (s, m4) ::
+    nil.
+
+
+Definition m5b : attackgraph measurement corruption := 
+{|
+    state := state_m5c ;
+    steps := steps_m5b ;
     label := label_m5c
 |}.
 
