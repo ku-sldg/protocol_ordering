@@ -111,8 +111,29 @@ Section Reducer.
     | reduce_done : forall x, reduce1 x = x -> reducer x x
     | reduce_more : forall x y, reduce1 x <> x -> reducer (reduce1 x) y -> reducer x y. 
 
-    (* maybe it might be useful to prove the reducer is transitive? *)
+    (* Maybe it's useful to prove properties over reducer?  *)
 
+    Theorem reduce1_nil : reduce1 nil = nil.
+    Proof.
+        auto.
+    Qed.
+    
+
+    (* if x reduces to y then x is at least the same as y. *)
+    Theorem reducer_asymmetric : forall x y, reducer x y -> ~ reducer y x.
+    Proof.
+        intros. induction H.
+        (* reduce_done case... this is impossible because y = y *)
+        + unfold not. intros.      
+    Abort.
+
+    Theorem  reducer_trans : forall x y, reducer x y -> forall z, reducer y z -> reducer x z.
+    Proof.
+        intros x y Hxy. induction Hxy.
+        + eauto.
+        + intros. apply reduce_more; eauto.
+    Qed.
+      
 End Reducer.
 
 Module m3b.
