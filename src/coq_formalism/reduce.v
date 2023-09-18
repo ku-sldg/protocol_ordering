@@ -169,14 +169,9 @@ Fixpoint subset {G1 G2 : attackgraph measurement corruption}
   end.
 (* existsb _ (fun st2 => G2.(label _ _) st2 = inr c) (fst (split y)) *)
 
-Definition subset1 {G1 G2 : attackgraph measurement corruption} 
-                (x : (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop :=
-  match G1.(label _ _) (fst(x)) with 
-    | inr c => existsb _ (fun step => match step with 
-                                    | (st2, _ ) => G2.(label _ _) st2 = inr c
-                                    end) y                
-    | inl r => True 
-  end.
+(* Proper subset using the fixpoint definition *)
+Definition proper_subset' {G1 G2 : attackgraph measurement corruption} 
+(x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := subset x y /\ ~ subset y x. 
 
 (* determine if corruption event in G1 is present in y
  * input: one state in G1 (no need to recurse through G1) and list to search (y) *)
@@ -194,31 +189,35 @@ list (G1.(state _ _) * G1.(state _ _)) -> (list (G2.(state _ _) * G2.(state _ _)
 | sub_nil : forall y, subset_ind nil y
 | sub_head : forall x xs y, st_in_y (fst x) y -> subset_ind xs y -> subset_ind (x::xs) y.
 
+(* Proper subset using the inductive definition *)
+Definition proper_subset {G1 G2 : attackgraph measurement corruption} 
+(x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := subset_ind x y /\ ~ subset_ind y x. 
+
+Notation "x < y" := (proper_subset x y) (at level 70).
+
+
+(****** TIME CONSTRAINED CORRUPTION EVENT SUBSET *)
+
+(* corruption events of x are a subset of corruption events in y *)
+Fixpoint subset2 {G1 G2 : attackgraph measurement corruption} 
+                (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop :=
+  match x with 
+  | nil => True
+  | (st1, st2 ) :: xs => match G1.(label _ _) st1 , G1.(label _ _) st2 with 
+                     | inl m , inr c => existsb _ (fun step => match step with 
+                                                       | (st1', st2') => G2.(label _ _) st2' = inr c /\ G2.(label _ _) st1' = inl m
+                                                       end) y                
+                     | _ , _ => subset2 xs y 
+                     end
+  end.
+
 (* if x is not empty then x cannot be a subset of nil *)
 Theorem not_subset_nil :forall (g1 g2: attackgraph measurement corruption) (x : list (g1.(state _ _) * g1.(state _ _))) (y : list (g2.(state _ _) * g2.(state _ _))) ,
  x <> nil -> y = nil -> ~ subset x y.
-Proof.
-    simpl. intros. unfold not. simpl. induction x.
-    + unfold not in *. intros. apply H; auto.
-    + rewrite H0. destruct a. destruct (g1.(label _ _) s).
-    ++ (* m is a measurement *)
-          
+Proof.    
 Abort.
 
-Theorem proper_subset_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), subset x y -> forall (z : list (g3.(state _ _) * g3.(state _ _)) ), subset y z -> subset x z.
-Proof.
-    intros. induction x.
-    + intros. simpl. eauto.
-    + induction z.
-    ++ intros. admit.
-    ++ intros.  inversion H. discriminate. contradiction. simpl.     
-
-  Definition proper_subset {G1 G2 : attackgraph measurement corruption} 
-  (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := subset x y /\ ~ subset y x. 
-
-  Notation "x < y" := (proper_subset x y) (at level 70).
-
-  (* Prove the proper subset is a strict partial order *)
+(* Prove the proper subset is a strict partial order *)
 
 (* We say a is strictly less than b (a < b) if 
  * 1. b has more corruption events 
@@ -247,17 +246,7 @@ Proof.
         intros g1 g2 g3 x. induction x.
         + intros; simpl. unfold proper_subset. split; auto.
         ++ simpl. auto.
-        ++ unfold not. simpl. intros.     
-    Qed.
-
-
-    
-    
-
-    (* I feel like this should work but I'm not sure how... 
-    Instance proper_sub_order x y : strict_partial_order _ (proper_subset x y). *) 
-
-  
+    Abort. 
 
 End Comparison.
 
@@ -406,11 +395,23 @@ Definition steps_m2c : list (state_m2c * state_m2c) :=
     (k, m4) :: 
     nil.
 
+Definition steps_m2a : list (state_m2c * state_m2c) :=  
+    (s, m4) :: 
+    (k, m4) :: 
+    nil.
+
 
 Definition m2c : attackgraph measurement corruption := 
 {|
     state := state_m2c ;
     steps := steps_m2c ;
+    label := label_m2c
+|}.
+
+Definition m2a : attackgraph measurement corruption := 
+{|
+    state := state_m2c ;
+    steps := steps_m2a ;
     label := label_m2c
 |}.
 
@@ -447,6 +448,21 @@ Proof.
     eqDec_state_right s m.
     eqDec_state_right m4 m.
     reflexivity.
+Qed.
+
+Print subset2. 
+Lemma subset2_m2a_m2c : subset2 m2a.(steps _ _) m2c.(steps _ _).
+Proof.
+    simpl. auto.
+Qed.
+
+Lemma not_subset2_m2c_m2a : ~ subset2 m2c.(steps _ _) m2a.(steps _ _).
+Proof.
+    unfold not; intros.
+    inversion H. inversion H0.
+    inversion H1. inversion H0.
+    inversion H1. inversion H2.
+    inversion H1.
 Qed.
 
 End m2c.
@@ -536,8 +552,8 @@ Definition m5c_steps := m5c.(steps _ _).
 Definition m5c'_steps := m5c'.(steps _ _).
 Definition m5c_reduced := ((c, m4) :: (v, m4) :: (s, m4) :: nil).
 
-(* Proof that m5c' is a proper subset of m5c *)
-Theorem m5c'_propersub_m5c : proper_subset m5c'_steps m5c_steps.
+(* Proof that m5c' is a proper subset (fixpoint def) of m5c *)
+Theorem m5c'_propersub_m5c_fix : proper_subset' m5c'_steps m5c_steps.
 Proof.
     unfold proper_subset. split.
     + simpl. auto.
@@ -546,6 +562,23 @@ Proof.
       inversion H1. inversion H2.
       inversion H2. inversion H3.
       auto.
+Qed.
+
+(* Proof that m5c' is a proper subset of m5c *)
+Theorem m5c'_propersub_m5c_ind : proper_subset m5c'_steps m5c_steps.
+Proof.
+    unfold proper_subset. split.
+    + constructor.
+    ++ simpl. unfold st_in_y.  simpl. auto.
+    ++ constructor.
+    +++  simpl; unfold st_in_y;  simpl.  auto.
+    +++ constructor; simpl. unfold st_in_y.  simpl. auto.
+        constructor; simpl. unfold st_in_y; simpl. auto 10.
+        constructor; simpl.
+    + unfold not. intros. inversion H; subst.
+      destruct H2 eqn:H2'. 
+    ++ inversion e.
+    ++ intuition.  inversion o. inversion H0. inversion H0. inversion H1. inversion H1. inversion H3. inversion H3.  
 Qed.
 
 (* must call reduce1 twice here *)
