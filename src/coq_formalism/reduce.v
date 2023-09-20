@@ -157,6 +157,10 @@ Fixpoint existsb ( A : Type) (f : A -> Prop) (l:list A) : Prop :=
       | a::l => f a \/ existsb A f l
     end.
 
+Inductive existsb_ind ( A : Type) (f : A -> Prop) : (list A) -> Prop :=
+| ex_head : forall a l, f a -> existsb_ind _ f (a::l)
+| ex_tail : forall a l, existsb_ind _ f l -> existsb_ind _ f (a::l).
+
 (********
   Facts about existsb *)
 
@@ -238,10 +242,10 @@ Definition cor_proper_subset' {G1 G2 : attackgraph measurement corruption}
  * input: one state in G1 (no need to recurse through G1) and list to search (y) *)
 Definition find_cor {G1 G2 : attackgraph measurement corruption} (st : G1.(state _ _)) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop := 
     match (G1.(label _ _) st) with 
-    | inr c => existsb _ (fun step => match step with 
+    | inr c => existsb_ind _ (fun step => match step with 
                                     | (st2, _ ) => G2.(label _ _) st2 = inr c
                                     end) y                
-    | inl r => False 
+    | inl r => True 
     end. 
 
 (* incomplete (??) definition of subset_ind *)
@@ -253,23 +257,17 @@ list (G1.(state _ _) * G1.(state _ _)) -> (list (G2.(state _ _) * G2.(state _ _)
 (* prove if x is nonempty then it cannot be a subset of nil *)
 Lemma subset_not_nil : forall G1 G2 a (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))), y = nil -> ~ cor_subset_ind (a::x) y.
 Proof. 
-    intros. subst.
-    intuition.
-    inversion H.
-    subst.
-    unfold find_cor in H2.
-    destruct (G1.(label _ _) (fst a)). 
-    inversion H2.
-    inversion H2.
-Qed.
+(* proof won't work bc (a::x) could be list of measurement events *)
+Abort.
 
-Lemma find_cons : forall G1 (x0: (G1.(state _ _) * G1.(state _ _))) x (xs : list (G1.(state _ _) * G1.(state _ _))), find_cor (fst x0) (xs) -> find_cor (fst x0) (x :: xs).
+Lemma find_cons : forall G1 (x0: (G1.(state _ _) * G1.(state _ _))) x (xs : list (G1.(state _ _) * G1.(state _ _))), 
+    find_cor (fst x0) (xs) -> find_cor (fst x0) (x :: xs).
 Proof.
     intros. unfold find_cor in *.
     destruct (G1.(label _ _) (fst x0)).
-    + inversion H.
-    + simpl in *. auto.
-Qed. 
+    + auto.
+    + simpl in *. apply ex_tail. auto.
+Qed.
 
 (* :( this causes a type error bc you can't use included on things of a different type *)
 Lemma find_cor_trans' : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _))) (y: state measurement corruption G2 * state measurement corruption G2) (ys:list (state measurement corruption G2 * state measurement corruption G2)) (zs : list (G3.(state _ _) * G3.(state _ _))), find_cor (fst x) (ys) (* -> incl ys zs*) -> find_cor (fst x) zs.
@@ -284,25 +282,31 @@ Proof.
     intros. unfold find_cor in *.
     destruct (G1.(label _ _) (fst x)).
     + inversion H.
-    + induction H0.
-    ++ inversion H.
-    ++ apply IHcor_subset_ind.  simpl in *. intuition.
     (* I don't think this is possible??? *)
 Abort. 
 
 
 (* I think this is the correct way to state the Lemma *)
-Lemma find_cor_trans : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _)))
+Lemma find_cor_helper : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _)))
                          (ys:list (state measurement corruption G2 * state measurement corruption G2)), 
                          find_cor (fst x) (ys) -> forall (zs : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind ys zs -> find_cor (fst x) zs.
 Proof.
-    intros G1 G2 G3 x ys H. unfold find_cor in H. destruct (G1.(label _ _) (fst x)).
-    + inversion H.
-    + intros. induction H0.
+    intros G1 G2 G3 x ys H. intros. 
+    unfold find_cor in *. destruct (G1.(label _ _) (fst x)).
+    + auto.
+    + induction H0 as [ | y ys zs].
     ++ inversion H.
-    ++ apply IHcor_subset_ind.  
-    (* or this way??? *)
-Abort. 
+    ++ inversion H; subst. 
+    +++ unfold find_cor in H0. destruct (G2.(label _ _) (fst y)) eqn:contra; auto.
+    ++++ destruct y. simpl in *. 
+        rewrite H3 in contra.
+        inversion contra.
+    ++++ destruct y. simpl in *. 
+    rewrite H3 in contra. inversion contra. subst. auto.
+    +++ apply IHcor_subset_ind. auto. 
+Qed.  
+
+
 
 Lemma cor_subset_ind_trans : forall G1 G2 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))), 
 cor_subset_ind x y -> 
