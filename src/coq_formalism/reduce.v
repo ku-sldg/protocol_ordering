@@ -166,6 +166,24 @@ Inductive existsb_ind ( A : Type) (f : A -> Prop) : (list A) -> Prop :=
 
 Print In.
 
+(* Prove if inductive definition holds then fixpoint definition also holds *)
+Lemma existsb_ind_impl_fix : forall A f l, existsb_ind A f l -> existsb A f l.
+Proof.
+    intros. induction H.
+    + simpl. left. eauto.
+    + simpl. right. eauto.  
+Qed.
+
+(* Prove if fixpoint definition holds then inductive definition also holds *)
+Lemma existsb_fix_impl_ind : forall A f l, existsb A f l -> existsb_ind A f l.
+Proof.
+    intros. induction l.
+    + simpl in *. inversion H.
+    + simpl in *. inversion H.
+    ++ apply ex_head. eauto.
+    ++ apply ex_tail. apply IHl. eauto.  
+Qed.
+
 (* existsb holds iff there exists some element in the list, x, such that f x holds *)
 Lemma existsb_exists :
   forall (A : Type) (f : A -> Prop) (l:list A), existsb _ f l <-> exists x, In x l /\ f x.
@@ -173,17 +191,6 @@ Proof.
   induction l; simpl; intuition; firstorder.
   subst; auto.
 Qed.
-
-Lemma existsb_nth : forall (A : Type) (f : A -> Prop) (l:list A) n d, n < length l ->
-~ existsb _ f l -> ~ f (nth n l d).
-Proof.
-    induction l.
-    inversion 1.
-    simpl; intros.
-    destruct H0.  auto.
-    destruct n ; auto.
-    (* this is true in the standard lib... *)
-Admitted.
 
 (* cannot use In because of the types *)
 
@@ -248,7 +255,7 @@ Definition find_cor {G1 G2 : attackgraph measurement corruption} (st : G1.(state
     | inl r => True 
     end. 
 
-(* incomplete (??) definition of subset_ind *)
+(* Inductively defined corruption subset *)
 Inductive cor_subset_ind {G1 G2 : attackgraph measurement corruption} : 
 list (G1.(state _ _) * G1.(state _ _)) -> (list (G2.(state _ _) * G2.(state _ _))) -> Prop :=
 | sub_nil : forall y, cor_subset_ind nil y
@@ -268,23 +275,6 @@ Proof.
     + auto.
     + simpl in *. apply ex_tail. auto.
 Qed.
-
-(* :( this causes a type error bc you can't use included on things of a different type *)
-Lemma find_cor_trans' : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _))) (y: state measurement corruption G2 * state measurement corruption G2) (ys:list (state measurement corruption G2 * state measurement corruption G2)) (zs : list (G3.(state _ _) * G3.(state _ _))), find_cor (fst x) (ys) (* -> incl ys zs*) -> find_cor (fst x) zs.
-Proof.
-Abort. 
-
-(* I think this is the correct way to state the Lemma *)
-Lemma find_cor_trans : forall G1 G3 (x: (G1.(state _ _) * G1.(state _ _)))
-                         (xs:list (state measurement corruption G1 * state measurement corruption G1)), 
-                         find_cor (fst x) (xs) -> forall (zs : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind xs zs -> find_cor (fst x) zs.
-Proof.
-    intros. unfold find_cor in *.
-    destruct (G1.(label _ _) (fst x)).
-    + inversion H.
-    (* I don't think this is possible??? *)
-Abort. 
-
 
 (* I think this is the correct way to state the Lemma *)
 Lemma find_cor_helper : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _)))
@@ -306,35 +296,42 @@ Proof.
     +++ apply IHcor_subset_ind. auto. 
 Qed.  
 
-
-
-Lemma cor_subset_ind_trans : forall G1 G2 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))), 
-cor_subset_ind x y -> 
-forall G3 (z : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind y z ->
-cor_subset_ind x z.
+Lemma cor_subset_ind_trans : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), 
+cor_subset_ind xs ys -> 
+forall G3 (zs : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind ys zs ->
+cor_subset_ind xs zs.
 Proof.
-    intros G1 G2. intros x y Hxy. induction Hxy.
-    + intros; constructor.
-    + intros. inversion H0; subst; clear H0.
-    ++ intuition. unfold find_cor in *.
-    destruct (G1.(label _ _) (fst x)).
-    +++ inversion H.
-    +++ inversion H.
-    ++ intuition. simpl in *. constructor.
-    +++  admit.
-Abort.   
+    intros G1 G2. intros xs ys Hxy. intros G3 zs Hyz.
+    induction Hxy as [ | x xs ys ].
+    + constructor.
+    + constructor.
+    ++ eapply find_cor_helper; eauto.
+    ++ apply IHHxy. apply Hyz. 
+Qed. 
 
 (* TODO : Prove fixpoint definition is equal to inductive def *)
-
-Theorem cor_subset_eq : forall G1 G2 (x: list (G1.(state _ _) * G1.(state _ _))) ( y : list (G2.(state _ _) * G2.(state _ _))), cor_subset_ind x y <-> cor_subset x y.
+Theorem cor_subset_eq : forall G1 G2 (xs: list (G1.(state _ _) * G1.(state _ _))) ( ys : list (G2.(state _ _) * G2.(state _ _))), cor_subset_ind xs ys <-> cor_subset xs ys.
 Proof.
     intros; split; intros.
-    + induction H.
+    (* prove inductive implies fixpoint *)
+    + induction H as [ | x xs ys ].
     ++ constructor.
-    ++ destruct (G1.(label _ _) (fst (x))).
-    +++ auto. simpl. admit.
+    ++ simpl in *. unfold find_cor in H. destruct (G1.(label _ _) (fst x)).
+    +++ eauto.
+    +++ apply existsb_ind_impl_fix in H. auto.
+    (* prove fixpoint implies inductive *)
+    + induction xs.
+    ++ constructor.
+    ++ destruct (G1.(label _ _) (fst a)) eqn:Hlab.
+    +++ econstructor. 
+    ++++ unfold find_cor. rewrite Hlab. auto.
+    ++++ simpl in *. rewrite Hlab in H. auto.
+    +++ constructor. 
+    ++++ unfold find_cor. rewrite Hlab. unfold cor_subset in H.
+         rewrite Hlab in H. apply existsb_fix_impl_ind in H.
+         auto.
+    ++++ 
 Abort.
-
 
 (* Proper subset using the inductive definition *)
 Definition cor_proper_subset {G1 G2 : attackgraph measurement corruption} 
@@ -381,20 +378,17 @@ Fixpoint time_subset {G1 G2 : attackgraph measurement corruption}
         intros. unfold cor_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
     Qed.
 
-    Ltac invc H := inversion H; clear H. 
+    Ltac invc H := inversion H; clear H.  
 
-    Theorem cor_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), 
-    cor_proper_subset x y -> 
-    forall (z : list (g3.(state _ _) * g3.(state _ _)) ), cor_proper_subset y z -> 
-    cor_proper_subset x z.
+    Theorem cor_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
+    cor_proper_subset xs ys -> 
+    forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), cor_proper_subset ys zs -> 
+    cor_proper_subset xs zs.
     Proof.
-        intros. unfold "<"; invc H; invc H0; split.
-        + clear H2. clear H3. induction H1.
-        ++ constructor.
-        ++ intuition. constructor; eauto. inversion H; subst.   
-        +++ admit.
-        +++ 
-    Abort. 
+        unfold cor_proper_subset in *. split.
+        + intuition; eapply cor_subset_ind_trans; eauto.
+        + unfold not. intros. intuition. apply H4. eapply cor_subset_ind_trans; eauto.
+    Qed. 
 
 End Comparison.
 
