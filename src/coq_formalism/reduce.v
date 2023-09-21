@@ -10,7 +10,7 @@ By: Sarah Johnson and Anna Fritz
 Date: Sept 11, 2023 *)
 
 Require Import Coq.Lists.List.
-Require Import attack_graph.
+Require Export Order.attack_graph.
 
 Section Reducer.
 

@@ -10,7 +10,7 @@
  **************************)
 
 Require Import Coq.Lists.List.
-Require Import attack_graph.
+Require Export Order.attack_graph.
 
  Section Comparison. 
 
