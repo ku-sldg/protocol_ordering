@@ -212,6 +212,17 @@ Proof.
     split; intuition.
 Qed.
 
+(********************************
+
+    DEFINING SUBSETS 
+
+We say a is strictly less than b (a < b) if 
+* 1. b has more corruption events 
+* OR 
+* 2. b has more time constrained corruption events *)
+
+(****** MORE CORRUPTION EVENTS SUBSET *)
+
 (* corruption events of x are a subset of corruption events in y *)
 Fixpoint cor_subset {G1 G2 : attackgraph measurement corruption} 
                 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop :=
@@ -225,21 +236,6 @@ Fixpoint cor_subset {G1 G2 : attackgraph measurement corruption}
                      end
   end.
 (* existsb _ (fun st2 => G2.(label _ _) st2 = inr c) (fst (split y)) *)
-
-Lemma cor_subset_nil_false : forall G1 G2 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))), x <> nil -> y = nil -> ~ cor_subset x y.
-Proof. 
-    intros. subst.
-    intuition. simpl in *.
-    induction x; try contradiction.
-    (* IHx is useless so I don't think you can prove this (in this way)*)
-Abort.
-
-Theorem  cor_subset_trans : forall G1 G2 G3 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))), 
-cor_subset x y -> 
-forall (z : list (G3.(state _ _) * G3.(state _ _))), cor_subset y z ->
-cor_subset x z.
-Proof.
-Abort.
 
 (* Proper subset using the fixpoint definition *)
 Definition cor_proper_subset' {G1 G2 : attackgraph measurement corruption} 
@@ -267,6 +263,7 @@ Proof.
 (* proof won't work bc (a::x) could be list of measurement events *)
 Abort.
 
+(* If corruption event is in xs then it is in (x::xs) *)
 Lemma find_cons : forall G1 (x0: (G1.(state _ _) * G1.(state _ _))) x (xs : list (G1.(state _ _) * G1.(state _ _))), 
     find_cor (fst x0) (xs) -> find_cor (fst x0) (x :: xs).
 Proof.
@@ -276,7 +273,7 @@ Proof.
     + simpl in *. apply ex_tail. auto.
 Qed.
 
-(* I think this is the correct way to state the Lemma *)
+(* Need this helper lemma to prove transitivity *)
 Lemma find_cor_helper : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _)))
                          (ys:list (state measurement corruption G2 * state measurement corruption G2)), 
                          find_cor (fst x) (ys) -> forall (zs : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind ys zs -> find_cor (fst x) zs.
@@ -330,65 +327,150 @@ Proof.
     ++++ unfold find_cor. rewrite Hlab. unfold cor_subset in H.
          rewrite Hlab in H. apply existsb_fix_impl_ind in H.
          auto.
-    ++++ 
+    ++++ (* this last case is hard... makes the proof seem harder than it should be *)
 Abort.
 
 (* Proper subset using the inductive definition *)
 Definition cor_proper_subset {G1 G2 : attackgraph measurement corruption} 
 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := cor_subset_ind x y /\ ~ cor_subset_ind y x. 
 
+(*******************************************
+Prove the proper subset of corruption events is a strict partial order *)
+
+(* define strictly less for corruption events as a proper subset relation *) 
+Class strict_partial_order {X : Type} (R : X -> X -> Prop) := {
+    irreflexive := forall a : X, ~ R a a ; 
+    asymmetric := forall a b : X, R a b -> ~ R b a ;
+    transitive := forall a b c: X, R a b -> R b c -> R a c 
+    }. 
+    
+Theorem cor_irr : forall (g1 : attackgraph measurement corruption) (x : list (g1.(state _ _) * g1.(state _ _)) ), ~ cor_proper_subset x x.
+    Proof.
+    intros. unfold cor_proper_subset. unfold not. intros. inversion H. contradiction.
+    Qed.
+
+Theorem cor_asym : forall (g1 g2 : attackgraph measurement corruption)  (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), cor_proper_subset x y -> ~ cor_proper_subset y x.
+    Proof.
+    intros. unfold cor_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
+    Qed.
+
+Ltac invc H := inversion H; clear H.  
+
+Theorem cor_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
+cor_proper_subset xs ys -> 
+forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), cor_proper_subset ys zs -> 
+cor_proper_subset xs zs.
+    Proof.
+    unfold cor_proper_subset in *. split.
+    + intuition; eapply cor_subset_ind_trans; eauto.
+    + unfold not. intros. intuition. apply H4. eapply cor_subset_ind_trans; eauto.
+    Qed. 
 
 (****** TIME CONSTRAINED CORRUPTION EVENT SUBSET *)
 
 (* corruption events of x are a subset of corruption events in y *)
 Fixpoint time_subset {G1 G2 : attackgraph measurement corruption} 
                 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop :=
-  match x with 
-  | nil => True
-  | (st1, st2 ) :: xs => match G1.(label _ _) st1 , G1.(label _ _) st2 with 
-                     | inl m , inr c => existsb _ (fun step => match step with 
-                                                       | (st1', st2') => G2.(label _ _) st2' = inr c /\ G2.(label _ _) st1' = inl m
-                                                       end) y                
-                     | _ , _ => time_subset xs y 
-                     end
-  end.
+    match x with 
+    | nil => True
+    | (st1, st2 ) :: xs => match G1.(label _ _) st1 , G1.(label _ _) st2 with 
+                        | inl m , inr c => existsb _ (fun step => match step with 
+                                                        | (st1', st2') => G2.(label _ _) st2' = inr c /\ G2.(label _ _) st1' = inl m
+                                                        end) y                
+                        | _ , _ => time_subset xs y 
+                        end
+    end.
 
-(*******************************************
- Prove the proper subset is a strict partial order *)
+(* determine if a time constrained corruption event in G1 is present in y
+* input: one step in G1 (no need to recurse through G1) and list to search (y) *)
+Definition find_time {G1 G2 : attackgraph measurement corruption} (st1 : G1.(state _ _) *  G1.(state _ _)) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop := 
+    match G1.(label _ _) (fst(st1)) , G1.(label _ _) (snd(st1))  with 
+    | inl m , inr c => existsb_ind _ (fun step => match step with 
+                                    | (st1', st2') => G2.(label _ _) st2' = inr c /\ G2.(label _ _) st1' = inl m
+                                    end) y                
+    | _ , _ => True 
+    end. 
 
-(* We say a is strictly less than b (a < b) if 
- * 1. b has more corruption events 
- * OR 
- * 2. b has more time constrained corruption events  *)
+(* Inductively defined corruption subset *)
+Inductive time_subset_ind {G1 G2 : attackgraph measurement corruption} : 
+list (G1.(state _ _) * G1.(state _ _)) -> (list (G2.(state _ _) * G2.(state _ _))) -> Prop :=
+| time_nil : forall y, time_subset_ind nil y
+| time_head : forall x xs y, find_time x y -> time_subset_ind xs y -> time_subset_ind (x::xs) y.
 
- (* define strictly less for corruption events as a proper subset relation *) 
-    Class strict_partial_order {X : Type} (R : X -> X -> Prop) := {
-        irreflexive := forall a : X, ~ R a a ; 
-        asymmetric := forall a b : X, R a b -> ~ R b a ;
-        transitive := forall a b c: X, R a b -> R b c -> R a c 
-    }. 
+Lemma find_time_helper : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _)))
+                         (ys:list (state measurement corruption G2 * state measurement corruption G2)), 
+                         find_time x ys -> forall (zs : list (G3.(state _ _) * G3.(state _ _))), time_subset_ind ys zs -> find_time x zs.
+Proof.
+    intros G1 G2 G3 x ys H. intros. 
+    unfold find_time in *. destruct (G1.(label _ _) (fst x)); auto.
+    destruct (G1.(label _ _) (snd x)); auto.
+    induction H0 as [ | y ys zs].
+    + inversion H.
+    + inversion H; subst.
+    ++ clear H. unfold find_time in H0. destruct (G2.(label _ _) (fst y)) eqn:Hfst; auto.
+    (* fst y is a measurement event *)
+    +++ destruct (G2.(label _ _) (snd y)) eqn:contra ; auto.
+    (* snd y is a measurement  *)
+    ++++ destruct y. simpl in *. inversion H3. 
+        rewrite H in contra.
+        inversion contra.
+    ++++ destruct y. simpl in *.
+         inversion H3. rewrite H in contra. inversion contra.
+         rewrite H2 in Hfst. inversion Hfst. subst. auto.
+    (* fst y is a corruption event *)
+    +++ destruct (G2.(label _ _) (snd y)) eqn:contra ; auto.
+    ++++ destruct y. intuition. simpl in *. rewrite Hfst in H2. inversion H2.
+    ++++ destruct y. intuition. simpl in *. rewrite Hfst in H2. inversion H2. 
+    ++ apply IHtime_subset_ind. auto. 
+Qed.
 
-    Theorem cor_irr : forall (g1 : attackgraph measurement corruption) (x : list (g1.(state _ _) * g1.(state _ _)) ), ~ cor_proper_subset x x.
-    Proof.
-        intros. unfold cor_proper_subset. unfold not. intros. inversion H. contradiction.
-    Qed.
+Theorem time_subset_ind_trans : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), 
+time_subset_ind xs ys -> 
+forall G3 (zs : list (G3.(state _ _) * G3.(state _ _))), time_subset_ind ys zs ->
+time_subset_ind xs zs.
+Proof.
+    intros G1 G2. intros xs ys Hxy. intros G3 zs Hyz.
+    induction Hxy as [ | x xs ys ].
+    + constructor.
+    + constructor.
+    ++ eapply find_time_helper; eauto.
+    ++ apply IHHxy. apply Hyz. 
+Qed.
 
-    Theorem cor_asym : forall (g1 g2 : attackgraph measurement corruption)  (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), cor_proper_subset x y -> ~ cor_proper_subset y x.
-    Proof.
-        intros. unfold cor_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
-    Qed.
+(* TODO : Prove fixpoint definition is equal to inductive def *)
+Theorem time_subset_eq : forall G1 G2 (xs: list (G1.(state _ _) * G1.(state _ _))) ( ys : list (G2.(state _ _) * G2.(state _ _))), time_subset_ind xs ys <-> time_subset xs ys.
+Proof.
+    intros; split; intros.
+    (* prove inductive implies fixpoint *)
+    + induction H as [ | x xs ys ].
+    ++ constructor.
+    ++ simpl in *. unfold find_cor in H.
+Abort.
 
-    Ltac invc H := inversion H; clear H.  
+(* Proper subset using the inductive definition *)
+Definition time_proper_subset {G1 G2 : attackgraph measurement corruption} 
+(x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := time_subset_ind x y /\ ~ time_subset_ind y x.
 
-    Theorem cor_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
-    cor_proper_subset xs ys -> 
-    forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), cor_proper_subset ys zs -> 
-    cor_proper_subset xs zs.
-    Proof.
-        unfold cor_proper_subset in *. split.
-        + intuition; eapply cor_subset_ind_trans; eauto.
-        + unfold not. intros. intuition. apply H4. eapply cor_subset_ind_trans; eauto.
-    Qed. 
+Theorem time_irr : forall (g1 : attackgraph measurement corruption) (x : list (g1.(state _ _) * g1.(state _ _)) ), ~ time_proper_subset x x.
+Proof.
+    intros. unfold time_proper_subset. unfold not. intros. inversion H. contradiction.
+Qed.
+
+Theorem time_asym : forall (g1 g2 : attackgraph measurement corruption)  (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), time_proper_subset x y -> ~ time_proper_subset y x.
+Proof.
+    intros. unfold time_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
+Qed.
+
+Theorem time_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
+time_proper_subset xs ys -> 
+forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), time_proper_subset ys zs -> 
+time_proper_subset xs zs.
+Proof.
+    unfold time_proper_subset in *. split.
+    + intuition; eapply time_subset_ind_trans; eauto.
+    + unfold not. intros. intuition. apply H4. eapply time_subset_ind_trans; eauto.
+Qed. 
+
 
 End Comparison.
 
@@ -538,6 +620,12 @@ Definition steps_m2c : list (state_m2c * state_m2c) :=
     (k, m4) :: 
     nil.
 
+Definition steps_m2b : list (state_m2c * state_m2c) :=  
+    (m', k) ::
+    (s, m4) :: 
+    (k, m4) :: 
+    nil.
+
 Definition steps_m2a : list (state_m2c * state_m2c) :=  
     (s, m4) :: 
     (k, m4) :: 
@@ -548,6 +636,13 @@ Definition m2c : attackgraph measurement corruption :=
 {|
     state := state_m2c ;
     steps := steps_m2c ;
+    label := label_m2c
+|}.
+
+Definition m2b : attackgraph measurement corruption := 
+{|
+    state := state_m2c ;
+    steps := steps_m2b ;
     label := label_m2c
 |}.
 
