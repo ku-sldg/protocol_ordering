@@ -2,8 +2,9 @@
     EQUIVALENCE
  **************************)
 
- (* TODO: prove the isomorphism is an equivalence relation 
-         - equivalence to only take into consideration states in the steps *)
+ (* proved an isomorphism between
+  * attack graphs is an equivalence 
+  * relation *)
 
 Require Import Coq.Lists.List.
 Require Import Order.attack_graph.

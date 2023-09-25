@@ -2,3 +2,4 @@
 attack_graph.v
 reduce.v
 strict_partial_order.v
+equiv.v
