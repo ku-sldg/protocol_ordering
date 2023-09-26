@@ -23,7 +23,7 @@ To reason about comparisons, we divide this research into the following files.
 `strict_partial_order.v` 
 - defining and proving strict partial order between two graphs 
 
-`supports_covers.v`
+`supports.v`
 - proving properties of supports as motivated by Rowe's paper "On Orderings in Security Models"
 
 `example.v`
