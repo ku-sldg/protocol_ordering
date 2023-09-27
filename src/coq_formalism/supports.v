@@ -43,7 +43,7 @@ Definition supports (SS : Ensemble (attackgraph measurement corruption)) (TT : E
 Theorem supports_irr : forall SS, ~ supports SS SS.
 Proof.
     intros. unfold supports. 
-    unfold not. intros. 
+    unfold not. intros. inversion SS.
 Abort. 
 
 Theorem supports_trans : forall SS TT PP, supports SS TT -> supports TT PP -> supports SS PP.

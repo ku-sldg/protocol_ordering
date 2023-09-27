@@ -111,19 +111,21 @@ Section Reducer.
     | reduce_done : forall x, reduce1 x = x -> reducer x x
     | reduce_more : forall x y, reduce1 x <> x -> reducer (reduce1 x) y -> reducer x y.  
 
-    Definition reduce_graph g1 := reducer (g1.(steps _ _)).  
+    Definition step_update (g1 : attackgraph measurement corruption) (newSteps : list (g1.(state _ _) * g1.(state _ _))) :=  {| state := g1.(state _ _) ; steps := newSteps ; label := g1.(label _ _) |}. 
 
-    (* a graph may always reduce to itself *)
-    Theorem reducer_refl : forall (G : attackgraph measurement corruption) (x : list(G.(state _ _) * G.(state _ _))), reducer x x.
+    Theorem  reducer_deterministic : forall G1 (x y z : list (G1.(state _ _) * G1.(state _ _))), 
+        reducer x y -> reducer x z -> y = z.
     Proof.
         intros.
-        induction x.
-        + econstructor. unfold reduce1. eauto.
-        + apply reduce_done. unfold reduce1. 
-    Abort.
-    (* Proof is hard and might not be possible? *)
-
-
+        generalize dependent z.
+        induction H.
+        + intros. inversion H0; subst; eauto.
+          contradiction.
+        + intros. inversion H1; subst.
+        ++ contradiction.
+        ++ apply IHreducer. eauto.
+    Qed.
+    
     (* if a graph reduces from x to y and then y to z then you can say x reduces to z *)
     Theorem  reducer_trans : forall (G : attackgraph measurement corruption) (x : list(G.(state _ _) * G.(state _ _))) (y : list(G.(state _ _) * G.(state _ _))) , reducer x y -> forall (z : list(G.(state _ _) * G.(state _ _))) , reducer y z -> reducer x z.
     Proof.
@@ -143,14 +145,6 @@ Section Reducer.
         + econstructor. eauto. 
         pose proof list_eq_dec.
         pose proof (eqDec_step G).
-        induction X with (A := (state measurement corruption G * state measurement corruption G )) (l := x) (l' := y).
-        intuition.
-
-        
-    Qed.
-    
-
-
-
+    Abort. 
 
 End Reducer.

@@ -73,7 +73,6 @@ split.
 ++ rewrite H6. rewrite H8; eauto.
 Qed. 
 
-
 Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) (f : G1.(state _ _) -> G2.(state _ _))  (g : G2.(state _ _) -> G1.(state _ _))  : Prop := 
   homomorphism G1 G2 f /\ homomorphism G2 G1 g.
 
@@ -99,10 +98,6 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
    exists f12 f21, (isomorphism g1 g2) f12 f21-> 
   (isomorphism g2 g1) f21 f12.
   Proof.
-    intros. eexists. eexists. intros.
-    inversion H. unfold isomorphism. split; eauto.
-  Restart.
-    intros. 
   Abort. 
 
   Theorem isomorphism_sym : forall g1 g2, 
@@ -151,6 +146,36 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
       split; intuition.
     +++ rewrite H9. rewrite H11. eauto.
     +++ rewrite H10. rewrite H12. eauto.
-  Qed.   
+  Qed.
+  
+  Print strict_partial_order.
+
+  Print reducer. 
+
+  (* two graphs are equal if you first reduce then prove isomorphic 
+   * reduce x to y 
+   * reduce a to b 
+   * prove the reduced form is also isomorphic *)
+   Check step_update. 
+
+
+  (* isomorphism of reduced graphs *) 
+  Definition reducer_isomorphism 
+  (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) 
+  (y : list(G1.(state _ _) * G1.(state _ _))) 
+  (b : list(G2.(state _ _) * G2.(state _ _))) 
+  (f : G1.(state _ _) -> G2.(state _ _))  (g : G2.(state _ _) -> G1.(state _ _)) := 
+  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) -> isomorphism (step_update G1 y) (step_update G2 b) f g.
+
+  Theorem reducer_isomorphism_refl : forall G1 y, exists f, reducer_isomorphism G1 G1 y y f f.
+  Proof.
+    intros.
+  Abort.
+
+
+
+
+  (* TODO prove equiv over sets of graphs *)
+  
 
 End Equivalence. 
