@@ -7,6 +7,7 @@
   * relation *)
 
 Require Import Coq.Lists.List.
+Require Import Order.utilities.
 Require Import Order.attack_graph.
 Require Import Order.reduce.
 Require Import Order.strict_partial_order.
@@ -95,12 +96,6 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   Qed.
 
   Theorem isomorphism_sym : forall g1 g2, 
-   exists f12 f21, (isomorphism g1 g2) f12 f21-> 
-  (isomorphism g2 g1) f21 f12.
-  Proof.
-  Abort. 
-
-  Theorem isomorphism_sym : forall g1 g2, 
   ( exists f12 f21, (isomorphism g1 g2) f12 f21 ) -> 
   ( exists g12 g21, (isomorphism g2 g1) g21 g12 ).
   Proof.
@@ -160,20 +155,69 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
 
 
   (* isomorphism of reduced graphs *) 
-  Definition reducer_isomorphism 
+  Definition reducer_isomorphism_wrong 
   (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) 
-  (y : list(G1.(state _ _) * G1.(state _ _))) 
-  (b : list(G2.(state _ _) * G2.(state _ _))) 
-  (f : G1.(state _ _) -> G2.(state _ _))  (g : G2.(state _ _) -> G1.(state _ _)) := 
-  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) -> isomorphism (step_update G1 y) (step_update G2 b) f g.
+  (y : list(G1.(state _ _) * G1.(state _ _))) (b : list(G2.(state _ _) * G2.(state _ _))) := 
+  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) ->  forall f g, isomorphism (step_update G1 y) (step_update G2 b) f g.
 
-  Theorem reducer_isomorphism_refl : forall G1 y, exists f, reducer_isomorphism G1 G1 y y f f.
+  Print reducer_deterministic.
+
+  Theorem reducer_isomorphism_refl : forall G1 b, reducer_isomorphism_wrong G1 G1 b b.
   Proof.
-    intros.
+    intuition. 
+    pose proof isomorphism_refl.
+    unfold reducer_isomorphism_wrong.
+    intros. 
   Abort.
+  
+  (* isomorphism of reduced graphs *) 
+  Definition reducer_isomorphism
+  (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) 
+  (y : list(G1.(state _ _) * G1.(state _ _))) (b : list(G2.(state _ _) * G2.(state _ _))) := 
+  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) ->
+  exists f g, isomorphism (step_update G1 y) (step_update G2 b) f g.
 
+  Theorem reducer_isomorphism_refl : forall G1 b, reducer_isomorphism G1 G1 b b.
+  Proof.
+    intuition. 
+    pose proof isomorphism_refl.
+    unfold reducer_isomorphism.
+    intros. specialize H with (step_update G1 b).
+    inversion H.
+  exists x. exists x. eauto.
+  Qed. 
+  
+  Theorem reducer_isomorphism_sym : forall G1 G2 a b, reducer_isomorphism G1 G2 a b -> reducer_isomorphism G2 G1 b a.
+  Proof.
+  intuition. 
+  pose proof isomorphism_sym.
+  unfold reducer_isomorphism in *.
+  intuition.
+  destruct H1 as [f_g1_g2 H1].
+  destruct H1 as [f_g2_g1 H1].
+  specialize H0 with (step_update G1 a) (step_update G2 b).
+  destruct H0.
+  + exists f_g1_g2. exists f_g2_g1. eauto.
+  + destruct H.
+  exists x0. exists x.
+  eauto.
+  Qed.
+  
+  Lemma reducer_iso_helper : forall G1 G3 a c, reducer eqDec_state (steps measurement corruption G1) a 
+  /\  reducer eqDec_state (steps measurement corruption G3) c.
+  Abort.
+  
+  Theorem reducer_isomorphism_trans : forall G1 G2 G3 a b c, (reducer_isomorphism G1 G2 a b /\ reducer_isomorphism G2 G3 b c) -> reducer_isomorphism G1 G3 a c.
+  Proof.
+    intuition.
+    unfold reducer_isomorphism in *.
+    intuition. simpl in *.
+    (* we have nothing about the fact that G2 actually reduces to b *)
+    (* I'm not sure how to solve this problem ... *)
+  Abort. 
 
-
+    
+    
 
   (* TODO prove equiv over sets of graphs *)
   
