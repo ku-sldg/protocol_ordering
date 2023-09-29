@@ -34,6 +34,13 @@ Require Import Order.utilities.
   Definition transitive {A : Type} (R : A -> A -> Prop) : Prop :=
     forall a1 a2 a3, R a1 a2 -> R a2 a3 -> R a1 a3.
 
+    (* Supports says: 
+    
+      * Given two sets of graphs SS and TT, we say
+      * that SS supports TT iff for every H in TT
+      * there exists some G in SS such that 
+      * G < H *)
+
   Definition Supports {A : Type} (R : A -> A -> Prop) (S : list A) (T : list A) : Prop :=
     forall H, In H T ->
   (exists G, In G S /\ R G H).
@@ -74,94 +81,85 @@ Context {corruption : Type}.
  Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
  Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
 
-(* Given two sets of graphs SS and TT, we say
-  * that SS supports TT iff for every H in TT
-  * there exists some G in SS such that 
-  * G < H *)
 
-  Definition supports_spo' (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
-    forall (H : (attackgraph measurement corruption)), In H TT ->
-    exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order (G.(steps _ _)) (H.(steps _ _)).
+ (* prove supports is a strict partial order when the strict partial order
+  * relation is applied *)
+  Definition supports_spo (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
+    forall (H : (attackgraph measurement corruption)), In H TT -> 
+    (exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order (G.(steps _ _)) (H.(steps _ _))).
 
-  Inductive supports_spo : list (attackgraph measurement corruption) -> list (attackgraph measurement corruption) -> Prop :=
-  | base' : forall SS, SS <> nil -> supports_spo nil SS
-  | sup' : forall SS TT  (H : (attackgraph measurement corruption)), In H TT -> 
-    (exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order (G.(steps _ _)) (H.(steps _ _))) -> supports_spo SS TT.
+    (* TODO : is this irr? *)
+    Theorem supports_spo_irr :forall a, ~ supports_spo a a.
+    Proof.
+      unfold not. unfold supports_spo.
+      intros a spo_a_a. induction a.
+      + admit.
+      + specialize spo_a_a with a. simpl in *. intuition.
+        pose proof (spo_irr a). apply IHa. intros. exists H2. split; eauto.
+    Abort.
 
-  (* want to prove this is a strict partial order too *)
+    Theorem supports_spo_trans : forall x y z, supports_spo x y -> supports_spo y z -> supports_spo x z.
+    Proof. 
+    unfold supports_spo.
+    intros X Y Z. intros HXY HYZ.
+    intros A InAZ.
+    specialize HYZ with A; intuition.
+    destruct H as [B H].
+    destruct H as [InBY H].
+    specialize HXY with B. intuition.
+    destruct H0 as [C H0].
+    destruct H0 as [InCX H0]. exists C; intuition.
+    pose proof (spo_trans C B A).
+    eapply H1; eauto.   
+  Qed.
 
-  Theorem supports_spo_irr :forall a, ~ supports_spo a a.
-  Proof.
-    intros. unfold not. intros.
-  Abort.
-
-  (* this is equality *)
-  Definition supports_eq' (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
+  (* prove supports is an equivalence relation when isomorphism 
+   * relation is applied*)
+  Definition supports_eq (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
     forall (H : (attackgraph measurement corruption)), In H TT ->
     exists (G : (attackgraph measurement corruption)), In G SS /\ exists f g, isomorphism G H f g.
 
-  Theorem supports_eq_refl': forall x, supports_eq' x x .
+  (* Prove properties of equivalence relation 
+   * reflexive, symmetric, and transitive *)
+  Theorem supports_eq_refl: forall x, supports_eq x x .
   Proof.
-    intros. unfold supports_eq'. intros.
+    intros. unfold supports_eq. intros.
     exists H. intuition.
     pose proof (isomorphism_refl H).
     inversion H1. exists x0; exists x0.
     eauto.     
   Qed.
 
-  Inductive supports_eq : list (attackgraph measurement corruption) -> list (attackgraph measurement corruption) -> Prop :=
-  | base : supports_eq nil nil
-  | sup : forall SS TT  (H : (attackgraph measurement corruption)), In H TT -> 
-    (exists (G : (attackgraph measurement corruption)), In G SS /\ exists f g, isomorphism G H f g) -> supports_eq SS TT.
-
-  (* equivalence : reflexive, symmetric, transitive *)
-
-  Theorem  supports_eq_refl : forall x, supports_eq x x.
+  (* I don't think this proof is possible. 
+   * Maybe all we have is a preorder *)
+  Theorem supports_eq_sym : forall x y, supports_eq x y -> supports_eq y x.
   Proof.
-    intros. induction x.
-    + econstructor.
-    + apply sup with (H:= a).
-    ++ simpl. left.   eauto.
-    ++ exists a. split.
-    +++ simpl; eauto.
-    +++ pose proof (isomorphism_refl a). inversion H.
-        exists x0. exists x0. eauto.
-  Qed.       
-  
-  Theorem supports_eq_sym: forall x y, supports_eq x y -> supports_eq y x.
-  Proof.
-    intros. 
-    induction H.
-    + econstructor.
-    (* + destruct H1 as [G H1]. destruct H1. econstructor; eauto.
-      destruct H2 as [f H2]. destruct H2 as [g H2].
-      exists H; eauto. split; eauto.
-      pose proof (isomorphism_sym G H).
-      destruct H3 as [ f' H3 ].
-    ++ exists f. exists g. eauto.
-    ++ destruct H3 as [g'].
-       exists g'. exists f'.
-       eauto.
-  Qed.*) Abort.
-  
-  Theorem supports_eq_trans : forall x y, supports_eq x y -> forall z, supports_eq y z -> supports_eq x z.
-  Proof.
-    intros. induction H.
-    + intros. admit.
-    + destruct H2. destruct H2. invc H0.
-    ++ subst. inversion H1.
-    ++ subst. destruct H6. destruct H0.
-       econstructor; eauto. exists x; intuition; eauto.
-       pose proof (isomorphism_trans x x0 H4).
-       destruct H7; eauto.i am  
+    unfold supports_eq. 
+    intros X Y HXY.
+    intros a InaX.
+    specialize HXY with a.
+    intuition.  
+  Abort. 
 
-
+  Theorem  supports_eq_trans : forall x y z, supports_eq x y -> supports_eq y z -> supports_eq x z.
+  Proof.
+    unfold supports_eq.
+    intros X Y Z. intros HXY HYZ.
+    intros A InAZ.
+    specialize HYZ with A; intuition.
+    destruct H as [B H].
+    destruct H as [InBY H].
+    specialize HXY with B. intuition.
+    destruct H0 as [C H0].
+    destruct H0 as [InCX H0]. exists C; intuition.
+    pose proof (isomorphism_trans C B A).
+    apply H1; eauto.   
+  Qed.
 
 
 (* Supports is a partial order... defining partial order
   * this way is called the "reflexive kernel" 
   * <= *)
-
 Definition supports (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
   forall (H : (attackgraph measurement corruption)), In H TT ->
   ( exists (G : (attackgraph measurement corruption)), In G SS /\ (strict_partial_order (G.(steps _ _)) (H.(steps _ _)) \/ exists f g, isomorphism G H f g )).
@@ -177,57 +175,35 @@ Definition supports (SS : list (attackgraph measurement corruption)) (TT : list 
   exists x. exists x.
   eauto.  
  Qed.
+
+ (* TODO: what should equality be here? This isn't quite right  *)
+ Theorem  supports_antisym : forall x y, supports x y -> supports y x ->  forall xs ys, In xs x /\ In ys y -> exists f g, isomorphism xs ys f g. 
+ Proof.
+    unfold supports.
+    intros X. intros Y.
+    intros supXY supYX.
+    intros xs ys. intros H. destruct H as [HxsX HysY].
+    specialize supYX with xs. intuition.
+    specialize supXY with ys; intuition.
+    destruct H as [y2 H].
+    destruct H. destruct H0 as [x2 H0].
+    destruct H0. 
+    destruct H1.    
+ Abort.
  
- (* TODO *)
-Check isomorphism_sym.
-Theorem  supports_antisym : forall SS TT, supports SS TT -> supports TT SS -> 
-SS = TT.
-Proof.
-  unfold supports. intuition. induction SS.
-  + induction TT; eauto.
-    simpl in *. admit.
-  +  
-  + 
-
-Theorem supports_trans : forall SS TT PP, supports SS TT -> supports TT PP -> supports SS PP.
-Proof.
-    unfold supports. intros SS TT PP Hst Htp h' Hh'.
-    specialize Htp with h'.
-    destruct Htp; eauto.
-    specialize Hst with x.
-    destruct Hst. destruct H; eauto.
-    destruct H. destruct H0.
-    exists x0; split; eauto.
-    eapply spo_trans; eauto.
-Qed. 
-  
-
-(* Traditional def of supports. This generates a preorder on attack graphs *)
-Definition supports_trad (SS : Ensemble (attackgraph measurement corruption)) (TT : Ensemble (attackgraph measurement corruption)) : Prop := 
-    forall (H : (attackgraph measurement corruption)), In _ TT H ->
-    ( exists (G : (attackgraph measurement corruption)), In _ SS G /\ exists f, homomorphism G H f ).
-  
-(* Proving traditional definition of supports is reflexive and transitive 
-  * (ie a preorder) *)
-
-Theorem supports_trad_refl : forall SS, supports_trad SS SS.
-Proof.
-  unfold supports_trad. intros. exists H; split; eauto. apply homomorphism_refl.
-Qed.
-
-Theorem supports_trad_trans : forall SS TT PP, supports_trad SS TT -> supports_trad TT PP -> supports_trad SS PP.
-Proof.
-    unfold supports_trad. intros SS TT PP Hst Htp h' Hh'.
-    specialize Htp with h'.
-    destruct Htp; eauto.
-    specialize Hst with x.
-    destruct Hst. destruct H; eauto.
-    destruct H. destruct H0.
-    exists x0; split; eauto.
-    eapply homomorphism_trans; eauto.
-Qed. 
-
-End Supports_Ensemble.
+ Theorem  supports_trans : forall x y z, supports x y -> supports y z -> supports x z.
+ Proof.
+    unfold supports. intros X Y Z. intros supXY supYZ.
+    intros c IncZ.
+    specialize supYZ with c; intuition.
+    destruct H as [b].
+    destruct H as [InbY].
+    specialize supXY with b.
+    intuition.
+    + destruct H as [a]. destruct H as [InaX]; intuition.
+    ++ admit.
+    ++ (* TODO: here is the case where you get a = b then b < c... how do they compare? *)
+  Abort.      
 
 
 Section Supports_Ensemble. 
