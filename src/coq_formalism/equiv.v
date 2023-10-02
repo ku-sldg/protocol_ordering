@@ -12,6 +12,11 @@ Require Import Order.attack_graph.
 Require Import Order.reduce.
 Require Import Order.strict_partial_order.
 
+Require Export Relation_Definitions.
+Require Export Setoids.Setoid. 
+
+Set Implicit Arguments. 
+
 Section Equivalence. 
 
 (* We aim to say two graphs are equivalent if thier reduced forms are isomorphic *)
@@ -89,17 +94,18 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     transitive := forall a b c: X, R a b -> R b c -> R a c 
     } . *)
   
-  Theorem isomorphism_refl : forall x, exists f , isomorphism x x f f.
+  Theorem isomorphism_refl : forall x, exists f g, isomorphism x x f g.
   Proof.
     unfold isomorphism. intros. exists (fun x => x).
+    exists (fun x => x).
     split; simpl; eexists; eauto.
   Qed.
 
   Theorem isomorphism_sym : forall g1 g2, 
   ( exists f12 f21, (isomorphism g1 g2) f12 f21 ) -> 
-  ( exists g12 g21, (isomorphism g2 g1) g21 g12 ).
+  ( exists g21 g12, (isomorphism g2 g1) g21 g12 ).
   Proof.
-    intros. destruct H as [f12]. destruct H as [f21].
+    intros. destruct H as [f21]. destruct H as [f12].
     exists f12. exists f21.
     destruct H.
     unfold isomorphism. split; eauto.
@@ -142,6 +148,28 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     +++ rewrite H9. rewrite H11. eauto.
     +++ rewrite H10. rewrite H12. eauto.
   Qed.
+
+  Definition myeq' := fun a b => exists f g, isomorphism a b f g.
+  Check myeq'. 
+
+  #[global]
+  Add Relation _ (fun a b => exists f g, isomorphism a b f g) 
+    reflexivity proved by isomorphism_refl
+    symmetry proved by isomorphism_sym
+    transitivity proved by isomorphism_trans
+  as myeq.
+
+  Lemma rewrite_help: forall a b, (exists
+  (f : state measurement corruption a -> state measurement corruption b) (g : state measurement corruption b -> state measurement corruption a),
+  isomorphism a b f g) -> a = b.
+  Proof.
+    intros.
+    autorewrite.   
+
+    
+  (* 
+  #[global]
+  Declare Instance Equivalence_eq : Equivalence ((fun a b => exists f g, isomorphism a b f g)). *)
   
   Print strict_partial_order.
 
@@ -185,14 +213,14 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     intros. specialize H with (step_update G1 b).
     inversion H.
   exists x. exists x. eauto.
-  Qed. 
+  Abort. 
   
   Theorem reducer_isomorphism_sym : forall G1 G2 a b, reducer_isomorphism G1 G2 a b -> reducer_isomorphism G2 G1 b a.
   Proof.
   intuition. 
   pose proof isomorphism_sym.
   unfold reducer_isomorphism in *.
-  intuition.
+  intuition. Abort. (* 
   destruct H1 as [f_g1_g2 H1].
   destruct H1 as [f_g2_g1 H1].
   specialize H0 with (step_update G1 a) (step_update G2 b).
@@ -201,7 +229,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   + destruct H.
   exists x0. exists x.
   eauto.
-  Qed.
+  Qed.*)
   
   Lemma reducer_iso_helper : forall G1 G3 a c, reducer eqDec_state (steps measurement corruption G1) a 
   /\  reducer eqDec_state (steps measurement corruption G3) c.
