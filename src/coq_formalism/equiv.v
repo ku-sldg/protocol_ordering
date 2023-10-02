@@ -164,8 +164,6 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   isomorphism a b f g) -> a = b.
   Proof.
     intros.
-    autorewrite.   
-
     
   (* 
   #[global]
