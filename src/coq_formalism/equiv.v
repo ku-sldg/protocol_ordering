@@ -12,8 +12,10 @@ Require Import Order.attack_graph.
 Require Import Order.reduce.
 Require Import Order.strict_partial_order.
 
-Require Export Relation_Definitions.
-Require Export Setoids.Setoid. 
+(* Require Export Relation_Definitions.*)
+Require Import Setoid. 
+Require Import Coq.Classes.Morphisms.
+Require Import Coq.Program.Basics. 
 
 Set Implicit Arguments. 
 
@@ -39,6 +41,10 @@ Definition bijective `{g1 : attackgraph measurement corruption } `{g2: attackgra
 
 Print existsb_ind.
 
+(************************
+ * DEFINING HOMOMORPHISM 
+ * state condition and 
+ * label condition *)
 Definition homomorphism (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  
     forall st1 st2, In (st1,st2) g1.(steps _ _) -> In ((f st1) ,(f st2)) g2.(steps _ _)    
     /\
@@ -79,8 +85,12 @@ split.
 ++ rewrite H6. rewrite H8; eauto.
 Qed. 
 
-Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) (f : G1.(state _ _) -> G2.(state _ _))  (g : G2.(state _ _) -> G1.(state _ _))  : Prop := 
-  homomorphism G1 G2 f /\ homomorphism G2 G1 g.
+(* Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) (f : G1.(state _ _) -> G2.(state _ _))  (g : G2.(state _ _) -> G1.(state _ _))  : Prop := 
+  homomorphism G1 G2 f /\ homomorphism G2 G1 g.*)
+
+Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) : Prop := 
+  (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f) /\  
+  (exists (g : G2.(state _ _) -> G1.(state _ _)), homomorphism G2 G1 g).
 
 (****************************
   We want the isomorphism to be
@@ -94,29 +104,25 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     transitive := forall a b c: X, R a b -> R b c -> R a c 
     } . *)
   
-  Theorem isomorphism_refl : forall x, exists f g, isomorphism x x f g.
+  Theorem isomorphism_refl : forall x, isomorphism x x .
   Proof.
-    unfold isomorphism. intros. exists (fun x => x).
-    exists (fun x => x).
-    split; simpl; eexists; eauto.
+    unfold isomorphism. intros. split; exists (fun x => x); eexists; eauto.
   Qed.
 
   Theorem isomorphism_sym : forall g1 g2, 
-  ( exists f12 f21, (isomorphism g1 g2) f12 f21 ) -> 
-  ( exists g21 g12, (isomorphism g2 g1) g21 g12 ).
+  isomorphism g1 g2 -> 
+  isomorphism g2 g1.
   Proof.
-    intros. destruct H as [f21]. destruct H as [f12].
-    exists f12. exists f21.
-    destruct H.
-    unfold isomorphism. split; eauto.
+    intros. destruct H as [H1 H2]. destruct H1 as [f12].
+    destruct H2 as [f21]. unfold isomorphism; split; eexists; eauto.
   Qed.
 
   Theorem isomorphism_trans : forall g1 g2 g3, 
-  ( exists f12 f21, (isomorphism g1 g2) f12 f21 ) -> 
-  ( exists g23 g32, (isomorphism g2 g3) g23 g32 ) ->
-  ( exists h13 h31, (isomorphism g1 g3) h13 h31 ).
+  (isomorphism g1 g2) -> 
+  (isomorphism g2 g3) ->
+  (isomorphism g1 g3) .
   Proof.
-    intros. 
+    intros. Admitted. (*  
     destruct H as [f12]. destruct H as [f21].
     destruct H0 as [g23]. destruct H0 as [g32].
     inversion H. 
@@ -147,23 +153,54 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
       split; intuition.
     +++ rewrite H9. rewrite H11. eauto.
     +++ rewrite H10. rewrite H12. eauto.
-  Qed.
+  Qed.*)
 
-  Definition myeq' := fun a b => exists f g, isomorphism a b f g.
-  Check myeq'. 
+  (* #[global]
+  Add Relation _ (isomorphism) 
+    reflexivity proved by isomorphism_refl
+    symmetry proved by isomorphism_sym
+    transitivity proved by isomorphism_trans
+  as myeq.*)
 
-  #[global]
-  Add Relation _ (fun a b => exists f g, isomorphism a b f g) 
+  Instance iso_equiv : Equivalence isomorphism.
+  Proof.
+    constructor; auto with *.
+    Abort.
+
+  Print relation.
+
+  Infix "==" := isomorphism (at level 80).
+  
+  Add Relation  _ (isomorphism)
     reflexivity proved by isomorphism_refl
     symmetry proved by isomorphism_sym
     transitivity proved by isomorphism_trans
   as myeq.
 
-  Lemma rewrite_help: forall a b, (exists
-  (f : state measurement corruption a -> state measurement corruption b) (g : state measurement corruption b -> state measurement corruption a),
-  isomorphism a b f g) -> a = b.
+  (* another take on transitivity *)
+  Lemma isomorphism_trans2 : forall a b c, a == b -> a == c -> b == c. 
+  Proof.
+    intros a b c Hab Hac.
+    (* here rewrite works *)
+    rewrite <- Hab.
+    eauto.
+  Qed.    
+
+  Instance iso_proper {x : (attackgraph measurement corruption)}: Proper (isomorphism ==> isomorphism) (fun x => x).
   Proof.
     intros.
+    unfold Proper. unfold "==>". intros. eauto.
+  Qed.     
+
+  (* Generalized rewriting for the 
+   * isomorphism relation... this is going
+   * to be impossible  *)
+  Lemma rewrite_help: forall a b,
+  isomorphism a b -> b = a.
+  Proof.
+    intros a b Heq.
+  Abort. 
+
     
   (* 
   #[global]
@@ -184,7 +221,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   Definition reducer_isomorphism_wrong 
   (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) 
   (y : list(G1.(state _ _) * G1.(state _ _))) (b : list(G2.(state _ _) * G2.(state _ _))) := 
-  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) ->  forall f g, isomorphism (step_update G1 y) (step_update G2 b) f g.
+  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) -> isomorphism (step_update G1 y) (step_update G2 b).
 
   Print reducer_deterministic.
 
@@ -201,7 +238,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) 
   (y : list(G1.(state _ _) * G1.(state _ _))) (b : list(G2.(state _ _) * G2.(state _ _))) := 
   (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) ->
-  exists f g, isomorphism (step_update G1 y) (step_update G2 b) f g.
+  isomorphism (step_update G1 y) (step_update G2 b).
 
   Theorem reducer_isomorphism_refl : forall G1 b, reducer_isomorphism G1 G1 b b.
   Proof.
@@ -210,7 +247,6 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     unfold reducer_isomorphism.
     intros. specialize H with (step_update G1 b).
     inversion H.
-  exists x. exists x. eauto.
   Abort. 
   
   Theorem reducer_isomorphism_sym : forall G1 G2 a b, reducer_isomorphism G1 G2 a b -> reducer_isomorphism G2 G1 b a.
