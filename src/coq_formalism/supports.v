@@ -189,13 +189,9 @@ Context {corruption : Type}.
     specialize HYZ with A; intuition.
     destruct H as [B H].
     destruct H as [InBY H].
-    (* destruct H as [fba].
-    destruct H as [fab]. *)
     specialize HXY with B. intuition.
     destruct H0 as [C H0].
-    destruct H0 as [InCX H0]. (* 
-    destruct H0 as [fbc].
-    destruct H0 as [fcb]. *)
+    destruct H0 as [InCX H0]. 
     exists C; intuition.
     Print isomorphism_trans.
     pose proof (isomorphism_trans eqDec_measurement eqDec_corruption eqDec_state H0 H).
