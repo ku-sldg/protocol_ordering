@@ -38,8 +38,11 @@ Context {corruption : Type}.
  Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
  Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
 
+ Definition strict_partial_order' (g1 g2 : attackgraph measurement corruption) : Prop :=
+  (cor_subset_ind (g1.(steps _ _)) (g2.(steps _ _)) /\ time_subset_ind (g1.(steps _ _)) (g2.(steps _ _))) /\ (cor_proper_subset (g1.(steps _ _)) (g2.(steps _ _)) \/ time_proper_subset (g1.(steps _ _)) (g2.(steps _ _))).
+
 Definition partial_order (G1 : attackgraph measurement corruption) (G2 : attackgraph measurement corruption) := 
-  isomorphism G1 G2 \/ strict_partial_order (G1.(steps _ _)) (G2.(steps _ _)).
+  isomorphism G1 G2 \/ strict_partial_order' G1 G2.
   
 Theorem po_refl : forall G1 G2, isomorphism G1 G2 ->  partial_order G1 G2.
 Proof.
@@ -55,7 +58,7 @@ Proof.
   pose proof (spo_asym G1 G2).
   specialize H1 with (G1.(steps _ _)) (G2.(steps _ _)).
   exfalso. apply H1. eauto. eauto.
-Qed.
+  Abort.
 
 Lemma cor_meas_label_ : forall  (G3 : attackgraph measurement corruption) (G2 : attackgraph measurement corruption) 
 (l : (list (state measurement corruption G3 * state measurement corruption G3))) m (l' : list (state measurement corruption G2 * state measurement corruption G2)) a,  label measurement corruption G3 (fst a) = inl m -> cor_subset_ind l' (a :: l) -> cor_subset_ind l' l.
@@ -75,45 +78,72 @@ Proof.
 Qed. 
 
 Lemma time_meas_label_ : forall  (G3 : attackgraph measurement corruption) (G2 : attackgraph measurement corruption) 
-(l : (list (state measurement corruption G3 * state measurement corruption G3))) c (l' : list (state measurement corruption G2 * state measurement corruption G2)) a,  label measurement corruption G3 (fst a) = inr c -> time_subset_ind l' (a :: l) -> time_subset_ind l' l.
+(l : (list (state measurement corruption G3 * state measurement corruption G3))) m1 m2 c (l' : list (state measurement corruption G2 * state measurement corruption G2)) a,  ((label measurement corruption G3 (fst a) = inl m1 /\ label measurement corruption G3 (snd a) = inl m2) \/  (label measurement corruption G3 (fst a)) = inr c) -> time_subset_ind l' (a :: l) -> time_subset_ind l' l.
 Proof.
-  intros. remember (a::l) as list1. induction H0.
-  + econstructor.   
-  + econstructor.
-  ++ unfold find_time. destruct (label measurement corruption G2 (fst x)) eqn:lab_x1; eauto.
+  intros. remember (a::l) as list1. destruct H as [ms | cs].
+  + induction H0.
+  ++ econstructor.   
+  ++ econstructor.
+  +++ unfold find_time. destruct (label measurement corruption G2 (fst x)) eqn:lab_x1;   
+     eauto.
      destruct (label measurement corruption G2 (snd (x))) eqn:lab_x2; eauto.
-     unfold find_time in H0.
-Admitted. 
+     unfold find_time in H. destruct ms as [m1' m2'].
+     rewrite lab_x1 in H. rewrite lab_x2 in H. inversion H; subst.
+  ++++ inversion H2; subst. destruct a. simpl in *. destruct H1. rewrite H1 in m2'. inversion m2'.
+  ++++ inversion H2. subst. eauto.
+  +++ intuition.
+  + induction H0.
+  ++ econstructor.
+  ++ econstructor; intuition.
+     unfold find_time. destruct (label measurement corruption G2 (fst x)) eqn:lab_x1; eauto. unfold find_time in H. rewrite lab_x1 in H.
+     destruct (label measurement corruption G2 (snd (x))) eqn:lab_x2; eauto.
+     inversion H; subst.
+  +++ inversion H3; subst. destruct a.  inversion H2; subst. simpl in *. rewrite H5 in cs. inversion cs.
+  +++ inversion H3; subst. eauto.
+Qed. 
+
+Lemma cor_subset_not_nil_if_c : forall  (G3 : attackgraph measurement corruption) (G2 : attackgraph measurement corruption)  a (l : (list (state measurement corruption G3 * state measurement corruption G3))) (l' : (list (state measurement corruption G2 * state measurement corruption G2))) c, 
+l' = nil -> label measurement corruption G3 (fst a) = inr c -> cor_subset_ind (a :: l) l' -> False.
+Proof.
+  intros. subst. simpl in *. inversion H1; subst.
+  unfold find_cor in H3. rewrite H0 in H3. inversion H3.
+Qed. 
 
 Theorem po_trans : forall G1 G2 G3, partial_order G1 G2 -> partial_order G2 G3 -> partial_order G1 G3.
 Proof.
   unfold partial_order.
   intros. 
-  destruct H.
-  + destruct H0.
+  destruct H as [isoG1G2 | spoG1G2].
+  + destruct H0 as [isoG2G3 | spoG2G3 ].
+  (* g1 = g2 /\ g2 = g3 *)
   ++ left. eapply isomorphism_trans; eauto.
-  ++ right. unfold isomorphism in H. destruct H.
-     induction (steps measurement corruption G1).
-  +++ unfold strict_partial_order. split.
-  ++++ split; econstructor. 
-  ++++ destruct H0. destruct H2.
-  +++++ left. split. econstructor. destruct H2.
-        induction (steps measurement corruption G3).
-  ++++++ exfalso. apply H3. econstructor.
-  ++++++ intros contra. inversion contra; subst.
-         unfold find_cor in H6. 
-         destruct (label measurement corruption G3 (fst a)) eqn:H'.
-  +++++++ apply IHl; eauto.
-  ++++++++ split. eapply cor_meas_label_; eauto. inversion H0.
-           admit.
-           ++++++++ admit.
-           ++++++++ admit.
-           +++++++ admit.
-           +++++ admit.
-           +++ admit.
-           + admit.     
+  (* g1 = g2 /\ g2 < g3 *)
+  ++ right.
+     unfold isomorphism in isoG1G2.
+     destruct isoG1G2 as [H H0]. unfold homomorphism in H. destruct H as [f].
+     destruct H as [ste lab].
+     unfold strict_partial_order' in *.
+     intuition.
+  +++ clear H0. destruct H. clear H2. clear H3. generalize dependent ste. generalize dependent lab. induction (steps measurement corruption G1).
+  (* induction on steps of G1 *)
+  ++++ intros. econstructor.
+  ++++ intros. intuition. econstructor.
+  +++++ unfold find_cor.
+        destruct (label measurement corruption G1 (fst a)) eqn:fsta; eauto.
+        destruct a. specialize lab with s s0.
+        specialize ste with s s0. simpl in *.
+        intuition.
+        rewrite H1 in fsta.
+        destruct (steps measurement corruption G2).
+  ++++++ induction H6.
+  ++++++ inversion H; subst. unfold find_cor in H8.
+         simpl in *. destruct H6. 
+  +++++++ subst. simpl in *. rewrite fsta in H8. eauto.
+  +++++++ simpl in *. eauto. admit.
+  +++++ auto with *.
+  +++
   Abort.   
-  
+
 End PO.
 
 (********** 
@@ -155,15 +185,28 @@ End PO.
       * there exists some G in SS such that 
       * G < H *)
 
-  Definition Supports {A : Type} (R : A -> A -> Prop) (SS : list A) (TT : list A) : Prop :=
-    forall H, In H TT ->
-  (exists G, In G SS /\ R G H).
+  Definition Supports {A : Type} (R : A -> A -> Prop) (SS : list A) (TT : list A) : Prop :=(forall H, In H TT ->
+  (exists G, In G SS /\ R G H)).
 
+  Inductive Supports_ind {A : Type} (R : A -> A -> Prop) :  list A ->  list A -> Prop :=
+  | sup_nil : forall SS, SS <> nil -> Supports_ind R SS nil
+  | sup_cons : forall SS TT, (forall H, In H TT ->
+  (exists G, In G SS /\ R G H)) -> Supports_ind R SS TT.
+ 
+
+  Lemma Supports_nil_nil : forall {A: Type} (R : A -> A -> Prop) SS,  irreflexive R -> SS = nil -> Supports R SS SS.
+  Proof.
+    intros. subst. unfold Supports. intros. simpl in *. inversion H1.
+  Qed.  
 
   (* not ever going to work bc A isn't finite *)
-  Lemma SupportsIrr : forall {A : Type} (R : A -> A -> Prop),
-  irreflexive R -> irreflexive (Supports R).
-  Proof. Abort. 
+  Lemma SupportsIrr : forall {A : Type} (R : A -> A -> Prop) (SS: list A)  ,
+  irreflexive R -> transitive R -> forall a, a <> nil -> ~ (Supports R) a a.
+  Proof.
+    intros. destruct a.
+    + intuition.
+    + clear H1. intuition. unfold Supports in *.
+  Admitted. 
 
   (* if we prove asymmetry then we will get irreflexivity for free? 
     * http://web.stanford.edu/class/archive/cs/cs103/cs103.1164/lectures/09/Small09.pdf *)
@@ -222,7 +265,9 @@ Context {corruption : Type}.
   Proof.
     intros. unfold strict_partial_order, isomorphism in *.
     unfold not. intros. intuition.
-    + destruct H1. apply H2. induction H1.  econstructor.         
+    + destruct H1. apply H2. induction H1.  econstructor.   
+    
+  Abort. 
  
 
  (* prove supports is a strict partial order when the strict partial order
@@ -268,9 +313,6 @@ Context {corruption : Type}.
       + unfold supports_spo. intros. inversion H0. destruct H2. eauto. 
       + unfold supports_spo in *. intuition.
     Abort.  
-
-
-
 
 
     Theorem supports_spo_asym :forall x y, supports_spo x y -> ~ supports_spo y x.
