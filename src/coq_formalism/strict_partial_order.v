@@ -11,6 +11,7 @@
 
 Require Import Coq.Lists.List.
 Require Export Order.attack_graph.
+Require Import Order.utilities.
 
  Section Comparison. 
 
@@ -228,8 +229,6 @@ Require Export Order.attack_graph.
      intros. unfold cor_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
      Qed.
  
- Ltac invc H := inversion H; clear H.  
- 
  Theorem cor_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
  cor_proper_subset xs ys -> 
  forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), cor_proper_subset ys zs -> 
@@ -371,6 +370,10 @@ Require Export Order.attack_graph.
      + unfold not. intros. intuition. apply H4. eapply time_subset_ind_trans; eauto.
  Qed. 
  
+(*******************************
+  STRICT PARTIAL ORDER 
+  ******************************)
+
  Definition strict_partial_order {g1 g2 : attackgraph measurement corruption} (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _))) : Prop := 
  (cor_subset_ind xs ys /\ time_subset_ind xs ys) /\ (cor_proper_subset xs ys \/ time_proper_subset xs ys).
  

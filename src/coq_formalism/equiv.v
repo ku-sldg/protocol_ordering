@@ -16,6 +16,8 @@ Require Import Order.strict_partial_order.
 Require Import Setoid. 
 Require Import Coq.Classes.Morphisms.
 Require Import Coq.Program.Basics. 
+Require Import Coq.Logic.FunctionalExtensionality.
+Require Import Coq.Logic.Description.
 
 Set Implicit Arguments. 
 
@@ -39,6 +41,35 @@ Definition injective `{g1 : attackgraph measurement corruption } `{g2: attackgra
 Definition surjective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := forall x, exists y,  x = f y. 
 Definition bijective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := injective f /\ surjective f.
 
+Lemma inverse {X Y : attackgraph measurement corruption} (f : (X.(state _ _)) -> (Y.(state _ _))) :
+  bijective f -> {g : (Y.(state _ _)) -> (X.(state _ _)) | (forall x, g (f x) = x) /\
+                               (forall y, f (g y) = y) }.
+Proof.
+intros [inj sur].
+apply constructive_definite_description.
+assert (H : forall y, exists! x, f x = y).
+{ intros y.
+  destruct (sur y) as [x xP].
+  exists x; split; trivial. eauto.
+  intros x' x'P.
+  apply inj. rewrite <- xP. eauto. }
+exists (fun y => proj1_sig (constructive_definite_description _ (H y))).
+split.
+- split.
+  + intros x.
+    destruct (constructive_definite_description _ _).
+    simpl.
+    now apply inj.
+  + intros y.
+    now destruct (constructive_definite_description _ _).
+- intros g' [H1 H2].
+  apply functional_extensionality.
+  intros y.
+  destruct (constructive_definite_description _ _) as [x e].
+  simpl.
+  now rewrite <- e, H1.
+Qed.
+
 Print existsb_ind.
 
 (************************
@@ -46,10 +77,10 @@ Print existsb_ind.
  * state condition and 
  * label condition *)
 Definition homomorphism (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  
-    forall st1 st2, In (st1,st2) g1.(steps _ _) -> In ((f st1) ,(f st2)) g2.(steps _ _)    
+    (forall st1 st2, In (st1,st2) g1.(steps _ _) -> In ((f st1) ,(f st2)) g2.(steps _ _))    
     /\
-    forall st1 st2, In (st1,st2) g1.(steps _ _) -> 
-        g1.(label _ _) st1 = g2.(label _ _) (f st1) /\ g1.(label _ _) st2 = g2.(label _ _) (f st2).
+    (forall st1 st2, In (st1,st2) g1.(steps _ _) -> 
+        g1.(label _ _) st1 = g2.(label _ _) (f st1) /\ g1.(label _ _) st2 = g2.(label _ _) (f st2)).
 
 (* might be helpful to prove homomorphism is reflexive and transitive *)
 
@@ -70,19 +101,21 @@ destruct f12 as [f12 g1g2].
 destruct g23 as [g23 g2g3].
 unfold homomorphism in *. 
 exists (fun x => g23 (f12 (x))).
-split.
+split; intros.
 + (* step condition *)
-  destruct (g1g2 st1 st2); eauto.
-  clear H1.
-  destruct (g2g3 (f12 st1) (f12 st2)); eauto.
+  intuition.
 + (* label condition *)
-  intros. destruct (g1g2 st0 st3); eauto.
-  destruct (g2g3 (f12 st0) (f12 st3)); eauto.
-  destruct (H2 st0 st3); eauto.
-  destruct (H4 (f12 st0) (f12 st3)); eauto.
-  split.
-++ rewrite H5. rewrite H7; eauto.
-++ rewrite H6. rewrite H8; eauto.
+  intuition.
+++ specialize H1 with st1 st2. intuition.
+   specialize H0 with st1 st2. intuition.
+   specialize H2 with (f12 st1) (f12 st2); intuition.
+   specialize H3 with (f12 st1) (f12 st2); intuition.
+   rewrite  H1. eauto.
+++specialize H1 with st1 st2. intuition.
+specialize H0 with st1 st2. intuition.
+specialize H2 with (f12 st1) (f12 st2); intuition.
+specialize H3 with (f12 st1) (f12 st2); intuition.
+rewrite  H5. eauto.
 Qed. 
 
 (* Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) (f : G1.(state _ _) -> G2.(state _ _))  (g : G2.(state _ _) -> G1.(state _ _))  : Prop := 
@@ -91,6 +124,7 @@ Qed.
 Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) : Prop := 
   (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f) /\  
   (exists (g : G2.(state _ _) -> G1.(state _ _)), homomorphism G2 G1 g).
+
 
 (****************************
   We want the isomorphism to be
@@ -184,7 +218,15 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     (* here rewrite works *)
     rewrite <- Hab.
     eauto.
-  Qed.    
+  Qed.   
+  
+  Lemma isomorphism_trans2' : forall a b c, a == b -> b == c -> a == c. 
+  Proof.
+    intros a b c Hab Hac.
+    (* here rewrite works *)
+    rewrite <- Hac.
+    eauto.
+  Qed.   
 
   Instance iso_proper {x : (attackgraph measurement corruption)}: Proper (isomorphism ==> isomorphism) (fun x => x).
   Proof.
@@ -196,19 +238,80 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
    * isomorphism relation... this is going
    * to be impossible  *)
   Lemma rewrite_help: forall a b,
-  isomorphism a b -> b = a.
+  isomorphism a b -> a = b.
   Proof.
-    intros a b Heq.
+    intros a b Heq. eauto. unfold isomorphism in *. 
   Abort. 
 
-    
-  (* 
-  #[global]
-  Declare Instance Equivalence_eq : Equivalence ((fun a b => exists f g, isomorphism a b f g)). *)
-  
-  Print strict_partial_order.
+  (************************
+   RETRY WITH A DIFFERENT WAY
+   TO DEFINE ISOMORPHISM 
 
-  Print reducer. 
+   as motivated by 
+   https://www.tildedave.com/2019/07/18/formalizing-lagranges-theorem-in-coq.html 
+   ************************)
+
+   Definition ListInjective' (A B: Type) (f: A -> B) (l: list A) :=
+    (forall x y: A, In x l -> In y l -> f x = f y -> x = y).
+
+   (* Definition ListInjective (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) (l :list (state measurement corruption g1 * state measurement corruption g1))  :=
+    (forall x y, In x l -> In y l -> f x = f y -> x = y).*)
+  
+  Definition ListSurjective' (A B: Type) (f: A -> B) (l: list B) (l': list A) :=
+    (forall x: B, In x l -> exists y, In y l' /\ f y = x).
+
+  Definition ListSurjective (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) l l' :=
+    (forall x, In x l -> exists y, In y l' /\ f y = x).
+
+  Definition ListLabelPreserve (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) :=  
+    (forall st1 st2, In (st1,st2) g1.(steps _ _) -> 
+    g1.(label _ _) st1 = g2.(label _ _) (f st1) /\ g1.(label _ _) st2 = g2.(label _ _) (f st2)).
+  
+  Definition ListIsomorphism' (A B: Type) (f: A -> B) (l1: list A) (l2: list B) :=
+    ListInjective' f l1 /\
+    ListSurjective' f l2 l1 /\
+    (forall d, In d l1 -> In (f d) l2).
+
+  (* Definition ListIsomorphism (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  (ListInjective g1 g2 f (g1.(steps _ _)) /\
+                   ListSurjective g1 g2 f (g2.(steps _ _)) (g1.(steps _ _)) /\
+                  (forall d, In d (g1.(steps _ _)) -> In (f d) (g2.(steps _ _))) /\ 
+                  ListLabelPreserve g1 g2 f).
+
+  Definition ListIsomorphismRefl : forall g1 l1, exists f, ListIsomorphism g1 g1 f l1 l1.
+  Proof.
+    intros. unfold ListIsomorphism.
+    intros. exists (fun x => x). intuition.
+    + unfold ListInjective. intros. eauto.
+    + unfold ListSurjective. intros. exists x. split; eauto.
+    + unfold ListLabelPreserve. intros.  
+  Abort.      *)
+    
+  Definition isomorphism' (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) : Prop := 
+  (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f /\ bijective f).
+
+  Theorem isomorphism'_refl : forall g1, isomorphism' g1 g1.
+  Proof.
+    intros. unfold isomorphism'. exists (fun x => x).
+    split.
+    + simpl in *. unfold homomorphism. eauto. 
+    + unfold bijective. unfold injective, surjective.
+    split.
+    ++ intros.  eauto.
+    ++ intros. eexists; eauto.
+  Qed.
+
+  Theorem isomorphism'_sym : forall g1 g2, isomorphism' g1 g2 -> isomorphism' g2 g1.
+  Proof.
+    intros. unfold isomorphism' in *.
+    destruct H as [fg1g2 H]. destruct H.
+    pose proof (inverse H0). destruct X as [fg2g1 X]. destruct X as [ g1inv g2inv].
+    exists fg2g1. split.
+  Abort.   
+
+
+  (************************
+   FACTS ABOUT REDUCER 
+   ************************)
 
   (* two graphs are equal if you first reduce then prove isomorphic 
    * reduce x to y 
@@ -284,4 +387,5 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   (* TODO prove equiv over sets of graphs *)
   
 
-End Equivalence. 
+End Equivalence.
+
