@@ -1,5 +1,5 @@
 (**** Labeled Graph Homomorphism 
-By: Anna Fritz 
+By: Anna Fritz and Sarah Johnson
 Date: July 18, 2023 
 
 Defining supports and covers and other interesting 
@@ -15,17 +15,6 @@ Require Import Order.equiv.
 Require Import Order.utilities.
 Require Import Order.partial_order.
 
-Require Export Relation_Definitions.
-Require Import Coq.Classes.Morphisms Setoid. 
-Require Import Coq.Classes.SetoidTactics. 
-Require Import Coq.Classes.Morphisms_Prop.
-
-(*Set Implicit Arguments.*)
-
-(* Require Import Coq.Sets.Ensembles.*)
-
-Section Supports_Facts. 
-
 (********** 
     SUPPORTS 
    
@@ -34,6 +23,9 @@ Section Supports_Facts.
     these sets of graphs so we introduce the idea 
     of supports as motivated by Rowe's paper.
     *********)
+
+Section Supports_Facts. 
+
 
 (* given some reflexive and transitive relation we 
  * know that supports is reflexive and transitive *)
@@ -155,8 +147,13 @@ Section Supports_Facts.
   Qed.
 End Supports_Facts.
 
-Section Supports_List. 
 
+(********************************
+ * OUR IMPLEMENTATION OF SUPPORTS 
+ * FOR LISTS OF ATTACK GRAPHS 
+ *********************************)
+
+Section Supports_List. 
 
 Context {measurement : Type}.
 Context {corruption : Type}.
@@ -215,8 +212,8 @@ Context {corruption : Type}.
     forall (H : (attackgraph measurement corruption)), In H TT ->
     (exists (G : (attackgraph measurement corruption)), In G SS /\ isomorphism G H).
 
-  (* Prove properties of equivalence relation 
-   * reflexive, symmetric, and transitive *)
+  (* Prove properties of supports_iso 
+   * reflexive, and transitive *)
   Theorem supports_iso_refl: forall x, supports_iso x x.
   Proof.
     intros. unfold supports_iso. intros.
@@ -241,8 +238,11 @@ Context {corruption : Type}.
     apply H1; eauto.   
   Qed.
 
-  (* Equivalence over sets of graphs 
-     We define this as each graph supports each other *)
+  (******************************
+   SET EQUIVALENCE   
+  
+   * Equivalence over sets of graphs 
+   * We define this as each graph supports each other *)
 
   Definition set_eq SS TT :=  supports_iso SS TT /\ supports_iso TT SS.
   
@@ -271,9 +271,11 @@ Context {corruption : Type}.
     + eapply supports_iso_trans; eauto.
   Qed.
   
-(* Proved set equivalence is an equivalence relation *)
+(******************************* 
+  SUPPORTS AS PARTIAL ORDER 
+********************************)
 
-(* Supports is a partial order... defining partial order
+ (* defining partial order
   * this way is called the "reflexive kernel" 
   * <= *)
 Definition supports (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := supports_iso SS TT \/ supports_spo SS TT. 
