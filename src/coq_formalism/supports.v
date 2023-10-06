@@ -122,26 +122,17 @@ Proof.
      unfold isomorphism in isoG1G2.
      destruct isoG1G2 as [H H0]. unfold homomorphism in H. destruct H as [f].
      destruct H as [ste lab].
+     destruct H0 as [g]. unfold homomorphism in H. destruct H as [gste glab].
      unfold strict_partial_order' in *.
      intuition.
-  +++ clear H0. destruct H. clear H2. clear H3. generalize dependent ste. generalize dependent lab. induction (steps measurement corruption G1).
-  (* induction on steps of G1 *)
-  ++++ intros. econstructor.
-  ++++ intros. intuition. econstructor.
-  +++++ unfold find_cor.
-        destruct (label measurement corruption G1 (fst a)) eqn:fsta; eauto.
-        destruct a. specialize lab with s s0.
-        specialize ste with s s0. simpl in *.
-        intuition.
-        rewrite H1 in fsta.
-        destruct (steps measurement corruption G2).
-  ++++++ induction H6.
-  ++++++ inversion H; subst. unfold find_cor in H8.
-         simpl in *. destruct H6. 
-  +++++++ subst. simpl in *. rewrite fsta in H8. eauto.
-  +++++++ simpl in *. eauto. admit.
-  +++++ auto with *.
-  +++
+  +++ induction (steps measurement corruption G1).
+  ++++ econstructor.
+  ++++ econstructor.
+  +++++ eapply find_cor_helper with (G2 := G2); eauto.
+        clear IHl. admit.
+  +++++ eapply IHl; auto with *. intros.  
+
+
   Abort.   
 
 End PO.
@@ -199,14 +190,46 @@ End PO.
     intros. subst. unfold Supports. intros. simpl in *. inversion H1.
   Qed.  
 
-  (* not ever going to work bc A isn't finite *)
-  Lemma SupportsIrr : forall {A : Type} (R : A -> A -> Prop) (SS: list A)  ,
-  irreflexive R -> transitive R -> forall a, a <> nil -> ~ (Supports R) a a.
+  Hypothesis eqDec_A : forall (A : Type) (x y : A), {x = y} + {x <> y}.
+
+  Lemma SupportsIrr : forall {A : Type} (R : A -> A -> Prop),
+    transitive R -> irreflexive R -> forall a, a <> nil -> ~ (Supports R) a a.
   Proof.
-    intros. destruct a.
-    + intuition.
-    + clear H1. intuition. unfold Supports in *.
-  Admitted. 
+    unfold irreflexive. intros A R HTrans HIrr a HNil contra.
+    destruct a.
+    - apply HNil. reflexivity.
+    - clear HNil. generalize dependent a. induction a0; unfold Supports in *.
+    -- intros a contra. specialize contra with a. simpl in *. intuition.
+       destruct H1. destruct H. destruct H; subst.
+    --- specialize HIrr with x. contradiction.
+    --- assumption.
+    -- intros a1 contra. apply IHa0 with a. intros HH HIn.
+       assert (In HH (a1 ::a :: a0) -> exists G : A, In G (a1 :: a :: a0) /\ R G HH) 
+       by apply contra. simpl in *. destruct HIn; subst.
+    --- pose proof (eqDec_A A). specialize X with a1 HH. destruct X; subst.
+    ---- intuition. destruct H1 as [GG H1]. destruct H1. destruct H0; subst.
+    ----- exists GG. auto.
+    ----- exists GG. auto.
+    ---- intuition. destruct H1 as [GG H1]. destruct H1. destruct H; subst.
+    ----- assert (GG = GG \/ HH = GG \/ In GG a0 -> exists G : A, (GG = G \/ HH = G \/ In G a0) /\ R G GG)
+          by apply contra. destruct H; subst.
+    ------ left. reflexivity.
+    ------ destruct H. destruct H; subst.
+    ------- specialize HIrr with x. contradiction.
+    ------- exists x. split; auto.
+            eapply HTrans; eauto.
+    ----- exists GG. auto.
+    --- intuition. destruct H2 as [GG H2]. destruct H2. destruct H2; subst.
+    ---- assert (GG = GG \/ a = GG \/ In GG a0 -> exists G : A, (GG = G \/ a = G \/ In G a0) /\ R G GG)
+         by apply contra.
+         destruct H2.
+    ----- left. reflexivity.
+    ----- destruct H2. destruct H2; subst.
+    ------ specialize HIrr with x. contradiction.
+    ------ exists x. split; auto.
+           eapply HTrans; eauto.
+    ---- exists GG. auto.
+  Qed.
 
   (* if we prove asymmetry then we will get irreflexivity for free? 
     * http://web.stanford.edu/class/archive/cs/cs103/cs103.1164/lectures/09/Small09.pdf *)
