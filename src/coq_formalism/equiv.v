@@ -293,7 +293,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   Proof.
     intros. unfold isomorphism'. exists (fun x => x).
     split.
-    + simpl in *. unfold homomorphism. eauto. 
+    + simpl in *. unfold homomorphism. intros.  eauto. 
     + unfold bijective. unfold injective, surjective.
     split.
     ++ intros.  eauto.
@@ -306,6 +306,14 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     destruct H as [fg1g2 H]. destruct H.
     pose proof (inverse H0). destruct X as [fg2g1 X]. destruct X as [ g1inv g2inv].
     exists fg2g1. split.
+    + unfold bijective, homomorphism in *. intuition.
+    ++ clear H2.  unfold injective, surjective in *. 
+       assert (H' : surjective fg1g2). { eauto. }
+       unfold surjective in H'.
+       specialize H3 with st1. destruct H3 as [st1'].
+       specialize H' with st2. destruct H' as [st2'].
+       specialize H1 with st1' st2'.
+       intuition. admit.
   Abort.   
 
 

@@ -11,6 +11,7 @@ Date: Sept 11, 2023 *)
 
 Require Import Coq.Lists.List.
 Require Export Order.attack_graph.
+Require Import Order.utilities.
 
 Section Reducer.
 
@@ -133,18 +134,5 @@ Section Reducer.
         + eauto.
         + intros. apply reduce_more; eauto.
     Qed.
-
-    (* prove reducer is total... ie it holds for any two lists *)
-
-    Print eqDec_step.
-    Print reducer. 
-
-    Theorem  reducer_total : forall (G : attackgraph measurement corruption) (x : list(G.(state _ _) * G.(state _ _))) (y : list(G.(state _ _) * G.(state _ _))), reducer x y.
-    Proof.
-        intros. induction x.
-        + econstructor. eauto. 
-        pose proof list_eq_dec.
-        pose proof (eqDec_step G).
-    Abort. 
 
 End Reducer.

@@ -168,6 +168,13 @@ Require Import Order.utilities.
      +++ apply IHcor_subset_ind. auto. 
  Qed.  
  
+Lemma cor_subset_ind_asym : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), cor_subset_ind xs ys -> ~ cor_subset_ind ys xs. 
+Proof.
+    intros. unfold not. intros. induction ys. destruct xs.
+Abort. 
+
+
+
  Lemma cor_subset_ind_trans : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), 
  cor_subset_ind xs ys -> 
  forall G3 (zs : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind ys zs ->
