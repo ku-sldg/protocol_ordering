@@ -58,7 +58,7 @@ Proof.
   pose proof (spo_asym G1 G2).
   specialize H1 with (G1.(steps _ _)) (G2.(steps _ _)).
   exfalso. apply H1. eauto. eauto.
-  Abort.
+Qed. 
 
 Lemma cor_meas_label_ : forall  (G3 : attackgraph measurement corruption) (G2 : attackgraph measurement corruption) 
 (l : (list (state measurement corruption G3 * state measurement corruption G3))) m (l' : list (state measurement corruption G2 * state measurement corruption G2)) a,  label measurement corruption G3 (fst a) = inl m -> cor_subset_ind l' (a :: l) -> cor_subset_ind l' l.
@@ -109,8 +109,331 @@ Proof.
   unfold find_cor in H3. rewrite H0 in H3. inversion H3.
 Qed. 
 
+Lemma po_trans_helper : forall G1 G2 G3, isomorphism G1 G2 /\ strict_partial_order' G2 G3 -> strict_partial_order' G1 G3.
+Proof with intuition.
+intros... 
+unfold isomorphism in H0.
+destruct H0 as [isoG1G2  spoG1G2]. 
+destruct isoG1G2 as [f H]. unfold homomorphism in H. destruct H as [ste lab].
+destruct spoG1G2. unfold homomorphism in H. destruct H as [gste glab].
+unfold strict_partial_order' in *...
+(* goal: cor subset *)
++ clear H. clear H2. clear gste.
+  induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+  eapply find_cor_helper;  eauto.
+  unfold find_cor.
+  destruct (label measurement corruption G1 (fst (s, s0))) eqn:lab'; eauto.
+  simpl in *. intuition. clear IHl.
+  clear H1.
+  specialize ste with s s0.
+  intuition. 
+  induction (steps measurement corruption G2)...
+  simpl in *. inversion H1.
+  simpl in *. destruct a... 
++++ inversion H. econstructor. specialize lab with s s0...
+    rewrite <- lab'. rewrite H1. eauto.
++++ apply ex_tail. eapply IHl0; intuition; specialize glab with st1 st2...
+++ apply IHl; auto with *.
+  (* goal: time subset  *)
++  clear H. clear H1. clear gste.
+      induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+      eapply find_time_helper; eauto.
+      unfold find_time.
+      destruct (label measurement corruption G1 (fst (s, s0))) eqn:fst; eauto.
+      destruct (label measurement corruption G1 (snd (s, s0))) eqn:snd; eauto.
+      simpl in *... clear IHl. clear H2.
+      specialize ste with s s0.
+      intuition. 
+      induction (steps measurement corruption G2).
+      simpl in *. inversion H1.
+      simpl in *. destruct a...
++++ inversion H. econstructor. split; specialize lab with s s0;
+      intuition. rewrite <- snd. rewrite H6. eauto.
+       rewrite <- fst. rewrite H1. eauto.
++++ apply ex_tail. eapply IHl0; intuition; specialize glab with st1 st2.
+      intuition. intuition.
+++ apply IHl; auto with *.
+  (* goal: proper subset  *)
++ left.
+  unfold cor_proper_subset. intuition.
+++ unfold cor_proper_subset in H... clear H2. clear H1. clear H3. clear gste.
+  induction (steps measurement corruption G1); econstructor.
++++ destruct a.
+      eapply find_cor_helper;  eauto.
+      unfold find_cor.
+      destruct (label measurement corruption G1 (fst (s, s0))) eqn:lab'; eauto.
+      simpl in *. intuition. clear IHl. clear H0.
+      specialize ste with s s0.
+      intuition. 
+      induction (steps measurement corruption G2).
+      simpl in *. inversion H1.
+      simpl in *. destruct a...
+++++ inversion H. econstructor. specialize lab with s s0.
+      intuition. rewrite <- lab'. rewrite H1. eauto.
+++++ apply ex_tail. eapply IHl0; intuition; specialize glab with st1 st2...
++++ apply IHl; auto with *.
+++ unfold cor_proper_subset in H... apply H4.
+  clear H4. clear H1. clear H2. clear H3. clear gste. 
+  induction (steps measurement corruption G3); econstructor. 
++++ destruct a.
+  inversion H0; subst.
+  eapply find_cor_helper; eauto. clear IHl. clear H4. clear H2. clear H0.
+  induction (steps measurement corruption G1); econstructor.
+++++ unfold find_cor in *. 
+    destruct (label measurement corruption G1 (fst a)) eqn:lab'; eauto.
+    destruct a. specialize lab with s1 s2... simpl in *...
+    specialize ste with s1 s2. simpl in *... clear IHl0.  (* clear IHl0. clear H4. clear H.*)
+    induction (steps measurement corruption G2).
+    inversion H4.
+    simpl in *.
+    destruct H4.
+    destruct a. inversion H1. apply ex_head. rewrite <- lab'. rewrite H. reflexivity.
+    apply ex_tail. eapply IHl1... auto with *.
+    specialize glab with st1 st2. simpl in *...  
+    specialize glab with st1 st2. simpl in *...
+++++ apply IHl0; auto with *.  
++++ eapply IHl. inversion H0...
+(* goal corruption subset *)
++ clear H. clear H2. clear gste.
+induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+  eapply find_cor_helper;  eauto.
+  unfold find_cor.
+  destruct (label measurement corruption G1 (fst (s, s0))) eqn:lab'; eauto.
+  simpl in *. intuition. clear IHl.
+  clear H1. specialize ste with s s0. intuition. 
+  induction (steps measurement corruption G2)...
+  simpl in *. inversion H1.
+  simpl in *. destruct a... 
++++ inversion H. econstructor. specialize lab with s s0...
+  rewrite <- lab'. rewrite H1. eauto.
++++ apply ex_tail. eapply IHl0; intuition; specialize glab with st1 st2...
+++ apply IHl; auto with *.
++ (* goal : time subset *) 
+  clear H. clear H1. clear gste.
+      induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+      eapply find_time_helper; eauto.
+      unfold find_time.
+      destruct (label measurement corruption G1 (fst (s, s0))) eqn:fst; eauto.
+      destruct (label measurement corruption G1 (snd (s, s0))) eqn:snd; eauto.
+      simpl in *... clear IHl. clear H2.
+      specialize ste with s s0.
+      intuition. 
+      induction (steps measurement corruption G2).
+      simpl in *. inversion H1.
+      simpl in *. destruct a...
++++ inversion H. econstructor. split; specialize lab with s s0;
+      intuition. rewrite <- snd. rewrite H6. eauto.
+       rewrite <- fst. rewrite H1. eauto.
++++ apply ex_tail. eapply IHl0; intuition; specialize glab with st1 st2.
+      intuition. intuition.
+++ apply IHl; auto with *.
+  (* goal: proper subset time *)
++ right.
+  unfold time_proper_subset. intuition.
+++ unfold time_proper_subset in H... clear H2. clear H1. clear H3. clear gste.
+  induction (steps measurement corruption G1); econstructor.
++++ destruct a.
+  eapply find_time_helper;  eauto; unfold find_time.
+  destruct (label measurement corruption G1 (fst (s, s0))) eqn:lab'; eauto.
+  destruct (label measurement corruption G1 (snd (s, s0))) eqn:lab''; eauto.
+  simpl in *... clear IHl. clear H0.
+  specialize ste with s s0...
+  induction (steps measurement corruption G2).
+  simpl in *. inversion H1.
+  simpl in *. destruct a...
+++++ inversion H. econstructor. specialize lab with s s0.
+intuition. rewrite <- lab''. rewrite H6. eauto.
+rewrite <- lab'. rewrite H1...
+++++ apply ex_tail. eapply IHl0; intuition; specialize glab with st1 st2...
++++ apply IHl; auto with *.
+++ unfold time_proper_subset in H... apply H4.
+clear H4. clear H1. clear H2. clear H3. clear gste. 
+induction (steps measurement corruption G3); econstructor. 
++++ destruct a.
+inversion H0; subst.
+eapply find_time_helper; eauto. clear IHl. clear H4. clear H2. clear H0.
+induction (steps measurement corruption G1); econstructor.
+++++ unfold find_time in *. 
+destruct (label measurement corruption G1 (fst a)) eqn:lab'; eauto.
+destruct (label measurement corruption G1 (snd a)) eqn:lab''; eauto.
+destruct a. specialize lab with s1 s2... simpl in *...
+specialize ste with s1 s2. simpl in *... clear IHl0.  (* clear IHl0. clear H4. clear H.*)
+induction (steps measurement corruption G2).
+inversion H4. simpl in *. destruct H4.
++++++ destruct a. inversion H1. apply ex_head... rewrite <- lab''. rewrite H2. reflexivity.
+      rewrite <- lab'. rewrite H...
++++++ apply ex_tail. eapply IHl1... auto with *.
+specialize glab with st1 st2. simpl in *...  
+specialize glab with st1 st2. simpl in *...
+++++ apply IHl0; auto with *.  
++++ eapply IHl. inversion H0...
+Qed.
+
+Lemma po_trans_helper' : forall G1 G2 G3, strict_partial_order' G1 G2 /\ isomorphism G2 G3 -> strict_partial_order' G1 G3.
+Proof with intuition.
+intros G1 G2 G3 H1. destruct H1 as [H1 H0]. 
+unfold isomorphism in H0.
+destruct H0 as [isoG1G2  spoG1G2]. 
+destruct isoG1G2 as [f H]. unfold homomorphism in H. destruct H as [ste lab].
+destruct spoG1G2. unfold homomorphism in H. destruct H as [gste glab].
+unfold strict_partial_order' in *...
+(* goal: cor subset *)
++ clear H. clear H2. clear gste.
+  induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+   inversion H1; subst.  
+   eapply find_cor_helper;  eauto.
+    unfold find_cor. clear IHl. clear H1. clear H2. clear H4. clear glab. 
+    induction (steps measurement corruption G2); econstructor.
++++ destruct a.  unfold find_cor. destruct (label measurement corruption G2 (fst (s1, s2))) eqn:lab'; eauto. simpl in *.
+    specialize lab with s1 s2.
+    specialize ste with s1 s2. simpl in *... clear IHl0.
+    induction (steps measurement corruption G3)... inversion H1. simpl in *...
+    econstructor. destruct a. inversion H3. rewrite <- lab'. rewrite H... apply ex_tail...
++++ apply IHl0; auto with *.
+++ inversion H1...
++ (* goal: time subset *) 
+  clear H. clear H1. clear gste.
+  induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+   inversion H2; subst.  
+   eapply find_time_helper;  eauto. clear IHl. clear H1. clear H2. clear H4. clear glab. 
+    induction (steps measurement corruption G2); econstructor.
++++ destruct a.  unfold find_time. 
+   destruct (label measurement corruption G2 (fst (s1, s2))) eqn:lab'; eauto. 
+   destruct (label measurement corruption G2 (snd (s1, s2))) eqn:lab''; eauto. simpl in *.
+    specialize lab with s1 s2.
+    specialize ste with s1 s2. simpl in *... clear IHl0.
+    induction (steps measurement corruption G3)... inversion H1.
+    simpl in *...
+    econstructor. destruct a. inversion H3...
+     rewrite <- lab''; rewrite H4...
+     rewrite <- lab'; rewrite H...
+    apply ex_tail...
++++ apply IHl0; auto with *.
+++ inversion H2...
+(* goal: cor proper *)
++ left. unfold cor_proper_subset in *...
+++ clear H3. clear H2. clear H1. clear gste.
+  induction (steps measurement corruption G1); econstructor.
++++ destruct a.
+   inversion H0; subst.  
+   eapply find_cor_helper;  eauto.
+   clear IHl. clear H0. clear H2. clear H4. clear glab. 
+    induction (steps measurement corruption G2); econstructor.
+++++ destruct a.  unfold find_cor. destruct (label measurement corruption G2 (fst (s1, s2))) eqn:lab'; eauto. simpl in *.
+    specialize lab with s1 s2.
+    specialize ste with s1 s2. simpl in *... clear IHl0.
+    induction (steps measurement corruption G3)... inversion H1.
+    simpl in *...
+    econstructor. destruct a. inversion H3. rewrite <- lab'.
+    rewrite H...
+    apply ex_tail...
+++++ apply IHl0; auto with *.
++++ inversion H0...
+++ apply H3. clear H1. clear H2. clear H0. clear H3.
+   clear gste.
+   induction (steps measurement corruption G2); econstructor.
++++ eapply find_cor_helper; eauto. destruct a.
+    unfold find_cor. destruct (label measurement corruption G2 (fst (s,s0))) eqn:lab'; eauto.
+    specialize lab with s s0... simpl in *...
+    specialize ste with s s0. simpl in *... clear IHl.  (* clear IHl0. clear H4. clear H.*)
+    induction (steps measurement corruption G3).
+    inversion H5. simpl in *. destruct H5.
+    destruct a. inversion H2. apply ex_head. rewrite <- lab'. rewrite H0...
+    apply ex_tail. eapply IHl0... auto with *.
+    specialize glab with st1 st2. simpl in *...  
+    specialize glab with st1 st2. simpl in *...
+    inversion H; eauto.
++++ apply IHl; auto with *.  
+(* goal: cor subset *)
++ clear H. clear H2. clear gste.
+  induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+   inversion H1; subst.  
+   eapply find_cor_helper;  eauto.
+    unfold find_cor. clear IHl. clear H1. clear H2. clear H4. clear glab. 
+    induction (steps measurement corruption G2); econstructor.
++++ destruct a.  unfold find_cor. destruct (label measurement corruption G2 (fst (s1, s2))) eqn:lab'; eauto. simpl in *.
+    specialize lab with s1 s2.
+    specialize ste with s1 s2. simpl in *... clear IHl0.
+    induction (steps measurement corruption G3)... inversion H1. simpl in *...
+    econstructor. destruct a. inversion H3. rewrite <- lab'. rewrite H... apply ex_tail...
++++ apply IHl0; auto with *.
+++ inversion H1...
++ (* goal: time subset *) 
+  clear H. clear H1. clear gste.
+  induction (steps measurement corruption G1); econstructor.
+++ destruct a.
+   inversion H2; subst.  
+   eapply find_time_helper;  eauto. clear IHl. clear H1. clear H2. clear H4. clear glab. 
+    induction (steps measurement corruption G2); econstructor.
++++ destruct a.  unfold find_time. 
+   destruct (label measurement corruption G2 (fst (s1, s2))) eqn:lab'; eauto. 
+   destruct (label measurement corruption G2 (snd (s1, s2))) eqn:lab''; eauto. simpl in *.
+    specialize lab with s1 s2.
+    specialize ste with s1 s2. simpl in *... clear IHl0.
+    induction (steps measurement corruption G3)... inversion H1.
+    simpl in *...
+    econstructor. destruct a. inversion H3...
+     rewrite <- lab''; rewrite H4...
+     rewrite <- lab'; rewrite H...
+    apply ex_tail...
++++ apply IHl0; auto with *.
+++ inversion H2...
+(* goal: time proper *)
++ right. unfold time_proper_subset in *...
+++ clear H1. clear H2. clear H3. clear gste.
+  induction (steps measurement corruption G1); econstructor.
++++ destruct a.
+   inversion H0; subst.  
+   eapply find_time_helper;  eauto.
+   clear IHl. clear H0. clear H2. clear H4. clear glab. 
+    induction (steps measurement corruption G2); econstructor.
+++++ destruct a.  unfold find_time. 
+     destruct (label measurement corruption G2 (fst (s1, s2))) eqn:lab'; eauto.
+     destruct (label measurement corruption G2 (snd (s1, s2))) eqn:lab''; eauto.
+     simpl in *.
+    specialize lab with s1 s2.
+    specialize ste with s1 s2. simpl in *... clear IHl0.
+    induction (steps measurement corruption G3)... inversion H1.
+    simpl in *...
+    econstructor. destruct a; inversion H3... rewrite <- lab''. rewrite H4...
+    rewrite <- lab'. rewrite H... 
+    apply ex_tail...
+++++ apply IHl0; auto with *.
++++ inversion H0...
+++ apply H3. clear H1. clear H2. clear H0. clear H3.
+   clear gste.
+   induction (steps measurement corruption G2); econstructor.
++++ eapply find_time_helper; eauto. destruct a.
+    unfold find_time. 
+    destruct (label measurement corruption G2 (fst (s,s0))) eqn:lab'; eauto.
+    destruct (label measurement corruption G2 (snd (s, s0))) eqn:lab''; eauto.
+    specialize lab with s s0... simpl in *...
+    specialize ste with s s0. simpl in *... clear IHl.  (* clear IHl0. clear H4. clear H.*)
+    induction (steps measurement corruption G3).
+    inversion H5. simpl in *. destruct H5.
+    destruct a. inversion H2. apply ex_head. rewrite <- lab'. rewrite H0...
+    rewrite <- lab''. rewrite H3...
+    apply ex_tail. eapply IHl0... auto with *.
+    specialize glab with st1 st2. simpl in *...  
+    specialize glab with st1 st2. simpl in *...
+    inversion H; eauto.
++++ apply IHl; auto with *.
+Qed.   
+
+
+(**************************************
+  PARTIAL ORDER OVER INDIVIDUAL GRAPHS 
+  IS TRANSITIVE 
+**************************************)
 Theorem po_trans : forall G1 G2 G3, partial_order G1 G2 -> partial_order G2 G3 -> partial_order G1 G3.
-Proof.
+Proof with intuition.
   unfold partial_order.
   intros. 
   destruct H as [isoG1G2 | spoG1G2].
@@ -118,22 +441,14 @@ Proof.
   (* g1 = g2 /\ g2 = g3 *)
   ++ left. eapply isomorphism_trans; eauto.
   (* g1 = g2 /\ g2 < g3 *)
-  ++ right.
-     unfold isomorphism in isoG1G2.
-     destruct isoG1G2 as [H H0]. unfold homomorphism in H. destruct H as [f].
-     destruct H as [ste lab].
-     destruct H0 as [g]. unfold homomorphism in H. destruct H as [gste glab].
-     unfold strict_partial_order' in *.
-     intuition.
-  +++ induction (steps measurement corruption G1).
-  ++++ econstructor.
-  ++++ econstructor.
-  +++++ eapply find_cor_helper with (G2 := G2); eauto.
-        clear IHl. admit.
-  +++++ eapply IHl; auto with *. intros.  
+  ++ right. eapply po_trans_helper; eauto.
+  + destruct H0 as [isoG2G3 | spoG2G3 ].
+  (* g1 < g2 /\ g2 = g3 *)
+  ++ right. eapply po_trans_helper'; eauto.
+  (* g1 < g2 /\ g2 < g3 *)
+  ++  right. eapply spo_trans; eauto.
+Qed. 
 
-
-  Abort.   
 
 End PO.
 
