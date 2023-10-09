@@ -162,6 +162,8 @@ Context {corruption : Type}.
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
  Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
+ (* could prove decidable from the hypothesis *)
+ Hypothesis eqDec_graph : forall (G1 G2 : attackgraph measurement corruption), {G1 = G2} + {G1 <> G2}.
 
   (* TODO : maybe this? *)
  Theorem eq_impl_not_order : forall (g1 g2: attackgraph measurement corruption), (strict_partial_order (g1.(steps _ _)) (g2.(steps _ _))) -> ~ isomorphism g1 g2.
@@ -187,9 +189,68 @@ Context {corruption : Type}.
     (exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order' G H)).
 
   (* TODO : is this irr? *)
-  Theorem supports_spo_irrefl :forall a, ~ supports_spo a a.
+  Theorem supports_spo_irrefl :forall a, a <> nil -> ~ supports_spo a a.
   Proof.
-  Abort.       
+    unfold supports_spo.
+    intros a HNil contra.
+    destruct a.
+    - apply HNil. reflexivity.
+    - clear HNil. generalize dependent a. induction a0.
+    -- intros a contra. specialize contra with a. simpl in *. intuition.
+      destruct H1. destruct H. destruct H; subst.
+    --- admit. (* pose proof (spo_irr x) as HIrr. specialize HIrr with x. contradiction. *)
+    --- assumption.
+    -- intros a1 contra. apply IHa0 with a. intros HH HIn.
+      assert (In HH (a1 ::a :: a0) -> exists G, In G (a1 :: a :: a0) /\ strict_partial_order' G HH) 
+      by apply contra. simpl in *. destruct HIn; subst.
+    --- pose proof (eqDec_graph a1 HH). destruct H0; subst.
+    ---- intuition. destruct H1 as [GG H1]. destruct H1. destruct H0; subst.
+    ----- exists GG. auto.
+    ----- exists GG. auto.
+    ---- intuition. destruct H1 as [GG H1]. destruct H1. destruct H; subst.
+    ----- assert (GG = GG \/ HH = GG \/ In GG a0 -> exists G, (GG = G \/ HH = G \/ In G a0) /\ strict_partial_order' G GG)
+          by apply contra. destruct H; subst.
+    ------ left. reflexivity.
+    ------ destruct H. destruct H; subst.
+    ------- admit. (* specialize HIrr with x. contradiction.*)
+    ------- exists x. split; auto.
+            (* eapply HTrans; eauto.*) admit. 
+    ----- exists GG. auto.
+    --- intuition. destruct H2 as [GG H2]. destruct H2. destruct H2; subst.
+    ---- assert (GG = GG \/ a = GG \/ In GG a0 -> exists G, (GG = G \/ a = G \/ In G a0) /\ strict_partial_order' G GG)
+        by apply contra.
+        destruct H2.
+    ----- left. reflexivity.
+    ----- destruct H2. destruct H2; subst.
+    ------ admit. (*  specialize HIrr with x. contradiction.*)
+    ------ exists x. split; auto. admit. 
+          (* eapply HTrans; eauto.*) 
+    ---- exists GG. auto.
+    Admitted. 
+  
+  Theorem supports_spo_asym :forall x y, x <> nil -> y <> nil -> supports_spo x y -> ~ supports_spo y x.
+  Proof.
+    unfold supports_spo. intros x y XNil YNil Hxy contra.
+    destruct x.
+    + apply XNil. reflexivity.
+    + clear XNil. generalize dependent a. induction x.
+    ++ intros a  Hxy contra. specialize contra with a.
+       simpl in *. intuition. destruct H1. destruct H; subst.
+       clear H0. specialize Hxy with x.
+       intuition. destruct H0. destruct H0.
+       destruct H0. subst.
+    +++ admit.
+    +++ eauto.
+    ++ intros. apply IHx with (a := a) .
+    +++ intros. destruct y.
+    ++++ simpl in H0. exfalso; eauto.
+    ++++ clear YNil. clear IHx.
+         assert (Hind : In a1 (a1 :: y) -> exists G : attackgraph measurement corruption, In G (a0 :: a :: x) /\ strict_partial_order' G a1 ) by apply Hxy.
+         simpl in Hind. intuition. destruct H3. destruct H1. specialize contra with x0. simpl in contra.
+         apply contra in H1. destruct H1. destruct H1. clear H0. clear H2. clear contra.   induction y.
+    +++++ simpl in *. admit.
+    +++++ apply IHy. auto with *.   destruct H1.  
+  Admitted.
 
   Theorem supports_spo_trans : forall x y z, supports_spo x y -> supports_spo y z -> supports_spo x z.
   Proof. 
@@ -294,15 +355,15 @@ Definition supports (SS : list (attackgraph measurement corruption)) (TT : list 
  Proof.
     intros X. intros Y.
     intros supXY supYX.
-    unfold set_eq. split; unfold supports in *.
+    unfold set_eq. split; unfold supports in *; intuition.
     + (* supports X Y *)  
-      destruct supYX; eauto.
-    ++ destruct supXY; eauto.
-       unfold supports_iso in *. intros y1 Hy1Y.
-       unfold supports_spo in H0. 
-       specialize H with y1. intuition.
-       (* y2 = x < y1 *)
-       (* There's no where to go from here... *)       
+      unfold supports_iso, supports_spo in *.
+      intros y InyY.
+      specialize
+       admit.
+    + eapply supports_spo_asym in H. contradiction.
+    + admit.
+    + eapply supports_spo_asym in H. contradiction.            
   Abort. 
 
  (* supports is transitive *)
