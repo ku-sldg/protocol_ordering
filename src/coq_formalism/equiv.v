@@ -156,38 +156,9 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   (isomorphism g2 g3) ->
   (isomorphism g1 g3) .
   Proof.
-    intros. Admitted. (*  
-    destruct H as [f12]. destruct H as [f21].
-    destruct H0 as [g23]. destruct H0 as [g32].
-    inversion H. 
-    inversion H0.
-    unfold isomorphism.
-    exists (fun x => g23 (f12 (x))).
-    exists (fun x => f21 (g32 (x))).
-    split; simpl.
-    + clear H2. clear H4.  unfold homomorphism in *.
-      split; eauto.
-    ++ destruct (H1 st1 st2); eauto.
-       destruct (H3 (f12 st1) (f12 st2)); eauto.
-    ++ intros. destruct (H1 st0 st3); eauto.
-       destruct (H3 (f12 st0) (f12 st3)); eauto.
-       destruct (H6 st0 st3); eauto.
-       destruct (H8 (f12 st0) (f12 st3)); eauto.
-       split; intuition.
-    +++ rewrite H9. rewrite H11. eauto.
-    +++ rewrite H10. rewrite H12. eauto.
-    + clear H1. clear H3.  unfold homomorphism in *.
-      split; eauto.
-    ++ destruct (H4 st1 st2); eauto.
-      destruct (H2 (g32 st1) (g32 st2)); eauto.
-    ++ intros. destruct (H4 st0 st3); eauto.
-      destruct (H2 (g32 st0) (g32 st3)); eauto.
-      destruct (H6 st0 st3); eauto.
-      destruct (H8 (g32 st0) (g32 st3)); eauto.
-      split; intuition.
-    +++ rewrite H9. rewrite H11. eauto.
-    +++ rewrite H10. rewrite H12. eauto.
-  Qed.*)
+    intros. destruct H. destruct H0.  
+    unfold isomorphism. split; pose proof homomorphism_trans as H3; eapply H3; eauto.
+  Qed. 
 
   (* #[global]
   Add Relation _ (isomorphism) 
