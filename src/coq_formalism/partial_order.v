@@ -21,11 +21,8 @@ Context {corruption : Type}.
  Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
  Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
 
- Definition strict_partial_order' (g1 g2 : attackgraph measurement corruption) : Prop :=
-  (cor_subset_ind (g1.(steps _ _)) (g2.(steps _ _)) /\ time_subset_ind (g1.(steps _ _)) (g2.(steps _ _))) /\ (cor_proper_subset (g1.(steps _ _)) (g2.(steps _ _)) \/ time_proper_subset (g1.(steps _ _)) (g2.(steps _ _))).
-
 Definition partial_order (G1 : attackgraph measurement corruption) (G2 : attackgraph measurement corruption) := 
-  isomorphism G1 G2 \/ strict_partial_order' G1 G2.
+  isomorphism G1 G2 \/ strict_partial_order G1 G2.
   
 Theorem po_refl : forall G1 G2, isomorphism G1 G2 ->  partial_order G1 G2.
 Proof.
@@ -38,9 +35,7 @@ Proof.
   destruct H; eauto.
   destruct H0; eauto.
   eapply isomorphism_sym. eauto.
-  pose proof (spo_asym G1 G2).
-  specialize H1 with (G1.(steps _ _)) (G2.(steps _ _)).
-  exfalso. apply H1. eauto. eauto.
+  pose proof (spo_asym G1 G2); intuition.
 Qed. 
 
 Lemma cor_meas_label_ : forall  (G3 : attackgraph measurement corruption) (G2 : attackgraph measurement corruption) 
@@ -92,14 +87,16 @@ Proof.
   unfold find_cor in H3. rewrite H0 in H3. inversion H3.
 Qed. 
 
-Lemma po_trans_helper : forall G1 G2 G3, isomorphism G1 G2 /\ strict_partial_order' G2 G3 -> strict_partial_order' G1 G3.
+Print strict_partial_order.
+
+Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement corruption), isomorphism G1 G2 /\ strict_partial_order G2 G3 -> strict_partial_order G1 G3.
 Proof with intuition.
 intros... 
 unfold isomorphism in H0.
 destruct H0 as [isoG1G2  spoG1G2]. 
 destruct isoG1G2 as [f H]. unfold homomorphism in H. destruct H as [ste lab].
 destruct spoG1G2. unfold homomorphism in H. destruct H as [gste glab].
-unfold strict_partial_order' in *...
+unfold strict_partial_order in *...
 (* goal: cor subset *)
 + clear H. clear H2. clear gste.
   induction (steps measurement corruption G1); econstructor.
@@ -256,14 +253,14 @@ specialize glab with st1 st2. simpl in *...
 +++ eapply IHl. inversion H0...
 Qed.
 
-Lemma po_trans_helper' : forall G1 G2 G3, strict_partial_order' G1 G2 /\ isomorphism G2 G3 -> strict_partial_order' G1 G3.
+Lemma po_trans_helper' : forall (G1 G2 G3 : attackgraph measurement corruption), strict_partial_order G1 G2 /\ isomorphism G2 G3 -> strict_partial_order G1 G3.
 Proof with intuition.
 intros G1 G2 G3 H1. destruct H1 as [H1 H0]. 
 unfold isomorphism in H0.
 destruct H0 as [isoG1G2  spoG1G2]. 
 destruct isoG1G2 as [f H]. unfold homomorphism in H. destruct H as [ste lab].
 destruct spoG1G2. unfold homomorphism in H. destruct H as [gste glab].
-unfold strict_partial_order' in *...
+unfold strict_partial_order in *...
 (* goal: cor subset *)
 + clear H. clear H2. clear gste.
   induction (steps measurement corruption G1); econstructor.

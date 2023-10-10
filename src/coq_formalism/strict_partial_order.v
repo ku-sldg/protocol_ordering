@@ -381,17 +381,17 @@ Abort.
   STRICT PARTIAL ORDER 
   ******************************)
 
- Definition strict_partial_order {g1 g2 : attackgraph measurement corruption} (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _))) : Prop := 
- (cor_subset_ind xs ys /\ time_subset_ind xs ys) /\ (cor_proper_subset xs ys \/ time_proper_subset xs ys).
+ Definition strict_partial_order (g1 g2 : attackgraph measurement corruption) : Prop :=
+    (cor_subset_ind (g1.(steps _ _)) (g2.(steps _ _)) /\ time_subset_ind (g1.(steps _ _)) (g2.(steps _ _))) /\ (cor_proper_subset (g1.(steps _ _)) (g2.(steps _ _)) \/ time_proper_subset (g1.(steps _ _)) (g2.(steps _ _))).
  
- Theorem spo_irr : forall (g1 : attackgraph measurement corruption) (x : list (g1.(state _ _) * g1.(state _ _)) ), ~ strict_partial_order x x.
+ Theorem spo_irr : forall (g1 : attackgraph measurement corruption), ~ strict_partial_order g1 g1.
  Proof.
      intros. unfold strict_partial_order. unfold not. intros. intuition.
      + unfold cor_proper_subset in H0; invc H0; intuition.
      + unfold time_proper_subset in H0; invc H0; intuition.
  Qed.
  
- Theorem spo_asym : forall (g1 g2 : attackgraph measurement corruption)  (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), strict_partial_order x y -> ~ strict_partial_order y x.
+ Theorem spo_asym : forall (g1 g2 : attackgraph measurement corruption), strict_partial_order g1 g2 -> ~ strict_partial_order g2 g1.
  Proof.
      intros. unfold strict_partial_order in *. unfold not. intros. intuition.
      + unfold cor_proper_subset in H; invc H; intuition.
@@ -403,10 +403,10 @@ Abort.
  Ltac try_left := left; eapply cor_trans; eauto.
  Ltac try_right := right; eapply time_trans; eauto.
  
- Theorem spo_trans : forall (g1 g2 g3 : attackgraph measurement corruption) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
- strict_partial_order xs ys -> 
- forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), strict_partial_order ys zs -> 
- strict_partial_order xs zs.
+ Theorem spo_trans : forall (g1 g2 g3 : attackgraph measurement corruption), 
+ strict_partial_order g1 g2 -> 
+ forall g3, strict_partial_order g2 g3 -> 
+ strict_partial_order g1 g3.
  Proof.
      intuition. unfold strict_partial_order in *; intuition;
      try (eapply cor_subset_ind_trans; eauto); try (eapply time_subset_ind_trans; eauto).
