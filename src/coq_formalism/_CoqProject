@@ -6,3 +6,4 @@ strict_partial_order.v
 equiv.v
 partial_order.v
 supports.v
+compare.v
