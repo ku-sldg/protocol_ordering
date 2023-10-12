@@ -28,49 +28,11 @@ Section Equivalence.
 Context {measurement : Type}.
 Context {corruption : Type}.
 
-(* Labels and States must have decidable equality *)
+(* Labels and States must have decidable equality 
 Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
 Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
-Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
+Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.*)
 
-Print reducer.
-
-(* injective = one-to-one*)
-Definition injective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := forall x y, (f x = f y) -> x = y. 
-(* surjective = onto *)
-Definition surjective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := forall x, exists y,  x = f y. 
-Definition bijective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := injective f /\ surjective f.
-
-Lemma inverse {X Y : attackgraph measurement corruption} (f : (X.(state _ _)) -> (Y.(state _ _))) :
-  bijective f -> {g : (Y.(state _ _)) -> (X.(state _ _)) | (forall x, g (f x) = x) /\
-                               (forall y, f (g y) = y) }.
-Proof.
-intros [inj sur].
-apply constructive_definite_description.
-assert (H : forall y, exists! x, f x = y).
-{ intros y.
-  destruct (sur y) as [x xP].
-  exists x; split; trivial. eauto.
-  intros x' x'P.
-  apply inj. rewrite <- xP. eauto. }
-exists (fun y => proj1_sig (constructive_definite_description _ (H y))).
-split.
-- split.
-  + intros x.
-    destruct (constructive_definite_description _ _).
-    simpl.
-    now apply inj.
-  + intros y.
-    now destruct (constructive_definite_description _ _).
-- intros g' [H1 H2].
-  apply functional_extensionality.
-  intros y.
-  destruct (constructive_definite_description _ _) as [x e].
-  simpl.
-  now rewrite <- e, H1.
-Qed.
-
-Print existsb_ind.
 
 (************************
  * DEFINING HOMOMORPHISM 
@@ -160,6 +122,20 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     unfold isomorphism. split; pose proof homomorphism_trans as H3; eapply H3; eauto.
   Qed. 
 
+  (* TODO *)
+  Theorem isomorphism_dec : forall g1 g2, {isomorphism g1 g2} + {~ isomorphism g1 g2}.
+  Proof.
+    intros. generalize dependent g1. destruct g2. induction steps.
+    + intros. destruct g1. induction steps.
+    ++ left. unfold isomorphism. unfold homomorphism. split.
+    +++ eexists. split; intros.
+    ++++ simpl in H. intuition.
+    ++++ simpl in H. intuition.
+    +++ eexists. split; intros; simpl in H; intuition.
+    ++ right.         
+  Abort.
+  
+
   (* #[global]
   Add Relation _ (isomorphism) 
     reflexivity proved by isomorphism_refl
@@ -214,142 +190,50 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     intros a b Heq. eauto. unfold isomorphism in *. 
   Abort. 
 
-  (************************
-   RETRY WITH A DIFFERENT WAY
-   TO DEFINE ISOMORPHISM 
+  End Equivalence.
 
-   as motivated by 
-   https://www.tildedave.com/2019/07/18/formalizing-lagranges-theorem-in-coq.html 
-   ************************)
-
-   Definition ListInjective' (A B: Type) (f: A -> B) (l: list A) :=
-    (forall x y: A, In x l -> In y l -> f x = f y -> x = y).
-
-   (* Definition ListInjective (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) (l :list (state measurement corruption g1 * state measurement corruption g1))  :=
-    (forall x y, In x l -> In y l -> f x = f y -> x = y).*)
-  
-  Definition ListSurjective' (A B: Type) (f: A -> B) (l: list B) (l': list A) :=
-    (forall x: B, In x l -> exists y, In y l' /\ f y = x).
-
-  Definition ListSurjective (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) l l' :=
-    (forall x, In x l -> exists y, In y l' /\ f y = x).
-
-  Definition ListLabelPreserve (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) :=  
-    (forall st1 st2, In (st1,st2) g1.(steps _ _) -> 
-    g1.(label _ _) st1 = g2.(label _ _) (f st1) /\ g1.(label _ _) st2 = g2.(label _ _) (f st2)).
-  
-  Definition ListIsomorphism' (A B: Type) (f: A -> B) (l1: list A) (l2: list B) :=
-    ListInjective' f l1 /\
-    ListSurjective' f l2 l1 /\
-    (forall d, In d l1 -> In (f d) l2).
-
-  (* Definition ListIsomorphism (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  (ListInjective g1 g2 f (g1.(steps _ _)) /\
-                   ListSurjective g1 g2 f (g2.(steps _ _)) (g1.(steps _ _)) /\
-                  (forall d, In d (g1.(steps _ _)) -> In (f d) (g2.(steps _ _))) /\ 
-                  ListLabelPreserve g1 g2 f).
-
-  Definition ListIsomorphismRefl : forall g1 l1, exists f, ListIsomorphism g1 g1 f l1 l1.
-  Proof.
-    intros. unfold ListIsomorphism.
-    intros. exists (fun x => x). intuition.
-    + unfold ListInjective. intros. eauto.
-    + unfold ListSurjective. intros. exists x. split; eauto.
-    + unfold ListLabelPreserve. intros.  
-  Abort.      *)
-    
-  Definition isomorphism' (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) : Prop := 
-  (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f /\ bijective f).
-
-  Theorem isomorphism'_refl : forall g1, isomorphism' g1 g1.
-  Proof.
-    intros. unfold isomorphism'. exists (fun x => x).
-    split.
-    + simpl in *. unfold homomorphism. intros.  eauto. 
-    + unfold bijective. unfold injective, surjective.
-    split.
-    ++ intros.  eauto.
-    ++ intros. eexists; eauto.
-  Qed.
-
-  Theorem isomorphism'_sym : forall g1 g2, isomorphism' g1 g2 -> isomorphism' g2 g1.
-  Proof.
-    intros. unfold isomorphism' in *.
-    destruct H as [fg1g2 H]. destruct H.
-    pose proof (inverse H0). destruct X as [fg2g1 X]. destruct X as [ g1inv g2inv].
-    exists fg2g1. split.
-    + unfold bijective, homomorphism in *. intuition.
-    ++ clear H2.  unfold injective, surjective in *. 
-       assert (H' : surjective fg1g2). { eauto. }
-       unfold surjective in H'.
-       specialize H3 with st1. destruct H3 as [st1'].
-       specialize H' with st2. destruct H' as [st2'].
-       specialize H1 with st1' st2'.
-       intuition. admit.
-  Abort.   
-
-
-  (************************
-   FACTS ABOUT REDUCER 
-   ************************)
-
+  (*******************************
+   * Want to check equivalence of 
+   * reduced graphs *)
+  (******************)
   (* two graphs are equal if you first reduce then prove isomorphic 
    * reduce x to y 
    * reduce a to b 
    * prove the reduced form is also isomorphic *)
-   Check step_update. 
 
+Section Reducer_Equivalence. 
 
-  (* isomorphism of reduced graphs *) 
-  Definition reducer_isomorphism_wrong 
-  (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) 
-  (y : list(G1.(state _ _) * G1.(state _ _))) (b : list(G2.(state _ _) * G2.(state _ _))) := 
-  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) -> isomorphism (step_update G1 y) (step_update G2 b).
+  Import Equivalence.
 
-  Print reducer_deterministic.
+  Context {measurement : Type}.
+  Context {corruption : Type}.
+  Context {G1 : attackgraph measurement corruption}.
+  Context {G2 : attackgraph measurement corruption}.
 
-  Theorem reducer_isomorphism_refl : forall G1 b, reducer_isomorphism_wrong G1 G1 b b.
-  Proof.
-    intuition. 
-    pose proof isomorphism_refl.
-    unfold reducer_isomorphism_wrong.
-    intros. 
-  Abort.
+  (* Labels and States must have decidable equality *)
+  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
+  Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+  Hypothesis eqDec_state1 : forall (x y : G1.(state _ _)), {x = y} + {x <> y}.
+  Hypothesis eqDec_state2 : forall (x y : G2.(state _ _)), {x = y} + {x <> y}.
+  
+  Print reducer.
   
   (* isomorphism of reduced graphs *) 
-  Definition reducer_isomorphism
-  (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) 
-  (y : list(G1.(state _ _) * G1.(state _ _))) (b : list(G2.(state _ _) * G2.(state _ _))) := 
-  (reducer eqDec_state (G1.(steps _ _)) y /\ reducer eqDec_state (G2.(steps _ _)) b) ->
+  Definition reducer_isomorphism (y : list(G1.(state _ _) * G1.(state _ _))) 
+                                 (b : list(G2.(state _ _) * G2.(state _ _))) := 
+  ((reducer eqDec_state1 (G1.(steps _ _)) y) /\ reducer eqDec_state2 (G2.(steps _ _)) b) ->
   isomorphism (step_update G1 y) (step_update G2 b).
 
-  Theorem reducer_isomorphism_refl : forall G1 b, reducer_isomorphism G1 G1 b b.
+  (* want to prove this is also an equivalence relation *)
+  (* Theorem reducer_isomorphism_refl : forall b z, reducer_isomorphism b b.
   Proof.
     intuition. 
-    pose proof isomorphism_refl.
-    unfold reducer_isomorphism.
-    intros. specialize H with (step_update G1 b).
-    inversion H.
+  Abort.
+  
+  Theorem reducer_isomorphism_sym : forall a b, reducer_isomorphism a b -> reducer_isomorphism b a.
+  Proof.
   Abort. 
   
-  Theorem reducer_isomorphism_sym : forall G1 G2 a b, reducer_isomorphism G1 G2 a b -> reducer_isomorphism G2 G1 b a.
-  Proof.
-  intuition. 
-  pose proof isomorphism_sym.
-  unfold reducer_isomorphism in *.
-  intuition. Abort. (* 
-  destruct H1 as [f_g1_g2 H1].
-  destruct H1 as [f_g2_g1 H1].
-  specialize H0 with (step_update G1 a) (step_update G2 b).
-  destruct H0.
-  + exists f_g1_g2. exists f_g2_g1. eauto.
-  + destruct H.
-  exists x0. exists x.
-  eauto.
-  Qed.*)
-  
-  Lemma reducer_iso_helper : forall G1 G3 a c, reducer eqDec_state (steps measurement corruption G1) a 
-  /\  reducer eqDec_state (steps measurement corruption G3) c.
-  Abort.
   
   Theorem reducer_isomorphism_trans : forall G1 G2 G3 a b c, (reducer_isomorphism G1 G2 a b /\ reducer_isomorphism G2 G3 b c) -> reducer_isomorphism G1 G3 a c.
   Proof.
@@ -358,13 +242,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     intuition. simpl in *.
     (* we have nothing about the fact that G2 actually reduces to b *)
     (* I'm not sure how to solve this problem ... *)
-  Abort. 
+  Abort. *) 
 
-    
-    
-
-  (* TODO prove equiv over sets of graphs *)
-  
-
-End Equivalence.
+End Reducer_Equivalence.
 

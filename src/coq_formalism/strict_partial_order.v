@@ -13,7 +13,7 @@ Require Import Coq.Lists.List.
 Require Export Order.attack_graph.
 Require Import Order.utilities.
 
- Section Comparison. 
+ Section Strict_Partial_Order. 
 
  Context {measurement : Type}.
  Context {corruption : Type}.
@@ -172,8 +172,6 @@ Lemma cor_subset_ind_asym : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state 
 Proof.
     intros. unfold not. intros. induction ys. destruct xs.
 Abort. 
-
-
 
  Lemma cor_subset_ind_trans : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), 
  cor_subset_ind xs ys -> 
@@ -422,4 +420,4 @@ Abort.
  
  (* We have proved the strict partial order is in fact a strict partial order *)
  
- End Comparison.
+ End Strict_Partial_Order.

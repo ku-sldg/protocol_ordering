@@ -7,9 +7,25 @@
 
 Require Import Coq.Lists.List.
 
-Require Export Order.attack_graph.
-Require Export Order.strict_partial_order.
-Require Export Order.reduce.
+Require Import Order.attack_graph.
+Require Import Order.strict_partial_order.
+Require Import Order.reduce.
+(* Require Import Order.equiv.
+Require Import Order.utilities.
+Require Import Order.partial_order.
+Require Import Order.supports.
+Require Import Order.compare. *)
+
+
+(* *********** 
+     sys & 
+ ker vc sys seq 
+ * *********** *)
+
+(* *********** *)
+(* Example m2c *)
+(* *********** *)
+(* *********** *)
 
 Module m3b.
 
@@ -43,7 +59,6 @@ Module m3b.
         (s, m4) ::
         nil.
     
-    
     Definition m3b : attackgraph measurement corruption := 
     {|
         state := state_m3b ;
@@ -55,21 +70,23 @@ Module m3b.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
     Lemma eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
-    Lemma eqDec_state : forall (x y : m3b.(state _ _)), {x = y} + {x <> y}.
+    Lemma eqDec_state: forall (x y : m3b.(state _ _)), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
-    
+
     Ltac eqDec_step_left step1 step2 :=
-        destruct (eqDec_step eqDec_state step1 step2) as [H|H]; [clear H | contradiction].
+    destruct (eqDec_step eqDec_state step1 step2) as [H|H]; [clear H | contradiction].
     Ltac eqDec_step_right step1 step2 :=
-        destruct (eqDec_step eqDec_state step1 step2) as [H|H]; [inversion H | clear H].
+    destruct (eqDec_step eqDec_state step1 step2) as [H|H]; [inversion H | clear H].
     Ltac eqDec_state_left st1 st2 :=
-        destruct (eqDec_state st1 st2) as [H|H]; [clear H | contradiction].
+    destruct (eqDec_state st1 st2) as [H|H]; [clear H | contradiction].
     Ltac eqDec_state_right st1 st2 :=
-        destruct (eqDec_state st1 st2) as [H|H]; [inversion H | clear H].
-    
+    destruct (eqDec_state st1 st2) as [H|H]; [inversion H | clear H].
+
+    Print reduce1.
+
     Lemma example_m3b : 
-        (reduce1 eqDec_state m3b.(steps _ _)) =
-        ((k, m4) :: (s, m4) :: nil).
+    (reduce1 eqDec_state m3b.(steps _ _)) =
+    ((k, m4) :: (s, m4) :: nil).
     Proof.
         unfold reduce1.
         simpl. 

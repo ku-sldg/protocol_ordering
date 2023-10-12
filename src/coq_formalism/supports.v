@@ -162,9 +162,8 @@ Context {corruption : Type}.
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
  Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
- (* could prove decidable from the hypothesis *)
- Hypothesis eqDec_graph : forall (G1 G2 : attackgraph measurement corruption), {G1 = G2} + {G1 <> G2}.
 
+ (* if g1 < g2 then g1 cannot equal g2 *)
  Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement corruption), strict_partial_order g1 g2 -> ~ isomorphism g1 g2.
  Proof.
     intros. unfold isomorphism, strict_partial_order in *. intuition.
@@ -208,7 +207,9 @@ Context {corruption : Type}.
  
 
  (* prove supports is a strict partial order when the strict partial order
-  * relation is applied *)
+  * relation is applied 
+  
+  * strict partial order = irreflexive, asymmetric, transitive *)
   Definition supports_spo (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
     (forall (H : (attackgraph measurement corruption)), In H TT ->  
     (exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order G H)).
@@ -227,63 +228,29 @@ Context {corruption : Type}.
     --- pose proof (spo_irr x) as HIrr. contradiction.
     --- assumption.
     (* inductive case (a1 :: a :: a0) *)
-    -- intros a1 contra. apply IHa0 with a. intros HH HIn.
-    (* HIn : In HH (a::a0)
-       reassert contra *)
-      assert (In HH (a1 ::a :: a0) -> exists G, In G (a1 :: a :: a0) /\ strict_partial_order G HH) 
-      by apply contra. simpl in *. destruct HIn; subst.
-    --- pose proof (eqDec_graph a1 HH). destruct H0; subst.
-    ---- intuition. destruct H1 as [GG H1]. destruct H1. destruct H0; subst.
-    ----- exists GG. auto.
-    ----- exists GG. auto.
-    ---- intuition. destruct H1 as [GG H1]. destruct H1. destruct H; subst.
-    ----- assert (GG = GG \/ HH = GG \/ In GG a0 -> exists G, (GG = G \/ HH = G \/ In G a0) /\ strict_partial_order G GG)
-          by apply contra. destruct H; subst.
-    ------ left. reflexivity.
-    ------ destruct H. destruct H; subst.
-    ------- pose proof (spo_irr x) as HIrr. contradiction.
-    ------- exists x. split; auto.
-            pose proof (spo_trans x GG HH).
-            intuition. 
-    ----- exists GG. auto.
-    --- intuition. destruct H2 as [GG H2]. destruct H2. destruct H2; subst.
-    ---- assert (GG = GG \/ a = GG \/ In GG a0 -> exists G, (GG = G \/ a = G \/ In G a0) /\ strict_partial_order G GG)
-        by apply contra.
-        destruct H2.
-    ----- left. reflexivity.
-    ----- destruct H2. destruct H2; subst.
-    ------  pose proof (spo_irr x) as HIrr; contradiction.
-    ------ exists x. split; auto.
-    pose proof (spo_trans x GG HH).
+    -- intros a1 contra. apply IHa0 with a1. intros HH HIn.
+       pose proof (contra' := contra). specialize contra' with HH.
+        simpl in contra'. intuition.
+        simpl in HIn. intuition. 
+    --- subst. destruct H3. destruct H. intuition. 
+    ---- subst. exists x. auto with *.
+    ---- subst. assert (contra' := contra). specialize contra with x.
+         simpl in contra. intuition. destruct H3. destruct H3.
+         intuition.
+    ----- subst. exfalso. apply spo_asym  in H4. contradiction.
+    ----- subst. exfalso. apply spo_irr in H4. destruct H4.
+    ----- exists x0. intuition. eapply spo_trans; eauto.
+    ---- exists x. intuition.
+    --- destruct H3. destruct H2. intuition.
+    ---- subst. exists x. intuition.
+    ---- subst. assert (contra' := contra). specialize contra with x.
+    simpl in contra. intuition. destruct H4. destruct H4.
     intuition.
-    ---- exists GG. auto.
-    Qed. 
-
-    Theorem supports_spo_irrefl' :forall a, a <> nil -> ~ supports_spo a a.
-    Proof.
-      unfold supports_spo.
-      intros a HNil contra.
-      destruct a.
-      (* a is nil *)
-      - apply HNil. reflexivity.
-      - clear HNil. generalize dependent a. induction a0.
-      (* base case (a::nil)*)
-      -- intros a contra. specialize contra with a. simpl in *. intuition.
-        destruct H1. destruct H. destruct H; subst.
-      --- pose proof (spo_irr x) as HIrr. contradiction.
-      --- assumption.
-      (* inductive case (a1 :: a :: a0) *)
-      -- intros a1 contra. apply IHa0 with a. intros HH HIn.
-      (* HIn : In HH (a::a0)
-         reassert contra *)
-        assert (In HH (a1 ::a :: a0) -> exists G, In G (a1 :: a :: a0) /\ strict_partial_order G HH) 
-        by apply contra. simpl in *. destruct HIn; subst.
-      ---- intuition. destruct H1 as [GG H1]. destruct H1. destruct H; subst.
-      ----- exists GG. auto. admit.
-      ----- exists GG. auto. Abort.
-
-
-  Ltac simp_int := simpl in *; intuition.
+  ----- subst.  exists x0. intuition. eapply spo_trans; eauto.
+  ----- subst. exfalso. apply spo_irr in H5. destruct H5.
+  ----- exists x0. intuition. eapply spo_trans; eauto.
+  ---- exists x. intuition.
+  Qed. 
   
   Theorem supports_spo_asym :forall x y, x <> nil -> supports_spo x y -> ~ supports_spo y x.
   Proof.
@@ -334,8 +301,7 @@ Context {corruption : Type}.
   eapply H1; eauto.   
   Qed.
 
-  (* prove supports is an equivalence relation when isomorphism 
-   * relation is applied*)
+  (* supports wrapper with isomorphism *)
   Definition supports_iso (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
     forall (H : (attackgraph measurement corruption)), In H TT ->
     (exists (G : (attackgraph measurement corruption)), In G SS /\ isomorphism G H).
@@ -349,9 +315,8 @@ Context {corruption : Type}.
     pose proof (isomorphism_refl H). eauto.
   Qed.
 
-  Theorem supports_iso_sym : forall x y, supports_iso x y -> supports_iso y x.
+  Theorem supports_iso_sym : forall x y, x <> nil -> supports_iso x y -> supports_iso y x.
   Proof.
-    intros.
   Abort.
   (* If x supports y then its not necessarily true that y supports x *) 
 
@@ -367,10 +332,18 @@ Context {corruption : Type}.
     destruct H0 as [C H0].
     destruct H0 as [InCX H0]. 
     exists C; intuition.
-    Print isomorphism_trans.
-    pose proof (isomorphism_trans eqDec_measurement eqDec_corruption eqDec_state H0 H).
-    apply H1; eauto.   
+    eapply isomorphism_trans; eauto.
   Qed.
+
+  (* TODO *)
+  Theorem  supports_iso_dec : forall x y, x <> nil -> {supports_iso x y} + {~ supports_iso x y} .
+  Proof.
+    intros. destruct x.
+    + exfalso. apply H. intuition.
+    + clear H. generalize dependent a. generalize dependent y. induction x.
+    ++ intros. unfold supports_iso.
+  Abort. 
+  
 
   (******************************
    SET EQUIVALENCE   
@@ -405,6 +378,17 @@ Context {corruption : Type}.
     + eapply supports_iso_trans; eauto.
   Qed.
   
+  (* TODO *)
+  Theorem set_eq_dec : forall SS TT, TT <> nil -> {set_eq SS TT} + {~ set_eq SS TT}.
+  Proof.
+    intros. destruct TT.
+    + exfalso. apply H. reflexivity.
+    + clear H. generalize dependent a. induction TT.
+    ++ intros. unfold set_eq. unfold supports_iso. admit.
+  Abort. 
+
+
+
 (******************************* 
   SUPPORTS AS PARTIAL ORDER 
 ********************************)
@@ -422,72 +406,67 @@ Definition supports (SS : list (attackgraph measurement corruption)) (TT : list 
   pose proof (isomorphism_refl s).
   eauto.  
  Qed.
-
-  (* if X < Y then X /= Y *)
-  Lemma helper' : forall X Y, supports_spo X Y -> ~ supports_iso X Y.
-  Proof.
-    intros. unfold not. intros contra. unfold supports_spo, supports_iso in *.
-    generalize dependent X. induction Y.
-    - intros. simpl in *. admit.
-    - intros. simpl in *. apply IHY with X.
-    -- intros. specialize H with H0. specialize contra with H0.
-       intuition.
-    -- intros. specialize H with H0. specialize contra with H0.
-       intuition.
-  Abort.                
-
- (* TODO: what should equality be here? This isn't quite right  *)
- Theorem  supports_antisym : forall x y, x <> nil -> supports x y -> supports y x -> set_eq x y. 
- Proof.
-    intros X. intros Y.
-    intros XNil supXY supYX.
-    unfold set_eq. split; unfold supports in *; intuition.
-    + (* supports_iso X Y *)  
-      exfalso. unfold supports_iso, supports_spo in *. 
-      destruct X as [ | x].
-    ++ intuition.
-    ++ clear XNil. 
-       assert (H' := H).
-       assert (H0' := H0).
-       specialize H0 with x. simpl in *. intuition.
-       destruct H0. destruct H0. apply H in H0. destruct H0. destruct H0.
-       destruct H0.
-       subst.
-    +++ admit.
-    +++ assert (H0'' := H0'). specialize H0'' with x1. intuition.
-        destruct H6. destruct H5.  
-    
-    
-    
-    
-    
-    generalize dependent x.
-      generalize dependent Y. induction X.
-    +++ intros. simp_int. specialize H0 with x. intuition.
-        destruct H0. destruct H0.
-        apply H in H0. destruct H0.
-        destruct H0. destruct H0.
-    ++++ subst. pose proof  order_impl_not_eq. specialize H0 with x1 x0. intuition.
-    apply myeq in H1; eauto.
-    ++++ inversion H0.
-    +++ intros Y y supxy supyx. apply IHX with Y a. clear IHX.
-    ++++  intros.
-         simpl in *. specialize H0 with a. intuition. 
-         destruct H2.
-    +++++ subst. specialize H0 with H1. intuition.
-          destruct H0. destruct H0. apply H in H0. destruct H0. destruct H0.   exists H1.  
          
-
-         assert (H': In H1 Y) by apply H2. apply H in H'.
-         destruct H'. destruct H3. destruct H3.
-    +++++ subst. specialize H0 with x. simp_int. destruct H0. destruct H0.       
-    
-    
-    
-    + eapply supports_spo_asym in H0. contradiction. intuition. 
-    + admit.
-    + eapply supports_spo_asym in H0. contradiction. intuition.             
-  Abort. 
+ Theorem  supports_antisym : forall x y, y <> nil -> x <> nil -> supports x y -> supports y x -> set_eq x y. 
+ Proof.
+ intros X. intros Y.
+ intros YNil XNil supXY supYX. unfold supports in *. intuition.
+ + (* supports_iso X Y *)  
+   unfold set_eq. split; eauto.
+ + apply set_eq_sym. unfold set_eq. split; eauto.  
+  (* X = Y & Y < X *)
+    exfalso.
+    unfold supports_iso, supports_spo in *. 
+    destruct Y.
+  ++ apply YNil. reflexivity.
+  ++ clear XNil. clear YNil. generalize dependent a. generalize dependent X. induction Y.
+  +++ intros. simpl in *. specialize H with a. intuition.
+      destruct H. destruct H. specialize H0 with x. intuition. destruct H3. destruct H0. destruct H0. subst.
+      apply myeq in H1; eauto. apply order_impl_not_eq in H3. intuition. intuition.
+  +++ intros. apply IHY with X a0.
+  ++++ intros. specialize H with H1. simpl in H. simpl in H2. intuition.
+  ++++ intros. eapply H0 in H2. destruct H2.
+  destruct H2. simpl in *.
+  destruct H2.
+  +++++ subst. exists x. intuition.
+  +++++ destruct H2. 
+  ++++++ subst. specialize H with x. intuition.
+    destruct H4. destruct H. apply H0 in H. destruct H. destruct H.
+    intuition.
+  +++++++ subst. exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
+          eapply spo_trans; eauto.
+  +++++++  subst. apply myeq in H4; eauto. apply order_impl_not_eq in H6. contradiction.
+  +++++++ exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
+  eapply spo_trans; eauto.
+  ++++++ exists x; intuition.
+  + unfold set_eq; intuition. 
+  (* X < Y & Y = X *)
+    exfalso.
+    unfold supports_iso, supports_spo in *. 
+    destruct X.
+  ++ apply XNil. reflexivity.
+  ++ clear XNil. clear YNil. generalize dependent a. generalize dependent Y. induction X.
+  +++ intros. simpl in *. specialize H0 with a. intuition.
+      destruct H0. destruct H0. specialize H with x. intuition. destruct H3. destruct H. destruct H. subst.
+      apply myeq in H1; eauto. apply order_impl_not_eq in H3. intuition. intuition.
+  +++ intros. apply IHX with Y a0.
+  ++++ intros. eapply H in H2. destruct H2.
+  destruct H2. simpl in *.
+  destruct H2.
+  +++++ subst. exists x. intuition.
+  +++++ destruct H2. 
+  ++++++ subst. specialize H0 with x. intuition.
+    destruct H4. destruct H0. apply H in H0. destruct H0. destruct H0.
+    intuition.
+  +++++++ subst. exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
+          eapply spo_trans; eauto.
+  +++++++  subst. apply myeq in H4; eauto. apply order_impl_not_eq in H6. contradiction.
+  +++++++ exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
+  eapply spo_trans; eauto.
+  ++++++ exists x; intuition.
+  ++++ intros. specialize H0 with H1. simpl in H0. simpl in H2. intuition.
+  + unfold set_eq. exfalso. eapply supports_spo_asym in H0. contradiction. intuition.
+Qed. 
 
  (* supports is transitive *)
  Theorem  supports_trans : forall x y z, supports x y -> supports y z -> supports x z.
@@ -512,5 +491,8 @@ Definition supports (SS : list (attackgraph measurement corruption)) (TT : list 
     eapply po_trans_helper'; eauto.
   + right. eapply supports_spo_trans; eauto.
 Qed.
+
+(* now we have proven there is a partial order 
+ * over sets of attack graphs *)
 
 End Supports_List.
