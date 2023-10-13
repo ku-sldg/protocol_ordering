@@ -17,10 +17,13 @@ Require Import Order.supports.
 Require Import Order.compare. 
 
 
-(* *********** 
+(* ******************* 
      sys & 
    vc sys seq 
- * *********** *)
+************************
+   Proving vc sys seq 
+   supports sys 
+ * ****************** *)
 Module vc_sys_seq_supports_sys. 
 
     Set Implicit Arguments.
