@@ -10,17 +10,406 @@ Require Import Coq.Lists.List.
 Require Import Order.attack_graph.
 Require Import Order.strict_partial_order.
 Require Import Order.reduce.
-(* Require Import Order.equiv.
+Require Import Order.equiv.
 Require Import Order.utilities.
 Require Import Order.partial_order.
 Require Import Order.supports.
-Require Import Order.compare. *)
+Require Import Order.compare. 
 
 
 (* *********** 
      sys & 
- ker vc sys seq 
+   vc sys seq 
  * *********** *)
+Module vc_sys_seq_supports_sys. 
+
+    Set Implicit Arguments.
+
+    Inductive measurement : Type :=
+    | ms : measurement
+    | ms4 : measurement.
+
+    Inductive corruption : Type :=
+    | sys : corruption
+    | ker : corruption
+    | vc : corruption
+    | a : corruption
+    | c : corruption.
+
+    Inductive states_sys : Type :=
+    | sys_sys : states_sys 
+    | sys_ker : states_sys
+    | sys_vc : states_sys
+    | sys_ms4 : states_sys.
+
+    Definition label_sys (st : states_sys) : measurement + corruption :=
+    match st with
+    | sys_sys => inr sys
+    | sys_ker => inr ker
+    | sys_vc => inr vc
+    | sys_ms4 => inl ms4
+    end.
+
+    (* 2 graphs for sys... m1a and m2a *)
+    Definition steps_m1a : list (states_sys * states_sys) := 
+        (sys_sys, sys_ms4) :: 
+        (sys_vc, sys_ms4) ::
+        nil.
+    
+    Definition m1a : attackgraph measurement corruption := 
+    {|
+        state := states_sys ;
+        steps := steps_m1a ;
+        label := label_sys
+    |}.
+
+    Definition steps_m2a : list (states_sys * states_sys) := 
+        (sys_sys, sys_ms4) :: 
+        (sys_ker, sys_ms4) ::
+        nil.
+    
+    Definition m2a : attackgraph measurement corruption := 
+    {|
+        state := states_sys ;
+        steps := steps_m2a ;
+        label := label_sys
+    |}.
+
+    Inductive states_vc_sys_seq : Type :=
+    | vc_sys_sys : states_vc_sys_seq 
+    | vc_sys_ker : states_vc_sys_seq
+    | vc_sys_vc : states_vc_sys_seq
+    | vc_sys_a : states_vc_sys_seq
+    | vc_sys_c : states_vc_sys_seq
+    | vc_sys_ms3 : states_vc_sys_seq
+    | vc_sys_ms4 : states_vc_sys_seq.
+
+    Definition label_vc_sys_seq (st : states_vc_sys_seq) : measurement + corruption :=
+    match st with
+    | vc_sys_sys => inr sys
+    | vc_sys_ker => inr ker
+    | vc_sys_vc => inr vc
+    | vc_sys_a => inr a
+    | vc_sys_c => inr c 
+    | vc_sys_ms3 => inl ms 
+    | vc_sys_ms4 => inl ms4
+    end.
+
+    (* 4 possible graphs *)
+
+    Definition steps_m1b : list (states_vc_sys_seq * states_vc_sys_seq) := 
+        (vc_sys_ms3, vc_sys_vc) :: 
+        (vc_sys_vc, vc_sys_ms4) ::
+        (vc_sys_sys, vc_sys_ms4) ::
+        nil.
+
+    Definition m1b : attackgraph measurement corruption := 
+    {|
+        state := states_vc_sys_seq ;
+        steps := steps_m1b ;
+        label := label_vc_sys_seq
+    |}.
+
+    Definition steps_m2b : list (states_vc_sys_seq * states_vc_sys_seq) := 
+        (vc_sys_ms3, vc_sys_ms4) :: 
+        (vc_sys_vc, vc_sys_ms4) ::
+        (vc_sys_sys, vc_sys_ms4) ::
+        nil.
+
+    Definition m2b : attackgraph measurement corruption := 
+    {|
+        state := states_vc_sys_seq ;
+        steps := steps_m2b ;
+        label := label_vc_sys_seq
+    |}.
+
+    Definition steps_m3b : list (states_vc_sys_seq * states_vc_sys_seq) := 
+        (vc_sys_vc, vc_sys_ms3) ::
+        (vc_sys_a, vc_sys_ms3) ::
+        (vc_sys_ms3, vc_sys_ms4) :: 
+        (vc_sys_sys, vc_sys_ms4) ::
+        nil.
+
+    Definition m3b : attackgraph measurement corruption := 
+    {|
+        state := states_vc_sys_seq ;
+        steps := steps_m3b ;
+        label := label_vc_sys_seq
+    |}.
+
+    Definition steps_m4b : list (states_vc_sys_seq * states_vc_sys_seq) := 
+        (vc_sys_vc, vc_sys_ms3) ::
+        (vc_sys_c, vc_sys_ms3) ::
+        (vc_sys_ms3, vc_sys_ms4) :: 
+        (vc_sys_sys, vc_sys_ms4) ::
+        nil.
+
+    Definition m4b : attackgraph measurement corruption := 
+    {|
+        state := states_vc_sys_seq ;
+        steps := steps_m4b ;
+        label := label_vc_sys_seq
+    |}.
+
+    (* Prove m2b, m3b and m4b reduce *)
+
+    Definition steps_m2b' : list (states_vc_sys_seq * states_vc_sys_seq) := 
+        (vc_sys_vc, vc_sys_ms4) ::
+        (vc_sys_sys, vc_sys_ms4) ::
+        nil.
+
+    Definition m2b' : attackgraph measurement corruption := 
+    {|
+        state := states_vc_sys_seq ;
+        steps := steps_m2b' ;
+        label := label_vc_sys_seq
+    |}.
+
+    Definition steps_m3b' : list (states_vc_sys_seq * states_vc_sys_seq) := 
+        (vc_sys_vc, vc_sys_ms4) ::
+        (vc_sys_a, vc_sys_ms4) ::
+        (vc_sys_sys, vc_sys_ms4) ::
+        nil.
+
+    Definition m3b' : attackgraph measurement corruption := 
+    {|
+        state := states_vc_sys_seq ;
+        steps := steps_m3b' ;
+        label := label_vc_sys_seq
+    |}.
+
+    Definition steps_m4b' : list (states_vc_sys_seq * states_vc_sys_seq) := 
+        (vc_sys_vc, vc_sys_ms4) ::
+        (vc_sys_c, vc_sys_ms4) ::
+        (vc_sys_sys, vc_sys_ms4) ::
+        nil.
+
+    Definition m4b' : attackgraph measurement corruption := 
+    {|
+        state := states_vc_sys_seq ;
+        steps := steps_m4b' ;
+        label := label_vc_sys_seq
+    |}.
+
+    Lemma eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
+    Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
+    Lemma eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+    Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
+    Lemma eqDec_state2: forall (x y : m2b.(state _ _)), {x = y} + {x <> y}.
+    Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
+    Lemma eqDec_state3: forall (x y : m3b.(state _ _)), {x = y} + {x <> y}.
+    Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
+    Lemma eqDec_state4: forall (x y : m4b.(state _ _)), {x = y} + {x <> y}.
+    Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
+
+    Ltac eqDec_step_left step1 step2 eqDec_state :=
+    destruct (eqDec_step eqDec_state step1 step2) as [H|H]; [clear H | contradiction].
+    Ltac eqDec_step_right step1 step2 eqDec_state :=
+    destruct (eqDec_step eqDec_state step1 step2) as [H|H]; [inversion H | clear H].
+    Ltac eqDec_state_left st1 st2 eqDec_state :=
+    destruct (eqDec_state st1 st2) as [H|H]; [clear H | contradiction].
+    Ltac eqDec_state_right st1 st2 eqDec_state :=
+    destruct (eqDec_state st1 st2) as [H|H]; [inversion H | clear H].
+
+    Lemma example_m2b_reduce1 : 
+    reduce1 eqDec_state2 steps_m2b =
+    steps_m2b'.
+    Proof.
+     unfold reduce1. simpl. 
+     eqDec_step_left (vc_sys_ms3, vc_sys_ms4) (vc_sys_ms3, vc_sys_ms4) eqDec_state2.
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_vc, vc_sys_ms4) eqDec_state2.
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_sys, vc_sys_ms4) eqDec_state2.
+     simpl.
+     eqDec_state_right vc_sys_vc vc_sys_ms3 eqDec_state2.
+     eqDec_state_right vc_sys_ms4 vc_sys_ms3 eqDec_state2.
+     eqDec_state_right vc_sys_sys vc_sys_ms3 eqDec_state2.
+     unfold steps_m2b'. reflexivity.
+    Qed. 
+
+    Lemma m2b_reduced : reducer eqDec_state2 steps_m2b steps_m2b'.
+    Proof. 
+        apply reduce_more.
+        + rewrite example_m2b_reduce1. unfold not. intros. inversion H. 
+        + rewrite example_m2b_reduce1. apply reduce_done. eauto.
+    Qed. 
+
+    Lemma example_m3b_reduce1 : 
+    reduce1 eqDec_state3 steps_m3b =
+    steps_m3b'.
+    Proof.
+     unfold reduce1. simpl. 
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_vc, vc_sys_ms3) eqDec_state3.
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_a, vc_sys_ms3) eqDec_state3.
+     eqDec_step_left (vc_sys_ms3, vc_sys_ms4) (vc_sys_ms3, vc_sys_ms4) eqDec_state3.
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_sys, vc_sys_ms4) eqDec_state3.
+     simpl.
+     eqDec_state_right vc_sys_vc vc_sys_ms3 eqDec_state3.
+     eqDec_state_right vc_sys_a vc_sys_ms3 eqDec_state3.
+     eqDec_state_left vc_sys_ms3 vc_sys_ms3 eqDec_state3.
+     eqDec_state_right vc_sys_sys vc_sys_ms3 eqDec_state3.
+     eqDec_state_right vc_sys_ms4 vc_sys_ms3 eqDec_state3.
+     unfold steps_m3b'. reflexivity.
+    Qed. 
+
+    Lemma m3b_reduced : reducer eqDec_state3 steps_m3b steps_m3b'.
+    Proof. 
+        apply reduce_more.
+        + rewrite example_m3b_reduce1. unfold not. intros. inversion H. 
+        + rewrite example_m3b_reduce1. apply reduce_done. eauto.
+    Qed. 
+
+    Lemma example_m4b_reduce1 : 
+    reduce1 eqDec_state4 steps_m4b =
+    steps_m4b'.
+    Proof.
+     unfold reduce1. simpl. 
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_vc, vc_sys_ms3) eqDec_state4.
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_c, vc_sys_ms3) eqDec_state4.
+     eqDec_step_left (vc_sys_ms3, vc_sys_ms4) (vc_sys_ms3, vc_sys_ms4) eqDec_state4.
+     eqDec_step_right (vc_sys_ms3, vc_sys_ms4) (vc_sys_sys, vc_sys_ms4) eqDec_state4.
+     simpl.
+     eqDec_state_right vc_sys_vc vc_sys_ms3 eqDec_state4.
+     eqDec_state_right vc_sys_c vc_sys_ms3 eqDec_state4.
+     eqDec_state_left vc_sys_ms3 vc_sys_ms3 eqDec_state4.
+     eqDec_state_right vc_sys_sys vc_sys_ms3 eqDec_state4.
+     eqDec_state_right vc_sys_ms4 vc_sys_ms3 eqDec_state4.
+     unfold steps_m4b'. reflexivity.
+    Qed. 
+
+    Lemma m4b_reduced : reducer eqDec_state4 steps_m4b steps_m4b'.
+    Proof. 
+        apply reduce_more.
+        + rewrite example_m4b_reduce1. unfold not. intros. inversion H. 
+        + rewrite example_m4b_reduce1. apply reduce_done. eauto.
+    Qed.
+
+    (* define homomorphism function *)
+    Definition f (x : states_sys) : states_vc_sys_seq :=
+        match x with 
+        | sys_sys => vc_sys_sys 
+        | sys_vc => vc_sys_vc
+        | sys_ker => vc_sys_ker
+        | sys_ms4 => vc_sys_ms4
+    end.
+
+    Definition g (x : states_vc_sys_seq) : option (states_sys) :=
+        match x with 
+        | vc_sys_sys => Some sys_sys 
+        | vc_sys_vc => Some sys_vc
+        | vc_sys_ker => Some sys_ker
+        | vc_sys_ms4 => Some sys_ms4
+        | _ => None
+    end.
+
+    Definition g' (x : states_vc_sys_seq) : (states_sys) :=
+        match x with 
+        | vc_sys_sys =>  sys_sys 
+        | vc_sys_vc =>  sys_vc
+        | vc_sys_ker =>  sys_ker
+        | vc_sys_ms4 =>  sys_ms4
+        | _ => sys_ms4
+    end.
+    
+    Definition sys_all : list (attackgraph measurement corruption) :=  m1a :: m2a :: nil .
+
+    Definition vc_sys_seq_all := m1b :: m2b' :: m3b' :: m4b' :: nil.
+
+    Ltac cor_in_head := simpl; apply ex_head; auto.
+    Ltac cor_in_tail := simpl; apply ex_tail; auto.
+
+    Lemma m1a_supports_m1b : supports ( m1a :: nil ) (m1b :: nil).
+    Proof.
+      unfold supports. right.
+      unfold supports_spo. intros. simpl in H0.
+      destruct H0.
+      + exists m1a. simp_int.
+        unfold strict_partial_order. intuition; subst.
+      ++ econstructor.
+      +++  simpl. unfold find_cor. simpl. apply ex_tail. simpl.
+           apply ex_tail. apply ex_head. simpl. eauto.
+      +++ econstructor.
+      ++++ unfold find_cor. simpl. apply ex_tail. apply ex_head. simp_int. 
+      ++++ econstructor.
+      ++ econstructor; try econstructor; try econstructor.
+      ++ right. unfold time_proper_subset. split.
+      +++ unfold find_time. repeat econstructor.
+      +++ unfold not. intros. inversion H. subst. unfold find_time in H2. simpl in *. inversion H2.
+      ++++ subst. invc H1. simpl in *. invc H0.
+      ++++ subst. invc H1. subst. invc H3. simpl in *. invc H0.
+           subst. invc H3.
+    + invc H0.
+    Qed.
+
+    Lemma vc_sys_seq_supports_sys : supports' sys_all vc_sys_seq_all.
+    Proof.
+      unfold supports'. intros. simpl in H0. intuition.
+      + subst. exists m1a. unfold sys_all; intuition. right.
+        unfold strict_partial_order. intuition.
+      ++ econstructor. 
+      +++ simpl. unfold steps_m1b. apply ex_tail. apply ex_tail. apply ex_head. simpl. intuition.
+      +++ econstructor. simpl. unfold steps_m1b. apply ex_tail. apply ex_head. simpl. eauto. econstructor.
+      ++ econstructor.
+      +++ simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+      +++ econstructor. simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+          econstructor.
+      ++ right. unfold time_proper_subset. split.
+      +++ econstructor.
+      ++++ simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+      ++++ econstructor. simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+          econstructor.
+      +++ unfold not. intros. invc H. subst. simpl in *. invc H2. subst.
+          simpl in *. destruct H0. inversion H0. subst. invc H0. subst. 
+          destruct H1. simpl in *. invc H. subst. invc H1.
+      + subst. exists m1a. unfold sys_all. intuition. left.
+        unfold isomorphism. split.
+      ++ simpl. exists f. unfold homomorphism. split.
+      +++ intros. simpl in *. intuition.
+      ++++ invc H0. right. left. unfold f. eauto.
+      ++++ invc H. left. unfold f. eauto.
+      +++ intros. simpl in *. intuition; try (invc H0; simpl in *; eauto); try (invc H; simpl in *; eauto).
+      ++ simpl. exists g'. unfold homomorphism. split.
+      +++ intros. simpl in *. intuition.
+      ++++ invc H0. right. left. unfold f. eauto.
+      ++++ invc H. left. unfold f. eauto.
+      +++ intros. simpl in *. intuition; try (invc H0; simpl in *; eauto); try (invc H; simpl in *; eauto).
+      + exists m1a. unfold sys_all. intuition. right. subst.
+        unfold strict_partial_order. intuition. 
+      ++  econstructor. 
+      +++ simpl. unfold steps_m3b'. apply ex_tail. apply ex_tail. apply ex_head. simpl. intuition.
+      +++ econstructor. simpl. unfold steps_m3b'. apply ex_head. simpl. eauto. econstructor.
+      ++ econstructor.
+      +++ simpl. unfold steps_m3b'. unfold find_time. simpl. eauto.
+      +++ econstructor. simpl. unfold steps_m3b'. unfold find_time. simpl. eauto.
+          econstructor.
+      ++ left. unfold cor_proper_subset. intuition.
+      +++ econstructor.  
+      ++++ simpl. unfold steps_m3b'. apply ex_tail. apply ex_tail. apply ex_head. simpl. intuition.
+      ++++ econstructor. simpl. unfold steps_m3b'. apply ex_head. simpl. eauto. econstructor.
+      +++ invc H. subst. invc H4. subst. invc H1. subst. invc H0.
+          subst. invc H0. subst. invc H1. invc H1.
+      +  exists m1a. unfold sys_all. intuition. right. subst.
+      unfold strict_partial_order. intuition. 
+    ++  econstructor. 
+    +++ simpl. unfold steps_m3b'. apply ex_tail. apply ex_tail. apply ex_head. simpl. intuition.
+    +++ econstructor. simpl. unfold steps_m3b'. apply ex_head. simpl. eauto. econstructor.
+    ++ econstructor.
+    +++ simpl. unfold steps_m3b'. unfold find_time. simpl. eauto.
+    +++ econstructor. simpl. unfold steps_m3b'. unfold find_time. simpl. eauto.
+        econstructor.
+    ++ left. unfold cor_proper_subset. intuition.
+    +++ econstructor.  
+    ++++ simpl. unfold steps_m3b'. apply ex_tail. apply ex_tail. apply ex_head. simpl. intuition.
+    ++++ econstructor. simpl. unfold steps_m3b'. apply ex_head. simpl. eauto. econstructor.
+    +++ invc H. subst. invc H4. subst. invc H1. subst. invc H0.
+        subst. invc H0. subst. invc H1. invc H1.
+ Qed.
+
+End vc_sys_seq_supports_sys. 
+
+
+
+
+
 
 (* *********** *)
 (* Example m2c *)
@@ -341,35 +730,6 @@ Ltac eqDec_state_right st1 st2 :=
 Definition m5c_steps := m5c.(steps _ _).
 Definition m5c'_steps := m5c'.(steps _ _).
 Definition m5c_reduced := ((c, m4) :: (v, m4) :: (s, m4) :: nil).
-
-(* Proof that m5c' is a proper subset (fixpoint def) of m5c *)
-Theorem m5c'_propersub_m5c_fix : cor_proper_subset' m5c'_steps m5c_steps.
-Proof.
-    unfold cor_proper_subset'. split.
-    + simpl; intuition.
-    + simpl. unfold not. intros. inversion H. inversion H0.
-      inversion H0. inversion H1.
-      inversion H1. inversion H2.
-      inversion H2. inversion H2.
-(* TODO *)
-      Abort.
-
-(* Proof that m5c' is a proper subset of m5c *)
-Theorem m5c'_propersub_m5c_ind : proper_subset m5c'_steps m5c_steps.
-Proof.
-    unfold proper_subset. split.
-    + constructor.
-    ++ simpl. unfold st_in_y.  simpl. auto.
-    ++ constructor.
-    +++  simpl; unfold st_in_y;  simpl.  auto.
-    +++ constructor; simpl. unfold st_in_y.  simpl. auto.
-        constructor; simpl. unfold st_in_y; simpl. auto 10.
-        constructor; simpl.
-    + unfold not. intros. inversion H; subst.
-      destruct H2 eqn:H2'. 
-    ++ inversion e.
-    ++ intuition.  inversion o. inversion H0. inversion H0. inversion H1. inversion H1. inversion H3. inversion H3.  
-Qed.
 
 (* must call reduce1 twice here *)
 Lemma example_m5c' : 
