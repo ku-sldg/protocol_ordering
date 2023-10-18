@@ -343,7 +343,16 @@ Context {corruption : Type}.
     + clear H. generalize dependent a. generalize dependent y. induction x.
     ++ intros. unfold supports_iso.
   Abort. 
-  
+
+(*****************************
+ REDUCE SET TO EASIEST GRAPHS 
+*****************************)
+
+Inductive reduce_set (orig : list (attackgraph measurement corruption)) : list (attackgraph measurement corruption) ->  list (attackgraph measurement corruption) -> Prop :=
+| set_nil : reduce_set orig nil nil
+(* there does not exist anything that is less than a1 *)
+| set_keep : forall a1 SS TT, (forall a2, In a2 orig -> ~ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) (a1 :: TT) 
+| set_remove : forall a1 SS TT, (exists a2, In a2 orig /\ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) TT. 
 
   (******************************
    SET EQUIVALENCE   
@@ -387,6 +396,11 @@ Context {corruption : Type}.
     ++ intros. unfold set_eq. unfold supports_iso. admit.
   Abort. 
 
+  Definition set_eq' SS TT :=  
+    (forall (H : (attackgraph measurement corruption)), In H TT -> (exists (G : (attackgraph measurement corruption)), In G SS /\ isomorphism G H)) /\ 
+    (forall (H : (attackgraph measurement corruption)), In H SS -> (exists (G : (attackgraph measurement corruption)), In G TT /\ isomorphism G H )).
+
+
 (******************************* 
   SUPPORTS AS PARTIAL ORDER 
 ********************************)
@@ -413,8 +427,8 @@ intros YNil XNil supXY supYX. unfold supports in *. intuition.
   unfold set_eq. split; eauto.
 + apply set_eq_sym. unfold set_eq. split; eauto.  
  (* X = Y & Y < X *)
-   exfalso.
-   unfold supports_iso, supports_spo in *. 
+ unfold supports_iso, supports_spo in *. 
+ exfalso.
    destruct Y.
  ++ apply YNil. reflexivity.
  ++ clear XNil. clear YNil. generalize dependent a. generalize dependent X. induction Y.
@@ -439,8 +453,8 @@ intros YNil XNil supXY supYX. unfold supports in *. intuition.
  ++++++ exists x; intuition.
  + unfold set_eq; intuition. 
  (* X < Y & Y = X *)
+ unfold supports_iso, supports_spo in *. 
    exfalso.
-   unfold supports_iso, supports_spo in *. 
    destruct X.
  ++ apply XNil. reflexivity.
  ++ clear XNil. clear YNil. generalize dependent a. generalize dependent Y. induction X.
@@ -502,50 +516,18 @@ Proof.
  eauto.  
 Qed.
       
- Theorem  supports_antisym' : forall x y, y <> nil -> x <> nil -> supports' x y -> supports' y x -> set_eq x y. 
+ Theorem  supports_antisym' : forall x y x' y', y <> nil -> x <> nil -> 
+ supports' x y -> supports' y x -> 
+ reduce_set x x x' -> reduce_set y y y' -> set_eq x' y'. 
  Proof.
- intros X. intros Y.
- intros YNil XNil supXY supYX. unfold supports' in *. intuition.
- unfold set_eq. unfold supports_iso. split.
- + destruct Y.
- ++ exfalso; intuition.
- ++ intros. clear XNil. clear YNil. generalize dependent a. generalize dependent X. induction Y.
- (* base case *)
- +++ intros. simpl in H0. destruct H0; eauto.
- ++++ subst. specialize supXY with H. simpl in *. intuition. destruct H2. destruct H0.
-      destruct H2.
- +++++ exists x. intuition.
- +++++ assert (H0' := H0). apply supYX in H0 . destruct H0. destruct H0. destruct H0.
- ++++++ subst. destruct H3.
- +++++++ exists x . intuition. apply myeq. auto.
- +++++++ apply spo_asym in H. contradiction.
- ++++++ inversion H0.
- ++++ inversion H0.
- (* inductive case *)
- +++ intros. apply IHY with H; auto with *.
- ++++ intros. simpl in H2. destruct H2.
- +++++ subst. assert (H0' := H0).
-       apply supXY in H0. destruct H0.
-       exists x. eauto.
- +++++ assert (supXY' := supXY). specialize supXY' with H1. simpl in supXY. intuition.
- ++++ intros. simpl in H0. intuition.
- +++++ subst. apply supYX in H2. destruct H2. destruct H0. simpl in H0.
-       destruct H0.
- ++++++ subst. exists x. auto with *.
- ++++++ destruct H0.
- +++++++ subst.
+ intros X Y. intros X' Y'.
+ intros YNil XNil supXY supYX.
+ intros redX' redY'.
+  unfold supports', set_eq in *. intuition.
 
- Restart. 
- intros X. intros Y.
- intros YNil XNil supXY supYX. unfold supports' in *. intuition.
- unfold set_eq. unfold supports_iso. split.
- + destruct X.
- ++ exfalso; intuition.
- ++ intros. clear XNil. clear YNil. generalize dependent a. generalize dependent Y. induction X.
- +++ intros. assert (H0' := H0). apply supXY in H0. destruct H0. destruct H0.
-     destruct H0. 
- ++++ subst.
- Admitted. 
+Abort.                  
+
+
  
 (* supports is transitive *)
 Theorem  supports_trans' : forall x y z, supports' x y -> supports' y z -> supports' x z.
