@@ -407,6 +407,25 @@ Module vc_sys_seq_supports_sys.
         subst. invc H0. subst. invc H1. invc H1.
  Qed.
 
+ (* *)
+ Theorem vc_sys_seq_set_reduced : reduce_set vc_sys_seq_all vc_sys_seq_all (m2b' :: nil).
+ Proof.
+    unfold vc_sys_seq_all. apply set_remove. 
+    + exists m2b'. split; auto with *.  admit.
+    + apply set_keep.
+    ++ intros. simp_int.
+    +++ subst. unfold strict_partial_order in H0. invc H0. admit.
+    +++ subst.  admit.
+    +++ admit. 
+    +++ admit.
+    ++  apply set_remove. 
+    +++ exists m2b'.  admit.
+    +++ apply set_remove. 
+    ++++ admit.
+    ++++ apply set_nil.     
+Admitted.
+ 
+
 End vc_sys_seq_supports_sys. 
 
 

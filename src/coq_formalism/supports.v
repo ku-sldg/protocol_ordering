@@ -15,6 +15,8 @@ Require Import Order.equiv.
 Require Import Order.utilities.
 Require Import Order.partial_order.
 
+Require Import Coq.Program.Equality.
+
 (********** 
     SUPPORTS 
    
@@ -354,6 +356,14 @@ Inductive reduce_set (orig : list (attackgraph measurement corruption)) : list (
 | set_keep : forall a1 SS TT, (forall a2, In a2 orig -> ~ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) (a1 :: TT) 
 | set_remove : forall a1 SS TT, (exists a2, In a2 orig /\ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) TT. 
 
+(* Search list_beq.
+
+Fixpoint reduce_set_fix (orig tail: list (attackgraph measurement corruption)) : list (attackgraph measurement corruption) := 
+  match tail with
+  | nil => nil 
+  | x::xs => if (forall x', In x' orig -> ~ strict_partial_order x' x) then x::reduce_set_fix orig xs else reduce_set_fix orig xs
+  end. *)
+
   (******************************
    SET EQUIVALENCE   
   
@@ -515,17 +525,143 @@ Proof.
  pose proof (isomorphism_refl H).
  eauto.  
 Qed.
-      
- Theorem  supports_antisym' : forall x y x' y', y <> nil -> x <> nil -> 
- supports' x y -> supports' y x -> 
- reduce_set x x x' -> reduce_set y y y' -> set_eq x' y'. 
- Proof.
- intros X Y. intros X' Y'.
- intros YNil XNil supXY supYX.
- intros redX' redY'.
-  unfold supports', set_eq in *. intuition.
 
-Abort.                  
+Check reduce_set. 
+
+Theorem reduce_set_lt : forall orig x x',
+  reduce_set orig x x' ->
+  forall g', In g' x' ->
+  forall g, In g orig ->
+  ~ strict_partial_order g g'.
+  Proof.
+    intros orig x x' XRed g' Inx' g Inorig contra.
+    induction XRed.
+    - inversion Inx'.
+    - destruct Inx'.
+    -- subst. specialize H with g. intuition.
+    -- apply IHXRed. auto.
+    - apply IHXRed. auto.
+  Qed.
+
+Theorem reduce_set_nil (x : list (attackgraph measurement corruption)) : x = nil -> reduce_set x x nil.
+Proof.
+  intros. subst. econstructor.
+Qed.
+
+Theorem reduce_set_nil' (x : list (attackgraph measurement corruption)) : reduce_set x x nil -> x = nil.
+Proof.
+  intros. induction H.
+  + eauto.
+  + subst. reflexivity.
+  + subst. destruct H. destruct H.  exfalso. induction x.
+  ++ invc H.
+  ++ simpl in H. destruct H.
+  +++ subst. invc H0.     generalize dependent H1. generalize dependent H.
+Abort. 
+
+Theorem in_reduced_orig : forall x xs xs', In x xs' -> reduce_set xs xs xs' -> In x xs.
+Proof.
+  intros. simpl in *. induction H0.
+  + invc H. 
+  + simpl in *. destruct H. eauto. eauto.
+  + simpl in *. right. eauto. 
+Qed.
+
+Theorem in_reduced_orig' : forall orig x xs xs', In x xs' -> reduce_set orig xs xs' -> In x xs.
+Proof.
+  intros. simpl in *. induction H0.
+  + invc H. 
+  + simpl in *. destruct H. eauto. eauto.
+  + simpl in *. right. eauto. 
+Qed.
+
+Theorem in_reduced_orig'' : forall orig x xs xs', In x xs -> reduce_set orig xs xs' -> In x orig.
+Proof.
+  intros. simpl in *. induction H0.
+  + invc H. 
+  + simpl in *. destruct H.
+  ++ subst. admit.
+  ++ eapply IHreduce_set. apply H.
+  + destruct H0. destruct H0. destruct H.
+  ++ subst.  
+Abort. 
+
+
+Theorem supports_reduced_iff : forall x y x' y',
+reduce_set x x x' -> reduce_set y y y' -> supports' x y <-> supports' x' y' .
+Proof.
+  intros. split.
+  + induction H.
+  ++ unfold supports'. admit. 
+     (* intros. pose proof in_reduced_orig H1 y y'. intuition. *)
+  ++ intros. unfold supports' in *. intros.
+     pose proof in_reduced_orig.
+     specialize H5 with H3 y y'.
+     intuition. simpl in *.
+     apply H2 in H5. destruct H5. destruct H5.
+     destruct H5.
+  +++ subst.
+      exists x0; intuition.
+  +++  subst. specialize IHreduce_set with H3. eapply IHreduce_set in H4.
+  ++++ destruct H4. exists x1. split. right; intuition. intuition.
+  ++++ intros. eapply H2 in H8. destruct H8. destruct H8. destruct H8.
+  +++++ subst. pose proof in_reduced_orig' x x0 SS TT.     intuition.           
+  
+  Abort. 
+
+Lemma reduced_supports' : forall orig x x' y, 
+  reduce_set orig x x' -> supports' x' y -> supports' x y.
+Proof.
+  intros. unfold supports' in *. intros.
+  apply H0 in H2. destruct H2. destruct H2.
+  pose proof in_reduced_orig' orig x0 x x'.
+  exists x0;
+  intuition.
+Qed.
+
+Lemma reduced_supports_y_x_x' : forall x x' y, 
+  reduce_set x x x' -> supports' y x -> supports' y x'.
+Proof.
+  intros x x' y red. induction red.
+  + unfold supports'. intros. invc H1.
+  + intros. unfold supports' in *.
+    intros. destruct H2.
+  ++ subst. specialize H0 with H1. simpl in H0. intuition.
+  ++ eapply IHred; auto with *.
+  + intros. unfold supports' in *.
+    intros. apply IHred; auto with *.
+Qed.          
+
+
+Lemma reduced_supports : forall x x' x'' y, 
+  reduce_set x x' x'' -> supports' x' y -> supports' x'' y.
+Proof.
+  intros x x' x'' y red. induction red.
+  + intros. unfold supports' in *. intros. eapply H in H1. destruct H1. destruct H1.  exfalso. destruct H1.
+  + unfold supports' in *. intros. assert (H1' := H1). 
+Abort.    
+
+
+Theorem  supports_antisym' : forall x y x' y',
+supports' x y -> supports' y x -> 
+reduce_set x x x' -> reduce_set y y y' -> set_eq x' y'. 
+Proof.
+intros X Y. intros X' Y'.
+intros (* YNil XNil *) supXY supYX.
+intros redX' redY'.
+unfold supports_iso. split.   
++ pose proof reduced_supports_y_x_x' X X' Y.
+pose proof reduced_supports' X X X' Y.
+  intuition. 
+  intuition. 
+  pose proof reduced_supports_y_x_x' Y Y' X.
+  intuition. generalize dependent redY'. induction redX'.
+++ unfold supports_iso. intros.  unfold supports' in H0. 
+  pose proof reduce_set_nil X. generalize dependent H2. 
+Abort.
+
+
+
 
 
  

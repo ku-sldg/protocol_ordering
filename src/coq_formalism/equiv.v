@@ -28,10 +28,10 @@ Section Equivalence.
 Context {measurement : Type}.
 Context {corruption : Type}.
 
-(* Labels and States must have decidable equality 
+(* Labels and States must have decidable equality *)
 Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
 Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
-Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.*)
+Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
 
 
 (************************
@@ -80,8 +80,95 @@ specialize H3 with (f12 st1) (f12 st2); intuition.
 rewrite  H5. eauto.
 Qed. 
 
-(* Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) (f : G1.(state _ _) -> G2.(state _ _))  (g : G2.(state _ _) -> G1.(state _ _))  : Prop := 
-  homomorphism G1 G2 f /\ homomorphism G2 G1 g.*)
+Print In_dec. 
+
+Theorem in_dec_state : forall (G : attackgraph measurement corruption) (a : state measurement corruption G) (l : list (state measurement corruption G)), 
+(forall (x y : state measurement corruption G),
+{x = y} + {x <> y}) -> 
+{In a l} + {~ In a l} .
+Proof.
+  pose proof In_dec. intros. induction l.
+  + right. unfold not. intros. invc H.
+  + specialize X0 with a a0. destruct X0.
+  ++ subst. left. simp_int.
+  ++ invc IHl.
+  +++ left. auto with *.
+  +++ right. unfold not. intros. invc H0.
+  ++++ unfold not in n. apply n. eauto.
+  ++++ contradiction.  
+Qed.
+
+Theorem in_dec_steps : forall (a : attackgraph measurement corruption) 
+(a' : (state measurement corruption a * state measurement corruption a))
+(l :list ((state measurement corruption a * state measurement corruption a))), 
+(forall x y : (state measurement corruption a * state measurement corruption a),
+{x = y} + {x <> y}) -> 
+{In a' l} + {~ In a' l} .
+Proof.
+  intros. induction l.
+  + right. unfold not. intros. invc H.
+  + specialize X with a' a0. destruct X.
+  ++ subst. left. auto with *.
+  ++ invc IHl.
+  +++ left. auto with *.
+  +++ right. unfold not. intros. invc H0.
+  ++++ apply n. eauto.
+  ++++ contradiction.
+Qed.            
+
+Print list_eq_dec. 
+
+Theorem  step_eq_dec : forall (a: attackgraph measurement corruption) (x y : state measurement corruption a * state measurement corruption a), {x = y} + {x <> y}.
+Proof.
+  intros. destruct x. destruct y.
+  destruct (eqDec_state a s s1); subst.
+  + destruct (eqDec_state a s0 s2); subst.
+  ++ left. reflexivity.
+  ++ right. unfold not. intros. inversion H.
+     contradiction.
+  + right. unfold not. intros. inversion H.
+    contradiction.
+Qed.       
+
+Lemma list_eq_dec' : forall (a: attackgraph measurement corruption) 
+(l l' :list (state measurement corruption a * state measurement corruption a)),
+{l = l'} + {l <> l'}.
+Proof.
+  intros. 
+  pose proof (list_eq_dec ). apply X.
+  apply step_eq_dec.
+Qed. 
+
+(* TODO *)
+Theorem homomorphism_dec : forall g1 g2, {exists f, homomorphism g1 g2 f} + {~ exists f, homomorphism g1 g2 f}.
+Proof.
+  intros. unfold homomorphism. 
+  pose proof in_dec_steps g1 as in_g1.  
+  pose proof in_dec_steps g2 as in_g2. 
+  pose proof step_eq_dec g2 as step_dec_g2.
+  pose proof step_eq_dec g1 as step_dec_g1.
+  destruct g1 as [g1_state g1_steps g1_lab]. 
+  destruct g2 as [g2_state g2_steps g2_lab].
+  simpl in *.  
+  induction g2_steps.
+  (* g2 steps is nil *)
+  + simpl. destruct g1_steps eqn:H'.
+  (* g1 steps also nil *)
+  ++ simpl. left. eexists. split. intros. invc H.
+     intros. invc H.
+  (* g2 nil and g1 not nil *)
+  ++ simpl in *. right. unfold not. intros. invc H. invc H0. subst. destruct p.
+     specialize H with g g0. intuition.
+  (* g2 steps not nil *)
+  +  destruct IHg2_steps.
+  ++ left. destruct e. exists x. destruct H. 
+     split; intros; auto with *.
+  ++ unfold not in n. exfalso. apply n. eexists. split; intros. 
+  +++ 
+  Restart.
+  pose proof (In_dec) as In_dec.
+Abort.           
+
 
 Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) : Prop := 
   (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f) /\  
@@ -125,7 +212,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   (* TODO *)
   Theorem isomorphism_dec : forall g1 g2, {isomorphism g1 g2} + {~ isomorphism g1 g2}.
   Proof.
-    intros. generalize dependent g1. destruct g2. induction steps.
+    intros. generalize dependent g1. unfold isomorphism. destruct g2. induction steps.
     + intros. destruct g1. induction steps.
     ++ left. unfold isomorphism. unfold homomorphism. split.
     +++ eexists. split; intros.
@@ -134,21 +221,6 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     +++ eexists. split; intros; simpl in H; intuition.
     ++ right.         
   Abort.
-  
-
-  (* #[global]
-  Add Relation _ (isomorphism) 
-    reflexivity proved by isomorphism_refl
-    symmetry proved by isomorphism_sym
-    transitivity proved by isomorphism_trans
-  as myeq.*)
-
-  Instance iso_equiv : Equivalence isomorphism.
-  Proof.
-    constructor; auto with *.
-    Abort.
-
-  Print relation.
 
   Infix "==" := isomorphism (at level 80).
   
@@ -158,45 +230,13 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
     transitivity proved by isomorphism_trans
   as myeq.
 
-  (* another take on transitivity *)
-  Lemma isomorphism_trans2 : forall a b c, a == b -> a == c -> b == c. 
-  Proof.
-    intros a b c Hab Hac.
-    (* here rewrite works *)
-    rewrite <- Hab.
-    eauto.
-  Qed.   
-  
-  Lemma isomorphism_trans2' : forall a b c, a == b -> b == c -> a == c. 
-  Proof.
-    intros a b c Hab Hac.
-    (* here rewrite works *)
-    rewrite <- Hac.
-    eauto.
-  Qed.   
-
-  Instance iso_proper {x : (attackgraph measurement corruption)}: Proper (isomorphism ==> isomorphism) (fun x => x).
-  Proof.
-    intros.
-    unfold Proper. unfold "==>". intros. eauto.
-  Qed.     
-
-  (* Generalized rewriting for the 
-   * isomorphism relation... this is going
-   * to be impossible  *)
-  Lemma rewrite_help: forall a b,
-  isomorphism a b -> a = b.
-  Proof.
-    intros a b Heq. eauto. unfold isomorphism in *. 
-  Abort. 
-
   End Equivalence.
 
   (*******************************
    * Want to check equivalence of 
    * reduced graphs *)
   (******************)
-  (* two graphs are equal if you first reduce then prove isomorphic 
+  (* TODO two graphs are equal if you first reduce then prove isomorphic 
    * reduce x to y 
    * reduce a to b 
    * prove the reduced form is also isomorphic *)
