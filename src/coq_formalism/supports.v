@@ -26,11 +26,11 @@ Require Import Coq.Program.Equality.
     of supports as motivated by Rowe's paper.
     *********)
 
+
+(* This section generalizes supports and various 
+ * relations to ensure supports behaves 
+ * as expected  *)    
 Section Supports_Facts. 
-
-
-(* given some reflexive and transitive relation we 
- * know that supports is reflexive and transitive *)
 
   Definition reflexive {A : Type} (R : A -> A -> Prop) : Prop :=
     forall a, R a a.
@@ -51,7 +51,6 @@ Section Supports_Facts.
     specialize H with a a. intuition.
   Qed. 
     
-  
   (* Supports says: 
     
       * Given two sets of graphs SS and TT, we say
@@ -62,11 +61,6 @@ Section Supports_Facts.
   Definition Supports {A : Type} (R : A -> A -> Prop) (SS : list A) (TT : list A) : Prop :=(forall H, In H TT ->
   (exists G, In G SS /\ R G H)).
 
-  Inductive Supports_ind {A : Type} (R : A -> A -> Prop) :  list A ->  list A -> Prop :=
-  | sup_nil : forall SS, SS <> nil -> Supports_ind R SS nil
-  | sup_cons : forall SS TT, (forall H, In H TT ->
-  (exists G, In G SS /\ R G H)) -> Supports_ind R SS TT.
- 
 
   Lemma Supports_nil_nil : forall {A: Type} (R : A -> A -> Prop) SS,  irreflexive R -> SS = nil -> Supports R SS SS.
   Proof.
@@ -114,8 +108,6 @@ Section Supports_Facts.
     ---- exists GG. auto.
   Qed.
 
-  (* if we prove asymmetry then we will get irreflexivity for free? 
-    * http://web.stanford.edu/class/archive/cs/cs103/cs103.1164/lectures/09/Small09.pdf *)
   Lemma SupportsAsym : forall {A : Type} (R : A -> A -> Prop),
   asymmetric R -> asymmetric (Supports R).
   Proof.
@@ -134,6 +126,8 @@ Section Supports_Facts.
       exists G. split; [assumption | eapply HTran; eauto].
   Qed.
 
+  (* given some reflexive and transitive relation we 
+   * know that supports is reflexive and transitive *)
   Lemma SupportsWrapper : forall {A : Type} (R : A -> A -> Prop),
     reflexive R -> transitive R ->
     reflexive (Supports R) /\ transitive (Supports R).
@@ -216,6 +210,8 @@ Context {corruption : Type}.
     (forall (H : (attackgraph measurement corruption)), In H TT ->  
     (exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order G H)).
 
+  (* supports is irreflexive for everything except nil.
+   * need to disallow the first parameter to be nil  *)  
   Theorem supports_spo_irrefl :forall a, a <> nil -> ~ supports_spo a a.
   Proof.
     unfold supports_spo.
@@ -406,6 +402,7 @@ Fixpoint reduce_set_fix (orig tail: list (attackgraph measurement corruption)) :
     ++ intros. unfold set_eq. unfold supports_iso. admit.
   Abort. 
 
+  (* remove this *)
   Definition set_eq' SS TT :=  
     (forall (H : (attackgraph measurement corruption)), In H TT -> (exists (G : (attackgraph measurement corruption)), In G SS /\ isomorphism G H)) /\ 
     (forall (H : (attackgraph measurement corruption)), In H SS -> (exists (G : (attackgraph measurement corruption)), In G TT /\ isomorphism G H )).
@@ -659,11 +656,6 @@ pose proof reduced_supports' X X X' Y.
 ++ unfold supports_iso. intros.  unfold supports' in H0. 
   pose proof reduce_set_nil X. generalize dependent H2. 
 Abort.
-
-
-
-
-
  
 (* supports is transitive *)
 Theorem  supports_trans' : forall x y z, supports' x y -> supports' y z -> supports' x z.
