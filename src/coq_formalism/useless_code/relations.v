@@ -3,6 +3,7 @@
                         ***********)
 
 Require Import Coq.Classes.RelationClasses.
+Require Import Setoid. 
 
 Definition relation (X : Type) := X -> X -> Prop.
 
@@ -119,6 +120,14 @@ Definition strange1: forall T:Type, 0>0 -> T.
 Defined.
 
 
+Module InductivePlayground.
+
+Inductive ev : nat -> Prop :=
+  | ev_0 : ev O
+  | ev_SS : forall n:nat, ev n -> ev (S (S n)).
+
+Definition even (n:nat) : Prop := 
+  evenb n = true.
 
 
 

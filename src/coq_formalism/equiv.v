@@ -116,8 +116,6 @@ Proof.
   ++++ contradiction.
 Qed.            
 
-Print list_eq_dec. 
-
 Theorem  step_eq_dec : forall (a: attackgraph measurement corruption) (x y : state measurement corruption a * state measurement corruption a), {x = y} + {x <> y}.
 Proof.
   intros. destruct x. destruct y.
@@ -140,7 +138,8 @@ Proof.
 Qed. 
 
 (* TODO *)
-Theorem homomorphism_dec : forall g1 g2, {exists f, homomorphism g1 g2 f} + {~ exists f, homomorphism g1 g2 f}.
+Theorem homomorphism_dec : forall g1 g2, 
+{exists f, homomorphism g1 g2 f} + {~ exists f, homomorphism g1 g2 f}.
 Proof.
   intros. unfold homomorphism. 
   pose proof in_dec_steps g1 as in_g1.  
@@ -149,7 +148,7 @@ Proof.
   pose proof step_eq_dec g1 as step_dec_g1.
   destruct g1 as [g1_state g1_steps g1_lab]. 
   destruct g2 as [g2_state g2_steps g2_lab].
-  simpl in *.  
+  simpl in *.
   induction g2_steps.
   (* g2 steps is nil *)
   + simpl. destruct g1_steps eqn:H'.
@@ -160,11 +159,9 @@ Proof.
   ++ simpl in *. right. unfold not. intros. invc H. invc H0. subst. destruct p.
      specialize H with g g0. intuition.
   (* g2 steps not nil *)
-  +  destruct IHg2_steps.
-  ++ left. destruct e. exists x. destruct H. 
-     split; intros; auto with *.
-  ++ unfold not in n. exfalso. apply n. eexists. split; intros. 
-  +++ 
+  + destruct IHg2_steps.
+  ++ admit.
+  ++ unfold not in n.  destruct n. right.   
   Restart.
   pose proof (In_dec) as In_dec.
 Abort.           
@@ -197,7 +194,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   isomorphism g2 g1.
   Proof.
     intros. destruct H as [H1 H2]. destruct H1 as [f12].
-    destruct H2 as [f21]. unfold isomorphism; split; eexists; eauto.
+    destruct H2 as [f21]. unfold isomorphism; split. eexists; eauto.
   Qed.
 
   Theorem isomorphism_trans : forall g1 g2 g3, 
