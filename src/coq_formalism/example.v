@@ -343,9 +343,9 @@ Module vc_sys_seq_supports_sys.
     + invc H0.
     Qed.
 
-    Lemma vc_sys_seq_supports_sys : supports' sys_all vc_sys_seq_all.
+    Lemma vc_sys_seq_supports_sys : supports sys_all vc_sys_seq_all.
     Proof.
-      unfold supports'. intros. simpl in H0. intuition.
+      unfold supports. intros. simpl in H0. intuition.
       + subst. exists m1a. unfold sys_all; intuition. right.
         unfold strict_partial_order. intuition.
       ++ econstructor. 

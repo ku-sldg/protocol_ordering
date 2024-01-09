@@ -1,9 +1,8 @@
-(**** Labeled Graph Homomorphism 
+(**** Defining support to compare sets of attack graphs. 
 By: Anna Fritz and Sarah Johnson
 Date: July 18, 2023 
 
-Defining supports and covers and other interesting 
-properties taken from Paul Rowe's paper: 
+Idea of supports motivated by Paul Rowe's paper: 
 "On Orderings in Security Models" *)
 
 Require Import Coq.Lists.List.
@@ -201,7 +200,6 @@ Context {corruption : Type}.
   +++ apply IHl; auto with *.
  Qed.   
  
-
  (* prove supports is a strict partial order when the strict partial order
   * relation is applied 
   
@@ -346,19 +344,12 @@ Context {corruption : Type}.
  REDUCE SET TO EASIEST GRAPHS 
 *****************************)
 
-Inductive reduce_set (orig : list (attackgraph measurement corruption)) : list (attackgraph measurement corruption) ->  list (attackgraph measurement corruption) -> Prop :=
-| set_nil : reduce_set orig nil nil
-(* there does not exist anything that is less than a1 *)
-| set_keep : forall a1 SS TT, (forall a2, In a2 orig -> ~ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) (a1 :: TT) 
-| set_remove : forall a1 SS TT, (exists a2, In a2 orig /\ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) TT. 
+  Inductive reduce_set (orig : list (attackgraph measurement corruption)) : list (attackgraph measurement corruption) ->  list (attackgraph measurement corruption) -> Prop :=
+  | set_nil : reduce_set orig nil nil
+  (* there does not exist anything that is less than a1 *)
+  | set_keep : forall a1 SS TT, (forall a2, In a2 orig -> ~ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) (a1 :: TT) 
+  | set_remove : forall a1 SS TT, (exists a2, In a2 orig /\ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) TT. 
 
-(* Search list_beq.
-
-Fixpoint reduce_set_fix (orig tail: list (attackgraph measurement corruption)) : list (attackgraph measurement corruption) := 
-  match tail with
-  | nil => nil 
-  | x::xs => if (forall x', In x' orig -> ~ strict_partial_order x' x) then x::reduce_set_fix orig xs else reduce_set_fix orig xs
-  end. *)
 
   (******************************
    SET EQUIVALENCE   
@@ -402,123 +393,17 @@ Fixpoint reduce_set_fix (orig tail: list (attackgraph measurement corruption)) :
     ++ intros. unfold set_eq. unfold supports_iso. admit.
   Abort. 
 
-  (* remove this *)
-  Definition set_eq' SS TT :=  
-    (forall (H : (attackgraph measurement corruption)), In H TT -> (exists (G : (attackgraph measurement corruption)), In G SS /\ isomorphism G H)) /\ 
-    (forall (H : (attackgraph measurement corruption)), In H SS -> (exists (G : (attackgraph measurement corruption)), In G TT /\ isomorphism G H )).
-
-
 (******************************* 
   SUPPORTS AS PARTIAL ORDER 
 ********************************)
 
- (* defining partial order
-  * this way is called the "reflexive kernel" 
-  * <= *)
-Definition supports (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := supports_iso SS TT \/ supports_spo SS TT. 
-
-Theorem supports_refl : forall SS,  supports SS SS.
-Proof.
- intros. unfold supports. intros. left.
- unfold supports_iso. 
- intros s H. exists s.  split; eauto.
- pose proof (isomorphism_refl s).
- eauto.  
-Qed.
-
-Theorem  supports_antisym : forall x y, y <> nil -> x <> nil -> supports x y -> supports y x -> set_eq x y. 
-Proof.
-intros X. intros Y.
-intros YNil XNil supXY supYX. unfold supports in *. intuition.
-+ (* supports_iso X Y *)  
-  unfold set_eq. split; eauto.
-+ apply set_eq_sym. unfold set_eq. split; eauto.  
- (* X = Y & Y < X *)
- unfold supports_iso, supports_spo in *. 
- exfalso.
-   destruct Y.
- ++ apply YNil. reflexivity.
- ++ clear XNil. clear YNil. generalize dependent a. generalize dependent X. induction Y.
- +++ intros. simpl in *. specialize H with a. intuition.
-     destruct H. destruct H. specialize H0 with x. intuition. destruct H3. destruct H0. destruct H0. subst.
-     apply myeq in H1; eauto. apply order_impl_not_eq in H3. intuition. intuition.
- +++ intros. apply IHY with X a0.
- ++++ intros. specialize H with H1. simpl in H. simpl in H2. intuition.
- ++++ intros. eapply H0 in H2. destruct H2.
- destruct H2. simpl in *.
- destruct H2.
- +++++ subst. exists x. intuition.
- +++++ destruct H2. 
- ++++++ subst. specialize H with x. intuition.
-   destruct H4. destruct H. apply H0 in H. destruct H. destruct H.
-   intuition.
- +++++++ subst. exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
-         eapply spo_trans; eauto.
- +++++++  subst. apply myeq in H4; eauto. apply order_impl_not_eq in H6. contradiction.
- +++++++ exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
- eapply spo_trans; eauto.
- ++++++ exists x; intuition.
- + unfold set_eq; intuition. 
- (* X < Y & Y = X *)
- unfold supports_iso, supports_spo in *. 
-   exfalso.
-   destruct X.
- ++ apply XNil. reflexivity.
- ++ clear XNil. clear YNil. generalize dependent a. generalize dependent Y. induction X.
- +++ intros. simpl in *. specialize H0 with a. intuition.
-     destruct H0. destruct H0. specialize H with x. intuition. destruct H3. destruct H. destruct H. subst.
-     apply myeq in H1; eauto. apply order_impl_not_eq in H3. intuition. intuition.
- +++ intros. apply IHX with Y a0.
- ++++ intros. eapply H in H2. destruct H2.
- destruct H2. simpl in *.
- destruct H2.
- +++++ subst. exists x. intuition.
- +++++ destruct H2. 
- ++++++ subst. specialize H0 with x. intuition.
-   destruct H4. destruct H0. apply H in H0. destruct H0. destruct H0.
-   intuition.
- +++++++ subst. exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
-         eapply spo_trans; eauto.
- +++++++  subst. apply myeq in H4; eauto. apply order_impl_not_eq in H6. contradiction.
- +++++++ exists x1. intuition. assert (H' : strict_partial_order x1 x). { eapply po_trans_helper'; eauto. }
- eapply spo_trans; eauto.
- ++++++ exists x; intuition.
- ++++ intros. specialize H0 with H1. simpl in H0. simpl in H2. intuition.
- + unfold set_eq. exfalso. eapply supports_spo_asym in H0. contradiction. intuition.
-Qed. 
-
-(* supports is transitive *)
-Theorem  supports_trans : forall x y z, supports x y -> supports y z -> supports x z.
-Proof with intuition.
-   unfold supports. intros X Y Z. intros supXY supYZ...
-   + left. eapply supports_iso_trans; eauto. 
-   + right. unfold supports_iso, supports_spo in *.
-     intros z HzZ.
-     specialize H0 with z...
-     destruct H1 as [y]. destruct H0 as [HyZ spo]. specialize H with y.
-     intuition. destruct H0 as [x].
-     destruct H as [InxX].
-     exists x. split; eauto.
-     eapply po_trans_helper; eauto.
-   + right. unfold supports_iso, supports_spo in *.
-   intros z HzZ.
-   specialize H0 with z...
-   destruct H1 as [y]. destruct H0 as [HyZ spo]. specialize H with y.
-   intuition. destruct H0 as [x].
-   destruct H as [InxX].
-   exists x. split; eauto.
-   eapply po_trans_helper'; eauto.
- + right. eapply supports_spo_trans; eauto.
-Qed.
-
-(* Oops... here is the correct way to define supports *)
-Definition supports' (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
+Definition supports (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
   forall (H : (attackgraph measurement corruption)), In H TT ->
 (exists (G : (attackgraph measurement corruption)), In G SS /\ (isomorphism G H \/ strict_partial_order G H)).
 
-Theorem supports_refl' : forall SS,  supports' SS SS.
+Theorem supports_refl : forall SS,  supports SS SS.
 Proof.
- intros. unfold supports'. intros. exists H. split; intuition.  left.
+ intros. unfold supports. intros. exists H. split; intuition.  left.
  pose proof (isomorphism_refl H).
  eauto.  
 Qed.
@@ -537,9 +422,9 @@ Qed.
 
 Theorem reduce_set_supports : forall x x',
 reduce_set x x x' ->
-supports' x x'.
+supports x x'.
 Proof.
-intros x x' XRed. unfold supports'.
+intros x x' XRed. unfold supports.
 intros H HIn.
 induction XRed; subst.
 - inversion HIn.
@@ -553,10 +438,10 @@ Qed.
 
 Theorem reduce_set_supports_y : forall x y y',
 reduce_set y y y' ->
-supports' x y ->
-supports' x y'.
+supports x y ->
+supports x y'.
 Proof.
-intros x y y' YRed Sup. unfold supports' in *.
+intros x y y' YRed Sup. unfold supports in *.
 intros H HIn. eapply reduce_set_in in HIn; eauto.
 Qed.
 
@@ -633,10 +518,10 @@ Proof.
   + simpl in *. right. eauto. 
 Qed.
 
-Lemma reduced_supports' : forall orig x x' y, 
-  reduce_set orig x x' -> supports' x' y -> supports' x y.
+Lemma reduced_supports : forall orig x x' y, 
+  reduce_set orig x x' -> supports x' y -> supports x y.
 Proof.
-  intros. unfold supports' in *. intros.
+  intros. unfold supports in *. intros.
   apply H0 in H2. destruct H2. destruct H2.
   pose proof in_reduced_orig' orig x0 x x'.
   exists x0;
@@ -644,30 +529,31 @@ Proof.
 Qed.
 
 Lemma reduced_supports_y_x_x' : forall x x' y, 
-  reduce_set x x x' -> supports' y x -> supports' y x'.
+  reduce_set x x x' -> supports y x -> supports y x'.
 Proof.
   intros x x' y red. induction red.
-  + unfold supports'. intros. invc H1.
-  + intros. unfold supports' in *.
+  + unfold supports. intros. invc H1.
+  + intros. unfold supports in *.
     intros. destruct H2.
   ++ subst. specialize H0 with H1. simpl in H0. intuition.
   ++ eapply IHred; auto with *.
-  + intros. unfold supports' in *.
+  + intros. unfold supports in *.
     intros. apply IHred; auto with *.
 Qed.          
 
-Ltac unfold_all := unfold supports' in *; unfold supports_iso in *.
+Ltac unfold_all := unfold supports in *; unfold supports_iso in *.
 
-Print supports'.
+Print supports.
 
 Theorem reduce_set_remove' : forall orig x x',
   reduce_set orig x x' ->
   forall g, In g x -> ~(In g x') ->
   exists g', (In g' x' /\ (strict_partial_order g' g)).
-Proof. 
+Proof.
+Abort. 
 
 Lemma reduced_supports_x_x' : forall orig x x' y, 
-  reduce_set orig x x' -> supports' x y -> supports' x' y.
+  reduce_set orig x x' -> supports x y -> supports x' y.
 Proof.
   intros.
   (* pose proof (reduce_set_keep orig x x') as keep.
@@ -677,22 +563,11 @@ Proof.
   induction H.
   + apply H0 in H2. destruct H2. destruct H. invc H.
   + intuition. pose proof (reduce_set_keep orig SS TT) as keep. intuition.
-    specialize H4 with  
-  
-  
-  
-  
-  induction H.
-  ++ exfalso. simpl in *. intuition.   admit.
-  + induction H.
-  ++ exfalso. eapply H3.    
-  apply H0 in H4. destruct H4.  destruct H4.
-  pose proof (in_reduced_orig'). 
-  assert (H' : In x0 x').      
+Abort.    
 
 
 Theorem  supports_antisym' : forall x y x' y',
-supports' x y -> supports' y x -> 
+supports x y -> supports y x -> 
 reduce_set x x x' -> reduce_set y y y' -> set_eq x' y'. 
 Proof.
 intros X Y. intros X' Y'.
@@ -706,33 +581,14 @@ unfold set_eq. split.
   destruct X.
 ++ unfold_all. intros. admit.
 ++ unfold_all. intros.  eapply H0 in H3. destruct H3. destruct H3.
-   induction redX'.        simpl in *. 
-
-
-
-unfold_all. generalize dependent supXY. induction redX'.
-++ intros. pose proof (in)  unfold_all.   
-
-
-pose proof (reduce_set_nil X).
-  generalize dependent H. induction redX'.
-++ intros.    unfold supports_iso. 
-
-
-
-
-
-
-
-
-
+   induction redX'.   
    Abort.
  
 (* supports is transitive *)
-Theorem  supports_trans' : forall x y z, supports' x y -> supports' y z -> supports' x z.
+Theorem  supports_trans' : forall x y z, supports x y -> supports y z -> supports x z.
 Proof with intuition.
 Proof.
-  intros. unfold supports' in *.
+  intros. unfold supports in *.
   intros. apply H0 in H2.
   destruct H2. destruct H2.
   apply H in H2.
@@ -743,9 +599,5 @@ Proof.
   + right. eapply po_trans_helper'; eauto.
   + right. eapply spo_trans; eauto.
 Qed.   
-
-
-(* now we have proven there is a partial order 
- * over sets of attack graphs *)
 
 End Supports_List.

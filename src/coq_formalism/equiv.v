@@ -161,9 +161,7 @@ Proof.
   (* g2 steps not nil *)
   + destruct IHg2_steps.
   ++ admit.
-  ++ unfold not in n.  destruct n. right.   
-  Restart.
-  pose proof (In_dec) as In_dec.
+  ++ unfold not in n.  destruct n.   
 Abort.           
 
 
@@ -194,7 +192,7 @@ Definition isomorphism (G1 : attackgraph measurement corruption) (G2: attackgrap
   isomorphism g2 g1.
   Proof.
     intros. destruct H as [H1 H2]. destruct H1 as [f12].
-    destruct H2 as [f21]. unfold isomorphism; split. eexists; eauto.
+    destruct H2 as [f21]. unfold isomorphism; split; eexists; eauto.
   Qed.
 
   Theorem isomorphism_trans : forall g1 g2 g3, 
