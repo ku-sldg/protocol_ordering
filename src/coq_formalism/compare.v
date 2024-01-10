@@ -11,6 +11,7 @@ Require Import Order.reduce.
 Require Import Order.equiv.
 Require Import Order.utilities.
 Require Import Order.partial_order.
+Require Import Order.set_equiv.
 Require Import Order.supports.
 
 Section Compare.

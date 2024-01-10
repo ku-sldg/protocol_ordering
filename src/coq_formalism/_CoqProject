@@ -5,5 +5,7 @@ reduce.v
 strict_partial_order.v
 equiv.v
 partial_order.v
+supports_facts.v
+set_equiv.v
 supports.v
 compare.v

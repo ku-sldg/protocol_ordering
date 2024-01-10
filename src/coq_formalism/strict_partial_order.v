@@ -87,16 +87,19 @@ Require Import Order.utilities.
      split; intuition.
  Qed.
  
- (********************************
+(********************************
  
      DEFINING SUBSETS 
  
  We say a is strictly less than b (a < b) if 
- * 1. b has more corruption events 
+ * 1.a is an adversary event subset and a is a
+     time-constrained adversary event proper subset
  * OR 
- * 2. b has more time constrained corruption events *)
+ * 2. a1 is a time-constrained adversary event subset and a1
+      is an adversary event proper subset 
+ *)
  
- (****** MORE CORRUPTION EVENTS SUBSET *)
+ (****** ADVERSARY EVENTS SUBSET *)
  
  (* corruption events of x are a subset of corruption events in y *)
  Fixpoint cor_subset {G1 G2 : attackgraph measurement corruption} 
