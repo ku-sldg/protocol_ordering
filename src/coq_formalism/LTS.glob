@@ -1,0 +1,21 @@
+DIGEST 55e34cf1d62ab73377a998967a5cadf7
+FLTS
+binder 9:9 <> L:1
+ind 97:98 <> sl
+constr 106:116 <> silentlabel
+rec 127:129 <> LTS
+proj 147:148 <> st
+proj 163:169 <> initial
+proj 191:194 <> step
+proj 221:221 <> l
+R175:178 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R173:174 LTS <> st:5 meth
+R200:203 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R198:199 LTS <> st:5 meth
+R206:209 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R204:205 LTS <> st:5 meth
+R227:230 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R225:226 LTS <> st:5 meth
+R232:234 Coq.Init.Datatypes <> ::type_scope:x_'+'_x not
+R231:231 LTS <> L prfax
+R235:236 LTS <> sl ind

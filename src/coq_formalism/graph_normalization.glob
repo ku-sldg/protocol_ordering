@@ -1,0 +1,405 @@
+DIGEST 77869ca30a35526b7b2f8d34c104f643
+FOrder.graph_normalization
+R242:255 Coq.Lists.List <> <> lib
+R273:290 Order.attack_graph <> <> lib
+R308:322 Order.utilities <> <> lib
+sec 334:340 <> Reducer
+binder 357:367 <> measurement:1
+binder 391:400 <> corruption:2
+R428:438 Order.attack_graph <> attackgraph rec
+R440:450 Order.graph_normalization <> Reducer.measurement var
+R452:461 Order.graph_normalization <> Reducer.corruption var
+binder 424:424 <> G:3
+var 538:554 Reducer eqDec_measurement
+R572:582 Order.graph_normalization <> Reducer.measurement var
+binder 566:566 <> x:4
+binder 568:568 <> y:5
+R586:586 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R592:596 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R603:603 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R588:590 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R587:587 Order.graph_normalization <> x:4 var
+R591:591 Order.graph_normalization <> y:5 var
+R598:601 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R597:597 Order.graph_normalization <> x:4 var
+R602:602 Order.graph_normalization <> y:5 var
+var 621:636 Reducer eqDec_corruption
+R654:663 Order.graph_normalization <> Reducer.corruption var
+binder 648:648 <> x:7
+binder 650:650 <> y:8
+R667:667 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R673:677 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R684:684 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R669:671 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R668:668 Order.graph_normalization <> x:7 var
+R672:672 Order.graph_normalization <> y:8 var
+R679:682 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R678:678 Order.graph_normalization <> x:7 var
+R683:683 Order.graph_normalization <> y:8 var
+var 702:712 Reducer eqDec_state
+R734:738 Order.attack_graph <> state proj
+R731:731 Order.graph_normalization <> Reducer.G var
+binder 725:725 <> x:10
+binder 727:727 <> y:11
+R747:747 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R753:757 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R764:764 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R749:751 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R748:748 Order.graph_normalization <> x:10 var
+R752:752 Order.graph_normalization <> y:11 var
+R759:762 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R758:758 Order.graph_normalization <> x:10 var
+R763:763 Order.graph_normalization <> y:11 var
+prf 827:836 <> eqDec_step
+R868:870 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R858:862 Order.attack_graph <> state proj
+R855:855 Order.graph_normalization <> Reducer.G var
+R874:878 Order.attack_graph <> state proj
+R871:871 Order.graph_normalization <> Reducer.G var
+binder 848:848 <> x:13
+binder 850:850 <> y:14
+R888:888 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R894:898 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R905:905 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R890:892 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R889:889 Order.graph_normalization <> x:13 var
+R893:893 Order.graph_normalization <> y:14 var
+R900:903 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R899:899 Order.graph_normalization <> x:13 var
+R904:904 Order.graph_normalization <> y:14 var
+R1016:1026 Order.graph_normalization <> Reducer.eqDec_state var
+R1016:1026 Order.graph_normalization <> Reducer.eqDec_state var
+R1071:1081 Order.graph_normalization <> Reducer.eqDec_state var
+R1071:1081 Order.graph_normalization <> Reducer.eqDec_state var
+R1183:1197 Coq.Init.Datatypes <> pair_equal_spec thm
+R1183:1197 Coq.Init.Datatypes <> pair_equal_spec thm
+R1183:1197 Coq.Init.Datatypes <> pair_equal_spec thm
+R1261:1271 Order.graph_normalization <> Reducer.eqDec_state var
+R1261:1271 Order.graph_normalization <> Reducer.eqDec_state var
+R1340:1354 Coq.Init.Datatypes <> pair_equal_spec thm
+R1340:1354 Coq.Init.Datatypes <> pair_equal_spec thm
+R1340:1354 Coq.Init.Datatypes <> pair_equal_spec thm
+R1440:1454 Coq.Init.Datatypes <> pair_equal_spec thm
+R1440:1454 Coq.Init.Datatypes <> pair_equal_spec thm
+R1440:1454 Coq.Init.Datatypes <> pair_equal_spec thm
+prf 1563:1578 <> eqDec_list_steps
+R1595:1598 Coq.Init.Datatypes <> list ind
+R1614:1616 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1604:1608 Order.attack_graph <> state proj
+R1601:1601 Order.graph_normalization <> Reducer.G var
+R1620:1624 Order.attack_graph <> state proj
+R1617:1617 Order.graph_normalization <> Reducer.G var
+binder 1589:1589 <> x:15
+binder 1591:1591 <> y:16
+R1634:1634 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1640:1644 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1651:1651 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1636:1638 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1635:1635 Order.graph_normalization <> x:15 var
+R1639:1639 Order.graph_normalization <> y:16 var
+R1646:1649 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R1645:1645 Order.graph_normalization <> x:15 var
+R1650:1650 Order.graph_normalization <> y:16 var
+R1690:1700 Coq.Lists.List <> list_eq_dec thm
+R1690:1700 Coq.Lists.List <> list_eq_dec thm
+R1709:1718 Order.graph_normalization <> eqDec_step thm
+R1709:1718 Order.graph_normalization <> eqDec_step thm
+def 1744:1773 <> replace_measurement_incomplete
+R1784:1787 Coq.Init.Datatypes <> list ind
+R1803:1805 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1793:1797 Order.attack_graph <> state proj
+R1790:1790 Order.graph_normalization <> Reducer.G var
+R1809:1813 Order.attack_graph <> state proj
+R1806:1806 Order.graph_normalization <> Reducer.G var
+binder 1776:1780 <> Steps:17
+R1836:1840 Order.attack_graph <> state proj
+R1833:1833 Order.graph_normalization <> Reducer.G var
+binder 1823:1824 <> st:18
+binder 1826:1828 <> st':19
+R1885:1888 Coq.Init.Datatypes <> list ind
+R1904:1906 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1894:1898 Order.attack_graph <> state proj
+R1891:1891 Order.graph_normalization <> Reducer.G var
+R1910:1914 Order.attack_graph <> state proj
+R1907:1907 Order.graph_normalization <> Reducer.G var
+R1940:1944 Order.graph_normalization <> Steps:17 var
+R1972:1975 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1962:1962 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1966:1967 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1971:1971 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1990:2000 Order.graph_normalization <> Reducer.eqDec_state var
+R2002:2003 Order.graph_normalization <> st:18 var
+R2158:2161 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2148:2148 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2152:2153 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2157:2157 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2162:2191 Order.graph_normalization <> replace_measurement_incomplete:20 def
+R2203:2205 Order.graph_normalization <> st':19 var
+R2200:2201 Order.graph_normalization <> st:18 var
+R2059:2062 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2049:2049 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2053:2054 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2058:2058 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2055:2057 Order.graph_normalization <> st':19 var
+R2063:2092 Order.graph_normalization <> replace_measurement_incomplete:20 def
+R2104:2106 Order.graph_normalization <> st':19 var
+R2101:2102 Order.graph_normalization <> st:18 var
+R2217:2219 Coq.Init.Datatypes <> nil constr
+R2224:2228 Order.graph_normalization <> Steps:17 var
+def 2314:2332 <> replace_measurement
+R2343:2346 Coq.Init.Datatypes <> list ind
+R2362:2364 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2352:2356 Order.attack_graph <> state proj
+R2349:2349 Order.graph_normalization <> Reducer.G var
+R2368:2372 Order.attack_graph <> state proj
+R2365:2365 Order.graph_normalization <> Reducer.G var
+binder 2335:2339 <> Steps:22
+R2399:2403 Order.attack_graph <> state proj
+R2396:2396 Order.graph_normalization <> Reducer.G var
+binder 2387:2388 <> st:23
+binder 2390:2392 <> st':24
+R2418:2421 Coq.Init.Datatypes <> list ind
+R2437:2439 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2427:2431 Order.attack_graph <> state proj
+R2424:2424 Order.graph_normalization <> Reducer.G var
+R2443:2447 Order.attack_graph <> state proj
+R2440:2440 Order.graph_normalization <> Reducer.G var
+R2468:2472 Order.graph_normalization <> Steps:22 var
+R2495:2498 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2485:2485 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2489:2490 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2494:2494 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2522:2532 Order.graph_normalization <> Reducer.eqDec_state var
+R2538:2539 Order.graph_normalization <> st:23 var
+R2726:2736 Order.graph_normalization <> Reducer.eqDec_state var
+R2742:2743 Order.graph_normalization <> st:23 var
+R2838:2841 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2828:2828 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2832:2833 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2837:2837 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2842:2860 Order.graph_normalization <> replace_measurement:25 def
+R2872:2874 Order.graph_normalization <> st':24 var
+R2869:2870 Order.graph_normalization <> st:23 var
+R2773:2776 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2763:2763 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2767:2768 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2772:2772 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2769:2771 Order.graph_normalization <> st':24 var
+R2777:2795 Order.graph_normalization <> replace_measurement:25 def
+R2807:2809 Order.graph_normalization <> st':24 var
+R2804:2805 Order.graph_normalization <> st:23 var
+R2559:2569 Order.graph_normalization <> Reducer.eqDec_state var
+R2575:2576 Order.graph_normalization <> st:23 var
+R2671:2674 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2661:2661 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2665:2666 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2670:2670 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2662:2664 Order.graph_normalization <> st':24 var
+R2675:2693 Order.graph_normalization <> replace_measurement:25 def
+R2705:2707 Order.graph_normalization <> st':24 var
+R2702:2703 Order.graph_normalization <> st:23 var
+R2606:2609 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2596:2596 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2600:2601 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2605:2605 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2597:2599 Order.graph_normalization <> st':24 var
+R2602:2604 Order.graph_normalization <> st':24 var
+R2610:2628 Order.graph_normalization <> replace_measurement:25 def
+R2640:2642 Order.graph_normalization <> st':24 var
+R2637:2638 Order.graph_normalization <> st:23 var
+R2882:2884 Coq.Init.Datatypes <> nil constr
+R2889:2893 Order.graph_normalization <> Steps:22 var
+def 2918:2933 <> find_measurement
+R2953:2956 Coq.Init.Datatypes <> list ind
+R2972:2974 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2962:2966 Order.attack_graph <> state proj
+R2959:2959 Order.graph_normalization <> Reducer.G var
+R2978:2982 Order.attack_graph <> state proj
+R2975:2975 Order.graph_normalization <> Reducer.G var
+binder 2936:2943 <> AllSteps:27
+binder 2945:2949 <> Steps:28
+R2994:2997 Coq.Init.Datatypes <> list ind
+R3013:3015 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3003:3007 Order.attack_graph <> state proj
+R3000:3000 Order.graph_normalization <> Reducer.G var
+R3019:3023 Order.attack_graph <> state proj
+R3016:3016 Order.graph_normalization <> Reducer.G var
+R3045:3049 Order.graph_normalization <> Steps:28 var
+R3072:3075 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3063:3063 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3066:3067 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3071:3071 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3096:3100 Order.attack_graph <> label proj
+R3093:3093 Order.graph_normalization <> Reducer.G var
+R3148:3150 Coq.Init.Datatypes <> inr constr
+R3158:3173 Order.graph_normalization <> find_measurement:29 def
+R3175:3182 Order.graph_normalization <> AllSteps:27 var
+R3223:3225 Coq.Init.Datatypes <> inl constr
+R3243:3247 Order.attack_graph <> label proj
+R3240:3240 Order.graph_normalization <> Reducer.G var
+R3422:3424 Coq.Init.Datatypes <> inl constr
+R3432:3450 Order.graph_normalization <> replace_measurement def
+R3453:3458 Coq.Lists.List <> remove def
+R3484:3491 Order.graph_normalization <> AllSteps:27 var
+R3474:3474 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3477:3478 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3482:3482 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3461:3470 Order.graph_normalization <> eqDec_step thm
+R3550:3565 Order.graph_normalization <> find_measurement:29 def
+R3567:3574 Order.graph_normalization <> AllSteps:27 var
+R3667:3669 Coq.Init.Datatypes <> nil constr
+R3674:3681 Order.graph_normalization <> AllSteps:27 var
+prf 3757:3779 <> find_measurement_helper
+R3795:3798 Coq.Init.Datatypes <> list ind
+R3813:3815 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3803:3807 Order.attack_graph <> state proj
+R3800:3800 Order.graph_normalization <> Reducer.G var
+R3819:3823 Order.attack_graph <> state proj
+R3816:3816 Order.graph_normalization <> Reducer.G var
+binder 3791:3791 <> x:31
+R3853:3855 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R3833:3848 Order.graph_normalization <> find_measurement def
+R3850:3850 Order.graph_normalization <> x:31 var
+R3852:3852 Order.graph_normalization <> x:31 var
+R3856:3856 Order.graph_normalization <> x:31 var
+def 4192:4198 <> reduce1
+R4209:4212 Coq.Init.Datatypes <> list ind
+R4228:4230 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4218:4222 Order.attack_graph <> state proj
+R4215:4215 Order.graph_normalization <> Reducer.G var
+R4234:4238 Order.attack_graph <> state proj
+R4231:4231 Order.graph_normalization <> Reducer.G var
+binder 4201:4205 <> Steps:32
+R4249:4252 Coq.Init.Datatypes <> list ind
+R4268:4270 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4258:4262 Order.attack_graph <> state proj
+R4255:4255 Order.graph_normalization <> Reducer.G var
+R4274:4278 Order.attack_graph <> state proj
+R4271:4271 Order.graph_normalization <> Reducer.G var
+R4293:4308 Order.graph_normalization <> find_measurement def
+R4310:4314 Order.graph_normalization <> Steps:32 var
+R4316:4320 Order.graph_normalization <> Steps:32 var
+ind 4828:4834 <> reducer
+constr 4932:4942 <> reduce_done
+constr 4991:5001 <> reduce_more
+R4874:4877 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4838:4841 Coq.Init.Datatypes <> list ind
+R4857:4859 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4847:4851 Order.attack_graph <> state proj
+R4844:4844 Order.graph_normalization <> Reducer.G var
+R4863:4867 Order.attack_graph <> state proj
+R4860:4860 Order.graph_normalization <> Reducer.G var
+R4914:4917 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4878:4881 Coq.Init.Datatypes <> list ind
+R4897:4899 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4887:4891 Order.attack_graph <> state proj
+R4884:4884 Order.graph_normalization <> Reducer.G var
+R4903:4907 Order.attack_graph <> state proj
+R4900:4900 Order.graph_normalization <> Reducer.G var
+binder 4953:4953 <> x:35
+R4969:4972 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4965:4967 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R4956:4962 Order.graph_normalization <> reduce1 def
+R4964:4964 Order.graph_normalization <> x:35 var
+R4968:4968 Order.graph_normalization <> x:35 var
+R4973:4979 Order.graph_normalization <> reducer:33 ind
+R4983:4983 Order.graph_normalization <> x:35 var
+R4981:4981 Order.graph_normalization <> x:35 var
+binder 5012:5012 <> x:36
+binder 5014:5014 <> y:37
+R5031:5034 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5026:5029 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R5017:5023 Order.graph_normalization <> reduce1 def
+R5025:5025 Order.graph_normalization <> x:36 var
+R5030:5030 Order.graph_normalization <> x:36 var
+R5056:5059 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5035:5041 Order.graph_normalization <> reducer:33 ind
+R5055:5055 Order.graph_normalization <> y:37 var
+R5044:5050 Order.graph_normalization <> reduce1 def
+R5052:5052 Order.graph_normalization <> x:36 var
+R5060:5066 Order.graph_normalization <> reducer:33 ind
+R5070:5070 Order.graph_normalization <> y:37 var
+R5068:5068 Order.graph_normalization <> x:36 var
+scheme 4828:4834 <> reducer_ind
+scheme 4828:4834 <> reducer_sind
+def 5091:5101 <> step_update
+R5109:5119 Order.attack_graph <> attackgraph rec
+R5121:5131 Order.graph_normalization <> Reducer.measurement var
+R5133:5142 Order.graph_normalization <> Reducer.corruption var
+binder 5104:5105 <> g1:38
+R5157:5160 Coq.Init.Datatypes <> list ind
+R5177:5179 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5167:5171 Order.attack_graph <> state proj
+R5163:5164 Order.graph_normalization <> g1:38 var
+R5184:5188 Order.attack_graph <> state proj
+R5180:5181 Order.graph_normalization <> g1:38 var
+binder 5146:5153 <> newSteps:39
+R5204:5208 Order.attack_graph <> state proj
+R5204:5208 Order.attack_graph <> state proj
+R5204:5208 Order.attack_graph <> state proj
+R5230:5234 Order.attack_graph <> steps proj
+R5230:5234 Order.attack_graph <> steps proj
+R5250:5254 Order.attack_graph <> label proj
+R5250:5254 Order.attack_graph <> label proj
+R5217:5221 Order.attack_graph <> state proj
+R5213:5214 Order.graph_normalization <> g1:38 var
+R5239:5246 Order.graph_normalization <> newSteps:39 var
+R5263:5267 Order.attack_graph <> label proj
+R5259:5260 Order.graph_normalization <> g1:38 var
+prf 5293:5313 <> reducer_deterministic
+R5333:5336 Coq.Init.Datatypes <> list ind
+R5352:5354 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5342:5346 Order.attack_graph <> state proj
+R5339:5339 Order.graph_normalization <> Reducer.G var
+R5358:5362 Order.attack_graph <> state proj
+R5355:5355 Order.graph_normalization <> Reducer.G var
+binder 5325:5325 <> x:40
+binder 5327:5327 <> y:41
+binder 5329:5329 <> z:42
+R5392:5395 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5381:5387 Order.graph_normalization <> reducer ind
+R5389:5389 Order.graph_normalization <> x:40 var
+R5391:5391 Order.graph_normalization <> y:41 var
+R5407:5410 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5396:5402 Order.graph_normalization <> reducer ind
+R5404:5404 Order.graph_normalization <> x:40 var
+R5406:5406 Order.graph_normalization <> z:42 var
+R5412:5414 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R5411:5411 Order.graph_normalization <> y:41 var
+R5415:5415 Order.graph_normalization <> z:42 var
+prf 5785:5797 <> reducer_trans
+R5813:5816 Coq.Init.Datatypes <> list ind
+R5831:5833 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5821:5825 Order.attack_graph <> state proj
+R5818:5818 Order.graph_normalization <> Reducer.G var
+R5837:5841 Order.attack_graph <> state proj
+R5834:5834 Order.graph_normalization <> Reducer.G var
+binder 5809:5809 <> x:43
+R5855:5858 Coq.Init.Datatypes <> list ind
+R5873:5875 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5863:5867 Order.attack_graph <> state proj
+R5860:5860 Order.graph_normalization <> Reducer.G var
+R5879:5883 Order.attack_graph <> state proj
+R5876:5876 Order.graph_normalization <> Reducer.G var
+binder 5851:5851 <> y:44
+R5905:5908 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5894:5900 Order.graph_normalization <> reducer ind
+R5902:5902 Order.graph_normalization <> x:43 var
+R5904:5904 Order.graph_normalization <> y:44 var
+R5921:5924 Coq.Init.Datatypes <> list ind
+R5939:5941 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5929:5933 Order.attack_graph <> state proj
+R5926:5926 Order.graph_normalization <> Reducer.G var
+R5945:5949 Order.attack_graph <> state proj
+R5942:5942 Order.graph_normalization <> Reducer.G var
+binder 5917:5917 <> z:45
+R5971:5974 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5960:5966 Order.graph_normalization <> reducer ind
+R5968:5968 Order.graph_normalization <> y:44 var
+R5970:5970 Order.graph_normalization <> z:45 var
+R5975:5981 Order.graph_normalization <> reducer ind
+R5983:5983 Order.graph_normalization <> x:43 var
+R5985:5985 Order.graph_normalization <> z:45 var
+R6079:6089 Order.graph_normalization <> reduce_more constr
+R6079:6089 Order.graph_normalization <> reduce_more constr
+R6113:6119 Order.graph_normalization Reducer <> sec

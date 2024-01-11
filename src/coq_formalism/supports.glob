@@ -1,0 +1,567 @@
+DIGEST 72f4fa713b4489ce21175b66f7bd7952
+FOrder.supports
+R216:229 Coq.Lists.List <> <> lib
+R248:265 Order.attack_graph <> <> lib
+R283:314 Order.graph_strict_partial_order <> <> lib
+R332:356 Order.graph_normalization <> <> lib
+R374:390 Order.graph_equiv <> <> lib
+R408:422 Order.utilities <> <> lib
+R440:464 Order.graph_partial_order <> <> lib
+R482:501 Order.supports_facts <> <> lib
+R519:533 Order.set_equiv <> <> lib
+R552:571 Coq.Program.Equality <> <> lib
+sec 968:980 <> Supports_List
+binder 994:1004 <> measurement:1
+binder 1024:1033 <> corruption:2
+var 1111:1127 Supports_List eqDec_measurement
+R1145:1155 Order.supports <> Supports_List.measurement var
+binder 1139:1139 <> x:3
+binder 1141:1141 <> y:4
+R1159:1159 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1165:1169 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1176:1176 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1161:1163 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1160:1160 Order.supports <> x:3 var
+R1164:1164 Order.supports <> y:4 var
+R1171:1174 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R1170:1170 Order.supports <> x:3 var
+R1175:1175 Order.supports <> y:4 var
+var 1191:1206 Supports_List eqDec_corruption
+R1224:1233 Order.supports <> Supports_List.corruption var
+binder 1218:1218 <> x:6
+binder 1220:1220 <> y:7
+R1237:1237 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1243:1247 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1254:1254 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1239:1241 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1238:1238 Order.supports <> x:6 var
+R1242:1242 Order.supports <> y:7 var
+R1249:1252 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R1248:1248 Order.supports <> x:6 var
+R1253:1253 Order.supports <> y:7 var
+var 1269:1279 Supports_List eqDec_state
+R1295:1305 Order.attack_graph <> attackgraph rec
+R1307:1317 Order.supports <> Supports_List.measurement var
+R1319:1328 Order.supports <> Supports_List.corruption var
+binder 1291:1291 <> G:9
+R1341:1345 Order.attack_graph <> state proj
+R1338:1338 Order.supports <> G:9 var
+binder 1332:1332 <> x:10
+binder 1334:1334 <> y:11
+R1354:1354 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1360:1364 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1371:1371 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1356:1358 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1355:1355 Order.supports <> x:10 var
+R1359:1359 Order.supports <> y:11 var
+R1366:1369 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R1365:1365 Order.supports <> x:10 var
+R1370:1370 Order.supports <> y:11 var
+prf 1483:1499 <> order_impl_not_eq
+R1518:1528 Order.attack_graph <> attackgraph rec
+R1530:1540 Order.supports <> Supports_List.measurement var
+R1542:1551 Order.supports <> Supports_List.corruption var
+binder 1511:1512 <> g1:13
+binder 1514:1515 <> g2:14
+R1581:1584 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1555:1574 Order.graph_strict_partial_order <> strict_partial_order def
+R1576:1577 Order.supports <> g1:13 var
+R1579:1580 Order.supports <> g2:14 var
+R1585:1586 Coq.Init.Logic <> ::type_scope:'~'_x not
+R1587:1596 Order.graph_equiv <> bidir_homo def
+R1601:1602 Order.supports <> g2:14 var
+R1598:1599 Order.supports <> g1:13 var
+R1632:1641 Order.graph_equiv <> bidir_homo def
+R1644:1663 Order.graph_strict_partial_order <> strict_partial_order def
+R1761:1772 Order.graph_equiv <> homomorphism def
+R1955:1959 Order.attack_graph <> steps proj
+R1961:1971 Order.supports <> Supports_List.measurement var
+R1973:1982 Order.supports <> Supports_List.corruption var
+R1955:1959 Order.attack_graph <> steps proj
+R1961:1971 Order.supports <> Supports_List.measurement var
+R1973:1982 Order.supports <> Supports_List.corruption var
+R2050:2057 Order.graph_strict_partial_order <> find_cor def
+R2079:2083 Order.attack_graph <> label proj
+R2085:2095 Order.supports <> Supports_List.measurement var
+R2097:2106 Order.supports <> Supports_List.corruption var
+R2112:2114 Coq.Init.Datatypes <> fst def
+R2079:2083 Order.attack_graph <> label proj
+R2085:2095 Order.supports <> Supports_List.measurement var
+R2097:2106 Order.supports <> Supports_List.corruption var
+R2112:2114 Coq.Init.Datatypes <> fst def
+R2301:2305 Order.attack_graph <> steps proj
+R2307:2317 Order.supports <> Supports_List.measurement var
+R2319:2328 Order.supports <> Supports_List.corruption var
+R2301:2305 Order.attack_graph <> steps proj
+R2307:2317 Order.supports <> Supports_List.measurement var
+R2319:2328 Order.supports <> Supports_List.corruption var
+R2515:2521 Order.graph_strict_partial_order <> ex_tail constr
+R2515:2521 Order.graph_strict_partial_order <> ex_tail constr
+R2656:2667 Order.graph_equiv <> homomorphism def
+R2844:2848 Order.attack_graph <> steps proj
+R2850:2860 Order.supports <> Supports_List.measurement var
+R2862:2871 Order.supports <> Supports_List.corruption var
+R2844:2848 Order.attack_graph <> steps proj
+R2850:2860 Order.supports <> Supports_List.measurement var
+R2862:2871 Order.supports <> Supports_List.corruption var
+R2933:2941 Order.graph_strict_partial_order <> find_time def
+R2961:2965 Order.attack_graph <> label proj
+R2967:2977 Order.supports <> Supports_List.measurement var
+R2979:2988 Order.supports <> Supports_List.corruption var
+R2994:2996 Coq.Init.Datatypes <> fst def
+R2961:2965 Order.attack_graph <> label proj
+R2967:2977 Order.supports <> Supports_List.measurement var
+R2979:2988 Order.supports <> Supports_List.corruption var
+R2994:2996 Coq.Init.Datatypes <> fst def
+R3039:3043 Order.attack_graph <> label proj
+R3045:3055 Order.supports <> Supports_List.measurement var
+R3057:3066 Order.supports <> Supports_List.corruption var
+R3072:3074 Coq.Init.Datatypes <> snd def
+R3039:3043 Order.attack_graph <> label proj
+R3045:3055 Order.supports <> Supports_List.measurement var
+R3057:3066 Order.supports <> Supports_List.corruption var
+R3072:3074 Coq.Init.Datatypes <> snd def
+R3248:3252 Order.attack_graph <> steps proj
+R3254:3264 Order.supports <> Supports_List.measurement var
+R3266:3275 Order.supports <> Supports_List.corruption var
+R3248:3252 Order.attack_graph <> steps proj
+R3254:3264 Order.supports <> Supports_List.measurement var
+R3266:3275 Order.supports <> Supports_List.corruption var
+R3510:3516 Order.graph_strict_partial_order <> ex_tail constr
+R3510:3516 Order.graph_strict_partial_order <> ex_tail constr
+def 3688:3695 <> supports
+R3703:3706 Coq.Init.Datatypes <> list ind
+R3709:3719 Order.attack_graph <> attackgraph rec
+R3721:3731 Order.supports <> Supports_List.measurement var
+R3733:3742 Order.supports <> Supports_List.corruption var
+binder 3698:3699 <> SS:15
+R3752:3755 Coq.Init.Datatypes <> list ind
+R3758:3768 Order.attack_graph <> attackgraph rec
+R3770:3780 Order.supports <> Supports_List.measurement var
+R3782:3791 Order.supports <> Supports_List.corruption var
+binder 3747:3748 <> TT:16
+R3821:3831 Order.attack_graph <> attackgraph rec
+R3833:3843 Order.supports <> Supports_List.measurement var
+R3845:3854 Order.supports <> Supports_List.corruption var
+binder 3816:3816 <> H:17
+R3866:3870 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3977:3977 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3859:3860 Coq.Lists.List <> In def
+R3864:3865 Order.supports <> TT:16 var
+R3862:3862 Order.supports <> H:17 var
+R3871:3878 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R3918:3921 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R3884:3894 Order.attack_graph <> attackgraph rec
+R3896:3906 Order.supports <> Supports_List.measurement var
+R3908:3917 Order.supports <> Supports_List.corruption var
+binder 3879:3879 <> G:18
+R3929:3933 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3976:3976 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3922:3923 Coq.Lists.List <> In def
+R3927:3928 Order.supports <> SS:15 var
+R3925:3925 Order.supports <> G:18 var
+R3948:3951 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3934:3943 Order.graph_equiv <> bidir_homo def
+R3947:3947 Order.supports <> H:17 var
+R3945:3945 Order.supports <> G:18 var
+R3952:3971 Order.graph_strict_partial_order <> strict_partial_order def
+R3973:3973 Order.supports <> G:18 var
+R3975:3975 Order.supports <> H:17 var
+prf 3989:4001 <> supports_refl
+binder 4012:4013 <> SS:19
+R4017:4024 Order.supports <> supports def
+R4026:4027 Order.supports <> SS:19 var
+R4029:4030 Order.supports <> SS:19 var
+R4056:4063 Order.supports <> supports def
+R4122:4136 Order.graph_equiv <> bidir_homo_refl thm
+R4122:4136 Order.graph_equiv <> bidir_homo_refl thm
+prf 4196:4210 <> supports_trans'
+binder 4221:4221 <> x:20
+binder 4223:4223 <> y:21
+binder 4225:4225 <> z:22
+R4240:4243 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4228:4235 Order.supports <> supports def
+R4237:4237 Order.supports <> x:20 var
+R4239:4239 Order.supports <> y:21 var
+R4256:4259 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4244:4251 Order.supports <> supports def
+R4253:4253 Order.supports <> y:21 var
+R4255:4255 Order.supports <> z:22 var
+R4260:4267 Order.supports <> supports def
+R4269:4269 Order.supports <> x:20 var
+R4271:4271 Order.supports <> z:22 var
+R4320:4327 Order.supports <> supports def
+R4475:4490 Order.graph_equiv <> bidir_homo_trans thm
+R4475:4490 Order.graph_equiv <> bidir_homo_trans thm
+R4517:4531 Order.graph_partial_order <> po_trans_helper thm
+R4517:4531 Order.graph_partial_order <> po_trans_helper thm
+R4559:4574 Order.graph_partial_order <> po_trans_helper' thm
+R4559:4574 Order.graph_partial_order <> po_trans_helper' thm
+R4602:4610 Order.graph_strict_partial_order <> spo_trans thm
+R4602:4610 Order.graph_strict_partial_order <> spo_trans thm
+ind 4747:4756 <> reduce_set
+constr 4912:4918 <> set_nil
+constr 5005:5012 <> set_keep
+constr 5158:5167 <> set_remove
+R4766:4769 Coq.Init.Datatypes <> list ind
+R4772:4782 Order.attack_graph <> attackgraph rec
+R4784:4794 Order.supports <> Supports_List.measurement var
+R4796:4805 Order.supports <> Supports_List.corruption var
+binder 4759:4762 <> orig:23
+R4852:4856 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4811:4814 Coq.Init.Datatypes <> list ind
+R4817:4827 Order.attack_graph <> attackgraph rec
+R4829:4839 Order.supports <> Supports_List.measurement var
+R4841:4850 Order.supports <> Supports_List.corruption var
+R4898:4901 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4857:4860 Coq.Init.Datatypes <> list ind
+R4863:4873 Order.attack_graph <> attackgraph rec
+R4875:4885 Order.supports <> Supports_List.measurement var
+R4887:4896 Order.supports <> Supports_List.corruption var
+R4922:4931 Order.supports <> reduce_set:24 ind
+R4942:4944 Coq.Init.Datatypes <> nil constr
+R4938:4940 Coq.Init.Datatypes <> nil constr
+R4933:4936 Order.supports <> orig:23 var
+binder 5023:5024 <> a1:26
+binder 5026:5027 <> SS:27
+binder 5029:5030 <> TT:28
+R5033:5033 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5087:5091 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+binder 5041:5042 <> a2:29
+R5055:5058 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5045:5046 Coq.Lists.List <> In def
+R5051:5054 Order.supports <> orig:23 var
+R5048:5049 Order.supports <> a2:29 var
+R5059:5060 Coq.Init.Logic <> ::type_scope:'~'_x not
+R5061:5080 Order.graph_strict_partial_order <> strict_partial_order def
+R5082:5083 Order.supports <> a2:29 var
+R5085:5086 Order.supports <> a1:26 var
+R5113:5116 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5092:5101 Order.supports <> reduce_set:24 ind
+R5111:5112 Order.supports <> TT:28 var
+R5108:5109 Order.supports <> SS:27 var
+R5103:5106 Order.supports <> orig:23 var
+R5117:5126 Order.supports <> reduce_set:24 ind
+R5147:5150 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R5145:5146 Order.supports <> a1:26 var
+R5151:5152 Order.supports <> TT:28 var
+R5136:5139 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R5134:5135 Order.supports <> a1:26 var
+R5140:5141 Order.supports <> SS:27 var
+R5128:5131 Order.supports <> orig:23 var
+binder 5178:5179 <> a1:30
+binder 5181:5182 <> SS:31
+binder 5184:5185 <> TT:32
+R5188:5188 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5240:5244 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5189:5195 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R5198:5199 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 5196:5197 <> a2:33
+R5210:5213 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R5200:5201 Coq.Lists.List <> In def
+R5206:5209 Order.supports <> orig:23 var
+R5203:5204 Order.supports <> a2:33 var
+R5214:5233 Order.graph_strict_partial_order <> strict_partial_order def
+R5235:5236 Order.supports <> a2:33 var
+R5238:5239 Order.supports <> a1:30 var
+R5266:5269 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5245:5254 Order.supports <> reduce_set:24 ind
+R5264:5265 Order.supports <> TT:32 var
+R5261:5262 Order.supports <> SS:31 var
+R5256:5259 Order.supports <> orig:23 var
+R5270:5279 Order.supports <> reduce_set:24 ind
+R5297:5298 Order.supports <> TT:32 var
+R5289:5292 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R5287:5288 Order.supports <> a1:30 var
+R5293:5294 Order.supports <> SS:31 var
+R5281:5284 Order.supports <> orig:23 var
+scheme 4747:4756 <> reduce_set_ind
+scheme 4747:4756 <> reduce_set_sind
+R5309:5318 Order.supports <> reduce_set ind
+prf 5331:5343 <> reduce_set_in
+binder 5354:5354 <> x:34
+binder 5356:5357 <> x':35
+R5378:5381 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5361:5370 Order.supports <> reduce_set ind
+R5372:5372 Order.supports <> x:34 var
+R5374:5374 Order.supports <> x:34 var
+R5376:5377 Order.supports <> x':35 var
+binder 5389:5389 <> a:36
+R5399:5402 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5392:5393 Coq.Lists.List <> In def
+R5397:5398 Order.supports <> x':35 var
+R5395:5395 Order.supports <> a:36 var
+R5403:5404 Coq.Lists.List <> In def
+R5408:5408 Order.supports <> x:34 var
+R5406:5406 Order.supports <> a:36 var
+prf 5477:5495 <> reduce_set_supports
+binder 5506:5506 <> x:37
+binder 5508:5509 <> x':38
+R5529:5532 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5512:5521 Order.supports <> reduce_set ind
+R5523:5523 Order.supports <> x:37 var
+R5525:5525 Order.supports <> x:37 var
+R5527:5528 Order.supports <> x':38 var
+R5533:5540 Order.supports <> supports def
+R5542:5542 Order.supports <> x:37 var
+R5544:5545 Order.supports <> x':38 var
+R5580:5587 Order.supports <> supports def
+R5712:5726 Order.graph_equiv <> bidir_homo_refl thm
+R5712:5726 Order.graph_equiv <> bidir_homo_refl thm
+prf 5923:5943 <> reduce_set_supports_y
+binder 5954:5954 <> x:39
+binder 5956:5956 <> y:40
+binder 5958:5959 <> y':41
+R5979:5982 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5962:5971 Order.supports <> reduce_set ind
+R5973:5973 Order.supports <> y:40 var
+R5975:5975 Order.supports <> y:40 var
+R5977:5978 Order.supports <> y':41 var
+R5995:5998 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5983:5990 Order.supports <> supports def
+R5992:5992 Order.supports <> x:39 var
+R5994:5994 Order.supports <> y:40 var
+R5999:6006 Order.supports <> supports def
+R6008:6008 Order.supports <> x:39 var
+R6010:6011 Order.supports <> y':41 var
+R6052:6059 Order.supports <> supports def
+R6088:6100 Order.supports <> reduce_set_in thm
+R6088:6100 Order.supports <> reduce_set_in thm
+prf 6131:6145 <> reduce_set_keep
+binder 6156:6159 <> orig:42
+binder 6161:6161 <> x:43
+binder 6163:6164 <> x':44
+R6187:6190 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6167:6176 Order.supports <> reduce_set ind
+R6178:6181 Order.supports <> orig:42 var
+R6183:6183 Order.supports <> x:43 var
+R6185:6186 Order.supports <> x':44 var
+binder 6198:6199 <> g':45
+R6210:6213 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6202:6203 Coq.Lists.List <> In def
+R6208:6209 Order.supports <> x':44 var
+R6205:6206 Order.supports <> g':45 var
+binder 6221:6221 <> g:46
+R6233:6236 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6224:6225 Coq.Lists.List <> In def
+R6229:6232 Order.supports <> orig:42 var
+R6227:6227 Order.supports <> g:46 var
+R6237:6238 Coq.Init.Logic <> ::type_scope:'~'_x not
+R6239:6258 Order.graph_strict_partial_order <> strict_partial_order def
+R6260:6260 Order.supports <> g:46 var
+R6262:6263 Order.supports <> g':45 var
+prf 6610:6626 <> reduce_set_remove
+binder 6637:6640 <> orig:47
+binder 6642:6642 <> x:48
+binder 6644:6645 <> x':49
+R6668:6671 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6648:6657 Order.supports <> reduce_set ind
+R6659:6662 Order.supports <> orig:47 var
+R6664:6664 Order.supports <> x:48 var
+R6666:6667 Order.supports <> x':49 var
+binder 6679:6679 <> g:50
+R6688:6691 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6682:6683 Coq.Lists.List <> In def
+R6687:6687 Order.supports <> x:48 var
+R6685:6685 Order.supports <> g:50 var
+R6702:6705 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6692:6693 Coq.Init.Logic <> ::type_scope:'~'_x not
+R6701:6701 Coq.Init.Logic <> ::type_scope:'~'_x not
+R6694:6695 Coq.Lists.List <> In def
+R6699:6700 Order.supports <> x':49 var
+R6697:6697 Order.supports <> g:50 var
+R6706:6712 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R6715:6717 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R6759:6759 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 6713:6714 <> g2:51
+R6728:6732 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R6758:6758 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R6718:6719 Coq.Lists.List <> In def
+R6724:6727 Order.supports <> orig:47 var
+R6721:6722 Order.supports <> g2:51 var
+R6733:6752 Order.graph_strict_partial_order <> strict_partial_order def
+R6754:6755 Order.supports <> g2:51 var
+R6757:6757 Order.supports <> g:50 var
+prf 7108:7121 <> reduce_set_nil
+binder 7132:7132 <> x:52
+R7153:7156 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7135:7144 Order.supports <> reduce_set ind
+R7146:7146 Order.supports <> x:52 var
+R7148:7148 Order.supports <> x:52 var
+R7150:7152 Coq.Init.Datatypes <> nil constr
+R7158:7160 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R7157:7157 Order.supports <> x:52 var
+R7161:7163 Coq.Init.Datatypes <> nil constr
+R7259:7260 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R7232:7250 Order.supports_facts <> supports_spo_irrefl thm
+R7259:7260 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R7232:7250 Order.supports_facts <> supports_spo_irrefl thm
+R7311:7322 Order.supports_facts <> supports_spo def
+R7343:7359 Order.supports <> reduce_set_remove thm
+R7343:7359 Order.supports <> reduce_set_remove thm
+prf 7397:7409 <> reduce_set_lt
+binder 7420:7423 <> orig:53
+binder 7425:7425 <> x:54
+binder 7427:7428 <> x':55
+R7453:7458 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7433:7442 Order.supports <> reduce_set ind
+R7444:7447 Order.supports <> orig:53 var
+R7449:7449 Order.supports <> x:54 var
+R7451:7452 Order.supports <> x':55 var
+binder 7466:7467 <> g':56
+R7478:7483 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7470:7471 Coq.Lists.List <> In def
+R7476:7477 Order.supports <> x':55 var
+R7473:7474 Order.supports <> g':56 var
+binder 7491:7491 <> g:57
+R7503:7508 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7494:7495 Coq.Lists.List <> In def
+R7499:7502 Order.supports <> orig:53 var
+R7497:7497 Order.supports <> g:57 var
+R7509:7510 Coq.Init.Logic <> ::type_scope:'~'_x not
+R7511:7530 Order.graph_strict_partial_order <> strict_partial_order def
+R7532:7532 Order.supports <> g:57 var
+R7534:7535 Order.supports <> g':56 var
+prf 7758:7773 <> in_reduced_orig'
+binder 7784:7787 <> orig:58
+binder 7789:7789 <> x:59
+binder 7791:7792 <> xs:60
+binder 7794:7796 <> xs':61
+R7807:7810 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7799:7800 Coq.Lists.List <> In def
+R7804:7806 Order.supports <> xs':61 var
+R7802:7802 Order.supports <> x:59 var
+R7833:7836 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7811:7820 Order.supports <> reduce_set ind
+R7822:7825 Order.supports <> orig:58 var
+R7827:7828 Order.supports <> xs:60 var
+R7830:7832 Order.supports <> xs':61 var
+R7837:7838 Coq.Lists.List <> In def
+R7842:7843 Order.supports <> xs:60 var
+R7840:7840 Order.supports <> x:59 var
+prf 7987:8002 <> reduced_supports
+binder 8013:8016 <> orig:62
+binder 8018:8018 <> x:63
+binder 8020:8021 <> x':64
+binder 8023:8023 <> y:65
+R8049:8052 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8029:8038 Order.supports <> reduce_set ind
+R8040:8043 Order.supports <> orig:62 var
+R8045:8045 Order.supports <> x:63 var
+R8047:8048 Order.supports <> x':64 var
+R8066:8069 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8053:8060 Order.supports <> supports def
+R8062:8063 Order.supports <> x':64 var
+R8065:8065 Order.supports <> y:65 var
+R8070:8077 Order.supports <> supports def
+R8079:8079 Order.supports <> x:63 var
+R8081:8081 Order.supports <> y:65 var
+R8108:8115 Order.supports <> supports def
+R8188:8203 Order.supports <> in_reduced_orig' thm
+R8188:8203 Order.supports <> in_reduced_orig' thm
+prf 8257:8279 <> reduced_supports_y_x_x'
+binder 8290:8290 <> x:66
+binder 8292:8293 <> x':67
+binder 8295:8295 <> y:68
+R8318:8321 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8301:8310 Order.supports <> reduce_set ind
+R8312:8312 Order.supports <> x:66 var
+R8314:8314 Order.supports <> x:66 var
+R8316:8317 Order.supports <> x':67 var
+R8334:8337 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8322:8329 Order.supports <> supports def
+R8331:8331 Order.supports <> y:68 var
+R8333:8333 Order.supports <> x:66 var
+R8338:8345 Order.supports <> supports def
+R8347:8347 Order.supports <> y:68 var
+R8349:8350 Order.supports <> x':67 var
+R8407:8414 Order.supports <> supports def
+R8453:8460 Order.supports <> supports def
+R8603:8610 Order.supports <> supports def
+R8698:8705 Order.supports <> supports def
+R8720:8731 Order.supports_facts <> supports_iso def
+prf 8765:8782 <> reduce_set_remove'
+binder 8793:8796 <> orig:69
+binder 8798:8798 <> x:70
+binder 8800:8801 <> x':71
+R8826:8831 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8806:8815 Order.supports <> reduce_set ind
+R8817:8820 Order.supports <> orig:69 var
+R8822:8822 Order.supports <> x:70 var
+R8824:8825 Order.supports <> x':71 var
+binder 8839:8839 <> g:72
+R8848:8851 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8842:8843 Coq.Lists.List <> In def
+R8847:8847 Order.supports <> x:70 var
+R8845:8845 Order.supports <> g:72 var
+R8862:8867 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8852:8853 Coq.Init.Logic <> ::type_scope:'~'_x not
+R8861:8861 Coq.Init.Logic <> ::type_scope:'~'_x not
+R8854:8855 Coq.Lists.List <> In def
+R8859:8860 Order.supports <> x':71 var
+R8857:8857 Order.supports <> g:72 var
+R8868:8874 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R8877:8879 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R8919:8919 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 8875:8876 <> g':73
+R8888:8892 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R8918:8918 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R8880:8881 Coq.Lists.List <> In def
+R8886:8887 Order.supports <> x':71 var
+R8883:8884 Order.supports <> g':73 var
+R8893:8912 Order.graph_strict_partial_order <> strict_partial_order def
+R8914:8915 Order.supports <> g':73 var
+R8917:8917 Order.supports <> g:72 var
+prf 8944:8964 <> reduced_supports_x_x'
+binder 8975:8978 <> orig:74
+binder 8980:8980 <> x:75
+binder 8982:8983 <> x':76
+binder 8985:8985 <> y:77
+R9011:9014 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8991:9000 Order.supports <> reduce_set ind
+R9002:9005 Order.supports <> orig:74 var
+R9007:9007 Order.supports <> x:75 var
+R9009:9010 Order.supports <> x':76 var
+R9027:9030 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9015:9022 Order.supports <> supports def
+R9024:9024 Order.supports <> x:75 var
+R9026:9026 Order.supports <> y:77 var
+R9031:9038 Order.supports <> supports def
+R9040:9041 Order.supports <> x':76 var
+R9043:9043 Order.supports <> y:77 var
+R9302:9316 Order.supports <> reduce_set_keep thm
+R9302:9316 Order.supports <> reduce_set_keep thm
+prf 9372:9388 <> supports_antisym'
+binder 9399:9399 <> x:78
+binder 9401:9401 <> y:79
+binder 9403:9404 <> x':80
+binder 9406:9407 <> y':81
+R9422:9425 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9410:9417 Order.supports <> supports def
+R9419:9419 Order.supports <> x:78 var
+R9421:9421 Order.supports <> y:79 var
+R9438:9442 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9426:9433 Order.supports <> supports def
+R9435:9435 Order.supports <> y:79 var
+R9437:9437 Order.supports <> x:78 var
+R9460:9463 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9443:9452 Order.supports <> reduce_set ind
+R9454:9454 Order.supports <> x:78 var
+R9456:9456 Order.supports <> x:78 var
+R9458:9459 Order.supports <> x':80 var
+R9481:9484 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9464:9473 Order.supports <> reduce_set ind
+R9475:9475 Order.supports <> y:79 var
+R9477:9477 Order.supports <> y:79 var
+R9479:9480 Order.supports <> y':81 var
+R9485:9490 Order.set_equiv <> set_eq def
+R9492:9493 Order.supports <> x':80 var
+R9495:9496 Order.supports <> y':81 var
+R9596:9601 Order.set_equiv <> set_eq def
+R9657:9679 Order.supports <> reduced_supports_y_x_x' thm
+R9657:9679 Order.supports <> reduced_supports_y_x_x' thm
+R9728:9750 Order.supports <> reduced_supports_y_x_x' thm
+R9728:9750 Order.supports <> reduced_supports_y_x_x' thm
+R9799:9812 Order.supports <> reduce_set_nil thm
+R9799:9812 Order.supports <> reduce_set_nil thm
+R9969:9981 Order.supports Supports_List <> sec

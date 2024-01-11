@@ -1,0 +1,92 @@
+DIGEST 17966e16c22a54d16de985d4016bf1ed
+FOrder.set_equiv
+R157:170 Coq.Lists.List <> <> lib
+R189:206 Order.attack_graph <> <> lib
+R224:255 Order.graph_strict_partial_order <> <> lib
+R273:297 Order.graph_normalization <> <> lib
+R315:331 Order.graph_equiv <> <> lib
+R349:363 Order.utilities <> <> lib
+R381:405 Order.graph_partial_order <> <> lib
+R423:442 Order.supports_facts <> <> lib
+R461:480 Coq.Program.Equality <> <> lib
+sec 492:500 <> Set_Equiv
+binder 514:524 <> measurement:1
+binder 544:553 <> corruption:2
+def 576:581 <> set_eq
+R589:592 Coq.Init.Datatypes <> list ind
+R595:605 Order.attack_graph <> attackgraph rec
+R607:617 Order.set_equiv <> Set_Equiv.measurement var
+R619:628 Order.set_equiv <> Set_Equiv.corruption var
+binder 584:585 <> SS:3
+R638:641 Coq.Init.Datatypes <> list ind
+R644:654 Order.attack_graph <> attackgraph rec
+R656:666 Order.set_equiv <> Set_Equiv.measurement var
+R668:677 Order.set_equiv <> Set_Equiv.corruption var
+binder 633:634 <> TT:4
+R703:706 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R685:696 Order.supports_facts <> supports_iso def
+R698:699 Order.set_equiv <> SS:3 var
+R701:702 Order.set_equiv <> TT:4 var
+R707:718 Order.supports_facts <> supports_iso def
+R720:721 Order.set_equiv <> TT:4 var
+R723:724 Order.set_equiv <> SS:3 var
+prf 826:836 <> set_eq_refl
+binder 847:848 <> SS:5
+R851:856 Order.set_equiv <> set_eq def
+R858:859 Order.set_equiv <> SS:5 var
+R861:862 Order.set_equiv <> SS:5 var
+R892:897 Order.set_equiv <> set_eq def
+R917:933 Order.supports_facts <> supports_iso_refl thm
+R917:933 Order.supports_facts <> supports_iso_refl thm
+R917:933 Order.supports_facts <> supports_iso_refl thm
+prf 955:964 <> set_eq_sym
+binder 975:976 <> SS:6
+binder 978:979 <> TT:7
+R994:997 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R982:987 Order.set_equiv <> set_eq def
+R989:990 Order.set_equiv <> SS:6 var
+R992:993 Order.set_equiv <> TT:7 var
+R998:1003 Order.set_equiv <> set_eq def
+R1005:1006 Order.set_equiv <> TT:7 var
+R1008:1009 Order.set_equiv <> SS:6 var
+R1038:1043 Order.set_equiv <> set_eq def
+prf 1095:1106 <> set_eq_trans
+binder 1117:1118 <> SS:8
+binder 1120:1121 <> TT:9
+R1136:1139 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1124:1129 Order.set_equiv <> set_eq def
+R1131:1132 Order.set_equiv <> SS:8 var
+R1134:1135 Order.set_equiv <> TT:9 var
+binder 1147:1148 <> PP:10
+R1163:1166 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1151:1156 Order.set_equiv <> set_eq def
+R1158:1159 Order.set_equiv <> TT:9 var
+R1161:1162 Order.set_equiv <> PP:10 var
+R1167:1172 Order.set_equiv <> set_eq def
+R1174:1175 Order.set_equiv <> SS:8 var
+R1177:1178 Order.set_equiv <> PP:10 var
+R1200:1205 Order.set_equiv <> set_eq def
+R1384:1401 Order.supports_facts <> supports_iso_trans thm
+R1384:1401 Order.supports_facts <> supports_iso_trans thm
+R1424:1441 Order.supports_facts <> supports_iso_trans thm
+R1424:1441 Order.supports_facts <> supports_iso_trans thm
+prf 1476:1485 <> set_eq_dec
+binder 1496:1497 <> SS:11
+binder 1499:1500 <> TT:12
+R1512:1515 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1505:1508 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R1503:1504 Order.set_equiv <> TT:12 var
+R1509:1511 Coq.Init.Datatypes <> nil constr
+R1516:1516 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1529:1533 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1548:1548 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1517:1522 Order.set_equiv <> set_eq def
+R1524:1525 Order.set_equiv <> SS:11 var
+R1527:1528 Order.set_equiv <> TT:12 var
+R1534:1535 Coq.Init.Logic <> ::type_scope:'~'_x not
+R1536:1541 Order.set_equiv <> set_eq def
+R1543:1544 Order.set_equiv <> SS:11 var
+R1546:1547 Order.set_equiv <> TT:12 var
+R1695:1700 Order.set_equiv <> set_eq def
+R1710:1721 Order.supports_facts <> supports_iso def
+R1744:1752 Order.set_equiv Set_Equiv <> sec

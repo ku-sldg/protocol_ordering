@@ -1,0 +1,1223 @@
+DIGEST 166b14dc1907ea149962bbbac3c67e42
+FOrder.graph_strict_partial_order
+R244:257 Coq.Lists.List <> <> lib
+R275:292 Order.attack_graph <> <> lib
+R310:324 Order.utilities <> <> lib
+sec 337:356 <> Strict_Partial_Order
+binder 371:381 <> measurement:1
+binder 402:411 <> corruption:2
+var 643:659 Strict_Partial_Order eqDec_measurement
+R677:687 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+binder 671:671 <> x:3
+binder 673:673 <> y:4
+R691:691 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R697:701 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R708:708 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R693:695 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R692:692 Order.graph_strict_partial_order <> x:3 var
+R696:696 Order.graph_strict_partial_order <> y:4 var
+R703:706 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R702:702 Order.graph_strict_partial_order <> x:3 var
+R707:707 Order.graph_strict_partial_order <> y:4 var
+var 723:738 Strict_Partial_Order eqDec_corruption
+R756:765 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 750:750 <> x:6
+binder 752:752 <> y:7
+R769:769 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R775:779 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R786:786 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R771:773 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R770:770 Order.graph_strict_partial_order <> x:6 var
+R774:774 Order.graph_strict_partial_order <> y:7 var
+R781:784 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R780:780 Order.graph_strict_partial_order <> x:6 var
+R785:785 Order.graph_strict_partial_order <> y:7 var
+var 801:811 Strict_Partial_Order eqDec_state
+R827:837 Order.attack_graph <> attackgraph rec
+R839:849 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R851:860 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 823:823 <> G:9
+R873:877 Order.attack_graph <> state proj
+R870:870 Order.graph_strict_partial_order <> G:9 var
+binder 864:864 <> x:10
+binder 866:866 <> y:11
+R886:886 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R892:896 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R903:903 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R888:890 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R887:887 Order.graph_strict_partial_order <> x:10 var
+R891:891 Order.graph_strict_partial_order <> y:11 var
+R898:901 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R897:897 Order.graph_strict_partial_order <> x:10 var
+R902:902 Order.graph_strict_partial_order <> y:11 var
+def 918:924 <> existsb
+binder 928:928 <> A:13
+R944:947 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R943:943 Order.graph_strict_partial_order <> A:13 var
+binder 939:939 <> f:14
+R957:960 Coq.Init.Datatypes <> list ind
+R962:962 Order.graph_strict_partial_order <> A:13 var
+binder 955:955 <> l:15
+R987:987 Order.graph_strict_partial_order <> l:15 var
+R1004:1006 Coq.Init.Datatypes <> nil constr
+R1011:1015 Coq.Init.Logic <> False ind
+R1027:1028 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1037:1040 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R1034:1034 Order.graph_strict_partial_order <> f:14 var
+R1041:1047 Order.graph_strict_partial_order <> existsb:16 def
+R1053:1053 Order.graph_strict_partial_order <> l:15 var
+R1051:1051 Order.graph_strict_partial_order <> f:14 var
+R1049:1049 Order.graph_strict_partial_order <> A:13 var
+ind 1078:1088 <> existsb_ind
+constr 1143:1149 <> ex_head
+constr 1198:1204 <> ex_tail
+binder 1092:1092 <> A:18
+R1108:1111 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1107:1107 Order.graph_strict_partial_order <> A:18 var
+binder 1103:1103 <> f:19
+R1120:1120 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1127:1131 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1121:1124 Coq.Init.Datatypes <> list ind
+binder 1160:1160 <> a:22
+binder 1162:1162 <> l:23
+R1168:1171 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1165:1165 Order.graph_strict_partial_order <> f:19 var
+R1167:1167 Order.graph_strict_partial_order <> a:22 var
+R1172:1182 Order.graph_strict_partial_order <> existsb_ind:20 ind
+R1190:1191 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1189:1189 Order.graph_strict_partial_order <> a:22 var
+R1192:1192 Order.graph_strict_partial_order <> l:23 var
+R1186:1186 Order.graph_strict_partial_order <> f:19 var
+binder 1215:1215 <> a:24
+binder 1217:1217 <> l:25
+R1237:1240 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1220:1230 Order.graph_strict_partial_order <> existsb_ind:20 ind
+R1236:1236 Order.graph_strict_partial_order <> l:25 var
+R1234:1234 Order.graph_strict_partial_order <> f:19 var
+R1241:1251 Order.graph_strict_partial_order <> existsb_ind:20 ind
+R1259:1260 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1258:1258 Order.graph_strict_partial_order <> a:24 var
+R1261:1261 Order.graph_strict_partial_order <> l:25 var
+R1255:1255 Order.graph_strict_partial_order <> f:19 var
+scheme 1078:1088 <> existsb_ind_ind
+scheme 1078:1088 <> existsb_ind_sind
+prf 1392:1411 <> existsb_ind_impl_fix
+binder 1422:1422 <> A:26
+binder 1424:1424 <> f:27
+binder 1426:1426 <> l:28
+R1446:1449 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1429:1439 Order.graph_strict_partial_order <> existsb_ind ind
+R1441:1441 Order.graph_strict_partial_order <> A:26 var
+R1443:1443 Order.graph_strict_partial_order <> f:27 var
+R1445:1445 Order.graph_strict_partial_order <> l:28 var
+R1450:1456 Order.graph_strict_partial_order <> existsb def
+R1458:1458 Order.graph_strict_partial_order <> A:26 var
+R1460:1460 Order.graph_strict_partial_order <> f:27 var
+R1462:1462 Order.graph_strict_partial_order <> l:28 var
+prf 1650:1669 <> existsb_fix_impl_ind
+binder 1680:1680 <> A:29
+binder 1682:1682 <> f:30
+binder 1684:1684 <> l:31
+R1700:1703 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1687:1693 Order.graph_strict_partial_order <> existsb def
+R1695:1695 Order.graph_strict_partial_order <> A:29 var
+R1697:1697 Order.graph_strict_partial_order <> f:30 var
+R1699:1699 Order.graph_strict_partial_order <> l:31 var
+R1704:1714 Order.graph_strict_partial_order <> existsb_ind ind
+R1716:1716 Order.graph_strict_partial_order <> A:29 var
+R1718:1718 Order.graph_strict_partial_order <> f:30 var
+R1720:1720 Order.graph_strict_partial_order <> l:31 var
+R1835:1841 Order.graph_strict_partial_order <> ex_head constr
+R1835:1841 Order.graph_strict_partial_order <> ex_head constr
+R1865:1871 Order.graph_strict_partial_order <> ex_tail constr
+R1865:1871 Order.graph_strict_partial_order <> ex_tail constr
+prf 1996:2009 <> existsb_exists
+binder 2024:2024 <> A:32
+R2040:2043 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2039:2039 Order.graph_strict_partial_order <> A:32 var
+binder 2035:2035 <> f:33
+R2053:2056 Coq.Init.Datatypes <> list ind
+R2058:2058 Order.graph_strict_partial_order <> A:32 var
+binder 2051:2051 <> l:34
+R2075:2079 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R2062:2068 Order.graph_strict_partial_order <> existsb def
+R2072:2072 Order.graph_strict_partial_order <> f:33 var
+R2074:2074 Order.graph_strict_partial_order <> l:34 var
+R2080:2086 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R2088:2089 Coq.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 2087:2087 <> x:35
+R2096:2099 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R2090:2091 Coq.Lists.List <> In def
+R2095:2095 Order.graph_strict_partial_order <> l:34 var
+R2093:2093 Order.graph_strict_partial_order <> x:35 var
+R2100:2100 Order.graph_strict_partial_order <> f:33 var
+R2102:2102 Order.graph_strict_partial_order <> x:35 var
+prf 2300:2309 <> In_a_l1_l2
+binder 2321:2321 <> A:36
+R2338:2341 Coq.Init.Datatypes <> list ind
+R2343:2343 Order.graph_strict_partial_order <> A:36 var
+binder 2332:2333 <> l1:37
+binder 2335:2336 <> l2:38
+R2349:2349 Order.graph_strict_partial_order <> A:36 var
+binder 2347:2347 <> a:39
+R2360:2363 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2353:2354 Coq.Lists.List <> In def
+R2358:2359 Order.graph_strict_partial_order <> l1:37 var
+R2356:2356 Order.graph_strict_partial_order <> a:39 var
+R2374:2377 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2364:2367 Coq.Lists.List <> incl def
+R2372:2373 Order.graph_strict_partial_order <> l2:38 var
+R2369:2370 Order.graph_strict_partial_order <> l1:37 var
+R2378:2379 Coq.Lists.List <> In def
+R2383:2384 Order.graph_strict_partial_order <> l2:38 var
+R2381:2381 Order.graph_strict_partial_order <> a:39 var
+prf 2508:2522 <> existsb_a_l1_l2
+binder 2534:2534 <> A:40
+R2550:2553 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2549:2549 Order.graph_strict_partial_order <> A:40 var
+binder 2545:2545 <> f:41
+R2567:2570 Coq.Init.Datatypes <> list ind
+R2572:2572 Order.graph_strict_partial_order <> A:40 var
+binder 2561:2562 <> l1:42
+binder 2564:2565 <> l2:43
+R2590:2593 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2576:2582 Order.graph_strict_partial_order <> existsb def
+R2586:2586 Order.graph_strict_partial_order <> f:41 var
+R2588:2589 Order.graph_strict_partial_order <> l1:42 var
+R2604:2607 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2594:2597 Coq.Lists.List <> incl def
+R2602:2603 Order.graph_strict_partial_order <> l2:43 var
+R2599:2600 Order.graph_strict_partial_order <> l1:42 var
+R2608:2614 Order.graph_strict_partial_order <> existsb def
+R2618:2618 Order.graph_strict_partial_order <> f:41 var
+R2620:2621 Order.graph_strict_partial_order <> l2:43 var
+R2659:2672 Order.graph_strict_partial_order <> existsb_exists thm
+R2659:2672 Order.graph_strict_partial_order <> existsb_exists thm
+R2725:2738 Order.graph_strict_partial_order <> existsb_exists thm
+R2725:2738 Order.graph_strict_partial_order <> existsb_exists thm
+def 3227:3236 <> cor_subset
+R3247:3257 Order.attack_graph <> attackgraph rec
+R3259:3269 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R3271:3280 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 3239:3240 <> G1:44
+binder 3242:3243 <> G2:45
+R3306:3309 Coq.Init.Datatypes <> list ind
+R3326:3328 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3316:3320 Order.attack_graph <> state proj
+R3312:3313 Order.graph_strict_partial_order <> G1:44 var
+R3333:3337 Order.attack_graph <> state proj
+R3329:3330 Order.graph_strict_partial_order <> G1:44 var
+binder 3302:3302 <> x:46
+R3351:3354 Coq.Init.Datatypes <> list ind
+R3371:3373 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3361:3365 Order.attack_graph <> state proj
+R3357:3358 Order.graph_strict_partial_order <> G2:45 var
+R3378:3382 Order.attack_graph <> state proj
+R3374:3375 Order.graph_strict_partial_order <> G2:45 var
+binder 3347:3347 <> y:47
+R3410:3410 Order.graph_strict_partial_order <> x:46 var
+R3423:3425 Coq.Init.Datatypes <> nil constr
+R3430:3433 Coq.Init.Logic <> True ind
+R3441:3444 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3462:3466 Order.attack_graph <> label proj
+R3458:3459 Order.graph_strict_partial_order <> G1:44 var
+R3474:3476 Coq.Init.Datatypes <> fst def
+R3478:3478 Order.graph_strict_partial_order <> x:46 var
+R3513:3515 Coq.Init.Datatypes <> inr constr
+R3522:3522 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3723:3728 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3523:3529 Order.graph_strict_partial_order <> existsb def
+binder 3538:3541 <> step:50
+R3552:3555 Order.graph_strict_partial_order <> step:50 var
+R3621:3621 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3625:3626 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3628:3629 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3652:3654 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R3638:3642 Order.attack_graph <> label proj
+R3634:3635 Order.graph_strict_partial_order <> G2:45 var
+R3655:3657 Coq.Init.Datatypes <> inr constr
+R3722:3722 Order.graph_strict_partial_order <> y:47 var
+R3729:3738 Order.graph_strict_partial_order <> cor_subset:48 def
+R3743:3743 Order.graph_strict_partial_order <> y:47 var
+R3783:3785 Coq.Init.Datatypes <> inl constr
+R3792:3801 Order.graph_strict_partial_order <> cor_subset:48 def
+R3806:3806 Order.graph_strict_partial_order <> y:47 var
+def 3981:3998 <> cor_proper_subset'
+R4009:4019 Order.attack_graph <> attackgraph rec
+R4021:4031 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R4033:4042 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 4001:4002 <> G1:52
+binder 4004:4005 <> G2:53
+R4052:4055 Coq.Init.Datatypes <> list ind
+R4072:4074 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4062:4066 Order.attack_graph <> state proj
+R4058:4059 Order.graph_strict_partial_order <> G1:52 var
+R4079:4083 Order.attack_graph <> state proj
+R4075:4076 Order.graph_strict_partial_order <> G1:52 var
+binder 4048:4048 <> x:54
+R4097:4100 Coq.Init.Datatypes <> list ind
+R4117:4119 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4107:4111 Order.attack_graph <> state proj
+R4103:4104 Order.graph_strict_partial_order <> G2:53 var
+R4124:4128 Order.attack_graph <> state proj
+R4120:4121 Order.graph_strict_partial_order <> G2:53 var
+binder 4093:4093 <> y:55
+R4154:4157 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R4140:4149 Order.graph_strict_partial_order <> cor_subset def
+R4153:4153 Order.graph_strict_partial_order <> y:55 var
+R4151:4151 Order.graph_strict_partial_order <> x:54 var
+R4158:4159 Coq.Init.Logic <> ::type_scope:'~'_x not
+R4160:4169 Order.graph_strict_partial_order <> cor_subset def
+R4173:4173 Order.graph_strict_partial_order <> x:54 var
+R4171:4171 Order.graph_strict_partial_order <> y:55 var
+def 4332:4339 <> find_cor
+R4350:4360 Order.attack_graph <> attackgraph rec
+R4362:4372 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R4374:4383 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 4342:4343 <> G1:56
+binder 4345:4346 <> G2:57
+R4396:4400 Order.attack_graph <> state proj
+R4392:4393 Order.graph_strict_partial_order <> G1:56 var
+binder 4387:4388 <> st:58
+R4413:4416 Coq.Init.Datatypes <> list ind
+R4433:4435 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4423:4427 Order.attack_graph <> state proj
+R4419:4420 Order.graph_strict_partial_order <> G2:57 var
+R4440:4444 Order.attack_graph <> state proj
+R4436:4437 Order.graph_strict_partial_order <> G2:57 var
+binder 4409:4409 <> y:59
+R4480:4484 Order.attack_graph <> label proj
+R4476:4477 Order.graph_strict_partial_order <> G1:56 var
+R4491:4492 Order.graph_strict_partial_order <> st:58 var
+R4508:4510 Coq.Init.Datatypes <> inr constr
+R4517:4527 Order.graph_strict_partial_order <> existsb_ind ind
+binder 4536:4539 <> step:60
+R4550:4553 Order.graph_strict_partial_order <> step:60 var
+R4600:4600 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4604:4605 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4607:4608 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4631:4633 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R4617:4621 Order.attack_graph <> label proj
+R4613:4614 Order.graph_strict_partial_order <> G2:57 var
+R4634:4636 Coq.Init.Datatypes <> inr constr
+R4682:4682 Order.graph_strict_partial_order <> y:59 var
+R4707:4709 Coq.Init.Datatypes <> inl constr
+R4716:4719 Coq.Init.Logic <> True ind
+ind 4791:4804 <> cor_subset_ind
+constr 4952:4958 <> sub_nil
+constr 4996:5003 <> sub_head
+R4815:4825 Order.attack_graph <> attackgraph rec
+R4827:4837 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R4839:4848 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 4807:4808 <> G1:62
+binder 4810:4811 <> G2:63
+R4893:4896 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4855:4858 Coq.Init.Datatypes <> list ind
+R4875:4877 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4865:4869 Order.attack_graph <> state proj
+R4882:4886 Order.attack_graph <> state proj
+R4897:4897 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4936:4940 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R4898:4901 Coq.Init.Datatypes <> list ind
+R4918:4920 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4908:4912 Order.attack_graph <> state proj
+R4925:4929 Order.attack_graph <> state proj
+binder 4969:4969 <> y:66
+R4972:4985 Order.graph_strict_partial_order <> cor_subset_ind:64 ind
+R4991:4991 Order.graph_strict_partial_order <> y:66 var
+R4987:4989 Coq.Init.Datatypes <> nil constr
+binder 5014:5014 <> x:67
+binder 5016:5017 <> xs:68
+binder 5019:5019 <> y:69
+R5040:5043 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5022:5029 Order.graph_strict_partial_order <> find_cor def
+R5039:5039 Order.graph_strict_partial_order <> y:69 var
+R5032:5034 Coq.Init.Datatypes <> fst def
+R5036:5036 Order.graph_strict_partial_order <> x:67 var
+R5063:5066 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5044:5057 Order.graph_strict_partial_order <> cor_subset_ind:64 ind
+R5062:5062 Order.graph_strict_partial_order <> y:69 var
+R5059:5060 Order.graph_strict_partial_order <> xs:68 var
+R5067:5080 Order.graph_strict_partial_order <> cor_subset_ind:64 ind
+R5090:5090 Order.graph_strict_partial_order <> y:69 var
+R5084:5085 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R5083:5083 Order.graph_strict_partial_order <> x:67 var
+R5086:5087 Order.graph_strict_partial_order <> xs:68 var
+scheme 4791:4804 <> cor_subset_ind_ind
+scheme 4791:4804 <> cor_subset_ind_sind
+prf 5166:5179 <> subset_not_nil
+binder 5190:5191 <> G1:70
+binder 5193:5194 <> G2:71
+binder 5196:5196 <> a:72
+R5203:5206 Coq.Init.Datatypes <> list ind
+R5223:5225 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5213:5217 Order.attack_graph <> state proj
+R5209:5210 Order.graph_strict_partial_order <> G1:70 var
+R5230:5234 Order.attack_graph <> state proj
+R5226:5227 Order.graph_strict_partial_order <> G1:70 var
+binder 5199:5199 <> x:73
+R5248:5251 Coq.Init.Datatypes <> list ind
+R5268:5270 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5258:5262 Order.attack_graph <> state proj
+R5254:5255 Order.graph_strict_partial_order <> G2:71 var
+R5275:5279 Order.attack_graph <> state proj
+R5271:5272 Order.graph_strict_partial_order <> G2:71 var
+binder 5244:5244 <> y:74
+R5296:5299 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5290:5292 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R5289:5289 Order.graph_strict_partial_order <> y:74 var
+R5293:5295 Coq.Init.Datatypes <> nil constr
+R5300:5301 Coq.Init.Logic <> ::type_scope:'~'_x not
+R5302:5315 Order.graph_strict_partial_order <> cor_subset_ind ind
+R5324:5324 Order.graph_strict_partial_order <> y:74 var
+R5319:5320 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R5318:5318 Order.graph_strict_partial_order <> a:72 var
+R5321:5321 Order.graph_strict_partial_order <> x:73 var
+prf 5481:5489 <> find_cons
+binder 5500:5501 <> G1:75
+R5523:5525 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5513:5517 Order.attack_graph <> state proj
+R5509:5510 Order.graph_strict_partial_order <> G1:75 var
+R5530:5534 Order.attack_graph <> state proj
+R5526:5527 Order.graph_strict_partial_order <> G1:75 var
+binder 5504:5505 <> x0:76
+binder 5543:5543 <> x:77
+R5551:5554 Coq.Init.Datatypes <> list ind
+R5571:5573 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5561:5565 Order.attack_graph <> state proj
+R5557:5558 Order.graph_strict_partial_order <> G1:75 var
+R5578:5582 Order.attack_graph <> state proj
+R5574:5575 Order.graph_strict_partial_order <> G1:75 var
+binder 5546:5547 <> xs:78
+R5620:5623 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5598:5605 Order.graph_strict_partial_order <> find_cor def
+R5617:5618 Order.graph_strict_partial_order <> xs:78 var
+R5608:5610 Coq.Init.Datatypes <> fst def
+R5612:5613 Order.graph_strict_partial_order <> x0:76 var
+R5624:5631 Order.graph_strict_partial_order <> find_cor def
+R5644:5647 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R5643:5643 Order.graph_strict_partial_order <> x:77 var
+R5648:5649 Order.graph_strict_partial_order <> xs:78 var
+R5634:5636 Coq.Init.Datatypes <> fst def
+R5638:5639 Order.graph_strict_partial_order <> x0:76 var
+R5681:5688 Order.graph_strict_partial_order <> find_cor def
+R5715:5719 Order.attack_graph <> label proj
+R5727:5729 Coq.Init.Datatypes <> fst def
+R5715:5719 Order.attack_graph <> label proj
+R5727:5729 Coq.Init.Datatypes <> fst def
+R5775:5781 Order.graph_strict_partial_order <> ex_tail constr
+R5775:5781 Order.graph_strict_partial_order <> ex_tail constr
+prf 5857:5871 <> find_cor_helper
+binder 5882:5883 <> G1:79
+binder 5885:5886 <> G2:80
+binder 5888:5889 <> G3:81
+R5910:5912 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5900:5904 Order.attack_graph <> state proj
+R5896:5897 Order.graph_strict_partial_order <> G1:79 var
+R5917:5921 Order.attack_graph <> state proj
+R5913:5914 Order.graph_strict_partial_order <> G1:79 var
+binder 5892:5892 <> x:82
+R5960:5963 Coq.Init.Datatypes <> list ind
+R5997:5999 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5966:5970 Order.attack_graph <> state proj
+R5972:5982 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R5984:5993 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+R5995:5996 Order.graph_strict_partial_order <> G2:80 var
+R6000:6004 Order.attack_graph <> state proj
+R6006:6016 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R6018:6027 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+R6029:6030 Order.graph_strict_partial_order <> G2:80 var
+binder 5957:5958 <> ys:83
+R6083:6086 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6062:6069 Order.graph_strict_partial_order <> find_cor def
+R6080:6081 Order.graph_strict_partial_order <> ys:83 var
+R6072:6074 Coq.Init.Datatypes <> fst def
+R6076:6076 Order.graph_strict_partial_order <> x:82 var
+R6100:6103 Coq.Init.Datatypes <> list ind
+R6120:6122 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R6110:6114 Order.attack_graph <> state proj
+R6106:6107 Order.graph_strict_partial_order <> G3:81 var
+R6127:6131 Order.attack_graph <> state proj
+R6123:6124 Order.graph_strict_partial_order <> G3:81 var
+binder 6095:6096 <> zs:84
+R6161:6164 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6141:6154 Order.graph_strict_partial_order <> cor_subset_ind ind
+R6159:6160 Order.graph_strict_partial_order <> zs:84 var
+R6156:6157 Order.graph_strict_partial_order <> ys:83 var
+R6165:6172 Order.graph_strict_partial_order <> find_cor def
+R6182:6183 Order.graph_strict_partial_order <> zs:84 var
+R6175:6177 Coq.Init.Datatypes <> fst def
+R6179:6179 Order.graph_strict_partial_order <> x:82 var
+R6244:6251 Order.graph_strict_partial_order <> find_cor def
+R6273:6277 Order.attack_graph <> label proj
+R6285:6287 Coq.Init.Datatypes <> fst def
+R6273:6277 Order.attack_graph <> label proj
+R6285:6287 Coq.Init.Datatypes <> fst def
+R6410:6417 Order.graph_strict_partial_order <> find_cor def
+R6440:6444 Order.attack_graph <> label proj
+R6452:6454 Coq.Init.Datatypes <> fst def
+R6440:6444 Order.attack_graph <> label proj
+R6452:6454 Coq.Init.Datatypes <> fst def
+prf 6720:6738 <> cor_subset_ind_asym
+binder 6749:6750 <> G1:85
+binder 6752:6753 <> G2:86
+R6761:6764 Coq.Init.Datatypes <> list ind
+R6781:6783 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R6771:6775 Order.attack_graph <> state proj
+R6767:6768 Order.graph_strict_partial_order <> G1:85 var
+R6788:6792 Order.attack_graph <> state proj
+R6784:6785 Order.graph_strict_partial_order <> G1:85 var
+binder 6756:6757 <> xs:87
+R6807:6810 Coq.Init.Datatypes <> list ind
+R6827:6829 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R6817:6821 Order.attack_graph <> state proj
+R6813:6814 Order.graph_strict_partial_order <> G2:86 var
+R6834:6838 Order.attack_graph <> state proj
+R6830:6831 Order.graph_strict_partial_order <> G2:86 var
+binder 6802:6803 <> ys:88
+R6868:6871 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6848:6861 Order.graph_strict_partial_order <> cor_subset_ind ind
+R6866:6867 Order.graph_strict_partial_order <> ys:88 var
+R6863:6864 Order.graph_strict_partial_order <> xs:87 var
+R6872:6873 Coq.Init.Logic <> ::type_scope:'~'_x not
+R6874:6887 Order.graph_strict_partial_order <> cor_subset_ind ind
+R6892:6893 Order.graph_strict_partial_order <> xs:87 var
+R6889:6890 Order.graph_strict_partial_order <> ys:88 var
+R6923:6925 Coq.Init.Logic <> not def
+prf 6979:6998 <> cor_subset_ind_trans
+binder 7009:7010 <> G1:89
+binder 7012:7013 <> G2:90
+R7021:7024 Coq.Init.Datatypes <> list ind
+R7041:7043 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R7031:7035 Order.attack_graph <> state proj
+R7027:7028 Order.graph_strict_partial_order <> G1:89 var
+R7048:7052 Order.attack_graph <> state proj
+R7044:7045 Order.graph_strict_partial_order <> G1:89 var
+binder 7016:7017 <> xs:91
+R7067:7070 Coq.Init.Datatypes <> list ind
+R7087:7089 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R7077:7081 Order.attack_graph <> state proj
+R7073:7074 Order.graph_strict_partial_order <> G2:90 var
+R7094:7098 Order.attack_graph <> state proj
+R7090:7091 Order.graph_strict_partial_order <> G2:90 var
+binder 7062:7063 <> ys:92
+R7130:7135 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7110:7123 Order.graph_strict_partial_order <> cor_subset_ind ind
+R7128:7129 Order.graph_strict_partial_order <> ys:92 var
+R7125:7126 Order.graph_strict_partial_order <> xs:91 var
+binder 7143:7144 <> G3:93
+R7152:7155 Coq.Init.Datatypes <> list ind
+R7172:7174 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R7162:7166 Order.attack_graph <> state proj
+R7158:7159 Order.graph_strict_partial_order <> G3:93 var
+R7179:7183 Order.attack_graph <> state proj
+R7175:7176 Order.graph_strict_partial_order <> G3:93 var
+binder 7147:7148 <> zs:94
+R7213:7217 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7193:7206 Order.graph_strict_partial_order <> cor_subset_ind ind
+R7211:7212 Order.graph_strict_partial_order <> zs:94 var
+R7208:7209 Order.graph_strict_partial_order <> ys:92 var
+R7218:7231 Order.graph_strict_partial_order <> cor_subset_ind ind
+R7236:7237 Order.graph_strict_partial_order <> zs:94 var
+R7233:7234 Order.graph_strict_partial_order <> xs:91 var
+R7395:7409 Order.graph_strict_partial_order <> find_cor_helper thm
+R7395:7409 Order.graph_strict_partial_order <> find_cor_helper thm
+prf 7529:7541 <> cor_subset_eq
+binder 7552:7553 <> G1:95
+binder 7555:7556 <> G2:96
+R7563:7566 Coq.Init.Datatypes <> list ind
+R7583:7585 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R7573:7577 Order.attack_graph <> state proj
+R7569:7570 Order.graph_strict_partial_order <> G1:95 var
+R7590:7594 Order.attack_graph <> state proj
+R7586:7587 Order.graph_strict_partial_order <> G1:95 var
+binder 7559:7560 <> xs:97
+R7610:7613 Coq.Init.Datatypes <> list ind
+R7630:7632 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R7620:7624 Order.attack_graph <> state proj
+R7616:7617 Order.graph_strict_partial_order <> G2:96 var
+R7637:7641 Order.attack_graph <> state proj
+R7633:7634 Order.graph_strict_partial_order <> G2:96 var
+binder 7605:7606 <> ys:98
+R7671:7675 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R7651:7664 Order.graph_strict_partial_order <> cor_subset_ind ind
+R7669:7670 Order.graph_strict_partial_order <> ys:98 var
+R7666:7667 Order.graph_strict_partial_order <> xs:97 var
+R7676:7685 Order.graph_strict_partial_order <> cor_subset def
+R7690:7691 Order.graph_strict_partial_order <> ys:98 var
+R7687:7688 Order.graph_strict_partial_order <> xs:97 var
+R7859:7866 Order.graph_strict_partial_order <> find_cor def
+R7888:7892 Order.attack_graph <> label proj
+R7900:7902 Coq.Init.Datatypes <> fst def
+R7888:7892 Order.attack_graph <> label proj
+R7900:7902 Coq.Init.Datatypes <> fst def
+R7940:7959 Order.graph_strict_partial_order <> existsb_ind_impl_fix thm
+R7940:7959 Order.graph_strict_partial_order <> existsb_ind_impl_fix thm
+R8093:8097 Order.attack_graph <> label proj
+R8105:8107 Coq.Init.Datatypes <> fst def
+R8093:8097 Order.attack_graph <> label proj
+R8105:8107 Coq.Init.Datatypes <> fst def
+R8176:8183 Order.graph_strict_partial_order <> find_cor def
+R8274:8281 Order.graph_strict_partial_order <> find_cor def
+R8326:8345 Order.graph_strict_partial_order <> existsb_fix_impl_ind thm
+R8326:8345 Order.graph_strict_partial_order <> existsb_fix_impl_ind thm
+def 8471:8487 <> cor_proper_subset
+R8498:8508 Order.attack_graph <> attackgraph rec
+R8510:8520 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R8522:8531 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 8490:8491 <> G1:99
+binder 8493:8494 <> G2:100
+R8541:8544 Coq.Init.Datatypes <> list ind
+R8561:8563 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R8551:8555 Order.attack_graph <> state proj
+R8547:8548 Order.graph_strict_partial_order <> G1:99 var
+R8568:8572 Order.attack_graph <> state proj
+R8564:8565 Order.graph_strict_partial_order <> G1:99 var
+binder 8537:8537 <> x:101
+R8586:8589 Coq.Init.Datatypes <> list ind
+R8606:8608 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R8596:8600 Order.attack_graph <> state proj
+R8592:8593 Order.graph_strict_partial_order <> G2:100 var
+R8613:8617 Order.attack_graph <> state proj
+R8609:8610 Order.graph_strict_partial_order <> G2:100 var
+binder 8582:8582 <> y:102
+R8647:8650 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R8629:8642 Order.graph_strict_partial_order <> cor_subset_ind ind
+R8646:8646 Order.graph_strict_partial_order <> y:102 var
+R8644:8644 Order.graph_strict_partial_order <> x:101 var
+R8651:8652 Coq.Init.Logic <> ::type_scope:'~'_x not
+R8653:8666 Order.graph_strict_partial_order <> cor_subset_ind ind
+R8670:8670 Order.graph_strict_partial_order <> x:101 var
+R8668:8668 Order.graph_strict_partial_order <> y:102 var
+prf 9132:9138 <> cor_irr
+R9155:9165 Order.attack_graph <> attackgraph rec
+R9167:9177 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R9179:9188 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 9150:9151 <> g1:103
+R9196:9199 Coq.Init.Datatypes <> list ind
+R9216:9218 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R9206:9210 Order.attack_graph <> state proj
+R9202:9203 Order.graph_strict_partial_order <> g1:103 var
+R9223:9227 Order.attack_graph <> state proj
+R9219:9220 Order.graph_strict_partial_order <> g1:103 var
+binder 9192:9192 <> x:104
+R9238:9239 Coq.Init.Logic <> ::type_scope:'~'_x not
+R9240:9256 Order.graph_strict_partial_order <> cor_proper_subset def
+R9260:9260 Order.graph_strict_partial_order <> x:104 var
+R9258:9258 Order.graph_strict_partial_order <> x:104 var
+R9295:9311 Order.graph_strict_partial_order <> cor_proper_subset def
+R9321:9323 Coq.Init.Logic <> not def
+prf 9383:9390 <> cor_asym
+R9410:9420 Order.attack_graph <> attackgraph rec
+R9422:9432 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R9434:9443 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 9402:9403 <> g1:105
+binder 9405:9406 <> g2:106
+R9452:9455 Coq.Init.Datatypes <> list ind
+R9472:9474 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R9462:9466 Order.attack_graph <> state proj
+R9458:9459 Order.graph_strict_partial_order <> g1:105 var
+R9479:9483 Order.attack_graph <> state proj
+R9475:9476 Order.graph_strict_partial_order <> g1:105 var
+binder 9448:9448 <> x:107
+R9498:9501 Coq.Init.Datatypes <> list ind
+R9518:9520 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R9508:9512 Order.attack_graph <> state proj
+R9504:9505 Order.graph_strict_partial_order <> g2:106 var
+R9525:9529 Order.attack_graph <> state proj
+R9521:9522 Order.graph_strict_partial_order <> g2:106 var
+binder 9494:9494 <> y:108
+R9561:9564 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9540:9556 Order.graph_strict_partial_order <> cor_proper_subset def
+R9560:9560 Order.graph_strict_partial_order <> y:108 var
+R9558:9558 Order.graph_strict_partial_order <> x:107 var
+R9565:9566 Coq.Init.Logic <> ::type_scope:'~'_x not
+R9567:9583 Order.graph_strict_partial_order <> cor_proper_subset def
+R9587:9587 Order.graph_strict_partial_order <> x:107 var
+R9585:9585 Order.graph_strict_partial_order <> y:108 var
+R9622:9638 Order.graph_strict_partial_order <> cor_proper_subset def
+R9666:9668 Coq.Init.Logic <> not def
+prf 9720:9728 <> cor_trans
+R9751:9761 Order.attack_graph <> attackgraph rec
+R9763:9773 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R9775:9784 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 9740:9741 <> g1:109
+binder 9743:9744 <> g2:110
+binder 9746:9747 <> g3:111
+R9793:9796 Coq.Init.Datatypes <> list ind
+R9813:9815 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R9803:9807 Order.attack_graph <> state proj
+R9799:9800 Order.graph_strict_partial_order <> g1:109 var
+R9820:9824 Order.attack_graph <> state proj
+R9816:9817 Order.graph_strict_partial_order <> g1:109 var
+binder 9788:9789 <> xs:112
+R9840:9843 Coq.Init.Datatypes <> list ind
+R9860:9862 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R9850:9854 Order.attack_graph <> state proj
+R9846:9847 Order.graph_strict_partial_order <> g2:110 var
+R9867:9871 Order.attack_graph <> state proj
+R9863:9864 Order.graph_strict_partial_order <> g2:110 var
+binder 9835:9836 <> ys:113
+R9907:9912 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9884:9900 Order.graph_strict_partial_order <> cor_proper_subset def
+R9905:9906 Order.graph_strict_partial_order <> ys:113 var
+R9902:9903 Order.graph_strict_partial_order <> xs:112 var
+R9926:9929 Coq.Init.Datatypes <> list ind
+R9946:9948 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R9936:9940 Order.attack_graph <> state proj
+R9932:9933 Order.graph_strict_partial_order <> g3:111 var
+R9953:9957 Order.attack_graph <> state proj
+R9949:9950 Order.graph_strict_partial_order <> g3:111 var
+binder 9921:9922 <> zs:114
+R9991:9996 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9968:9984 Order.graph_strict_partial_order <> cor_proper_subset def
+R9989:9990 Order.graph_strict_partial_order <> zs:114 var
+R9986:9987 Order.graph_strict_partial_order <> ys:113 var
+R9997:10013 Order.graph_strict_partial_order <> cor_proper_subset def
+R10018:10019 Order.graph_strict_partial_order <> zs:114 var
+R10015:10016 Order.graph_strict_partial_order <> xs:112 var
+R10046:10062 Order.graph_strict_partial_order <> cor_proper_subset def
+R10102:10121 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R10102:10121 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R10145:10147 Coq.Init.Logic <> not def
+R10186:10205 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R10186:10205 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+def 10362:10372 <> time_subset
+R10383:10393 Order.attack_graph <> attackgraph rec
+R10395:10405 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R10407:10416 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 10375:10376 <> G1:115
+binder 10378:10379 <> G2:116
+R10442:10445 Coq.Init.Datatypes <> list ind
+R10462:10464 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R10452:10456 Order.attack_graph <> state proj
+R10448:10449 Order.graph_strict_partial_order <> G1:115 var
+R10469:10473 Order.attack_graph <> state proj
+R10465:10466 Order.graph_strict_partial_order <> G1:115 var
+binder 10438:10438 <> x:117
+R10487:10490 Coq.Init.Datatypes <> list ind
+R10507:10509 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R10497:10501 Order.attack_graph <> state proj
+R10493:10494 Order.graph_strict_partial_order <> G2:116 var
+R10514:10518 Order.attack_graph <> state proj
+R10510:10511 Order.graph_strict_partial_order <> G2:116 var
+binder 10483:10483 <> y:118
+R10548:10548 Order.graph_strict_partial_order <> x:117 var
+R10563:10565 Coq.Init.Datatypes <> nil constr
+R10570:10573 Coq.Init.Logic <> True ind
+R10593:10596 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10582:10582 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10586:10587 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10591:10592 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10634:10638 Order.attack_graph <> label proj
+R10630:10631 Order.graph_strict_partial_order <> G1:115 var
+R10613:10617 Order.attack_graph <> label proj
+R10609:10610 Order.graph_strict_partial_order <> G1:115 var
+R10682:10684 Coq.Init.Datatypes <> inl constr
+R10690:10692 Coq.Init.Datatypes <> inr constr
+R10699:10700 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R10938:10943 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R10701:10707 Order.graph_strict_partial_order <> existsb def
+binder 10716:10719 <> step:121
+R10730:10733 Order.graph_strict_partial_order <> step:121 var
+R10800:10800 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10805:10806 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10811:10811 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10843:10846 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R10835:10837 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R10820:10824 Order.attack_graph <> label proj
+R10816:10817 Order.graph_strict_partial_order <> G2:116 var
+R10838:10840 Coq.Init.Datatypes <> inr constr
+R10866:10868 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R10851:10855 Order.attack_graph <> label proj
+R10847:10848 Order.graph_strict_partial_order <> G2:116 var
+R10869:10871 Coq.Init.Datatypes <> inl constr
+R10937:10937 Order.graph_strict_partial_order <> y:118 var
+R10944:10954 Order.graph_strict_partial_order <> time_subset:119 def
+R10959:10959 Order.graph_strict_partial_order <> y:118 var
+R11012:11022 Order.graph_strict_partial_order <> time_subset:119 def
+R11027:11027 Order.graph_strict_partial_order <> y:118 var
+def 11241:11249 <> find_time
+R11260:11270 Order.attack_graph <> attackgraph rec
+R11272:11282 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R11284:11293 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 11252:11253 <> G1:123
+binder 11255:11256 <> G2:124
+R11317:11320 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R11307:11311 Order.attack_graph <> state proj
+R11303:11304 Order.graph_strict_partial_order <> G1:123 var
+R11325:11329 Order.attack_graph <> state proj
+R11321:11322 Order.graph_strict_partial_order <> G1:123 var
+binder 11297:11299 <> st1:125
+R11342:11345 Coq.Init.Datatypes <> list ind
+R11362:11364 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R11352:11356 Order.attack_graph <> state proj
+R11348:11349 Order.graph_strict_partial_order <> G2:124 var
+R11369:11373 Order.attack_graph <> state proj
+R11365:11366 Order.graph_strict_partial_order <> G2:124 var
+binder 11338:11338 <> y:126
+R11436:11440 Order.attack_graph <> label proj
+R11432:11433 Order.graph_strict_partial_order <> G1:123 var
+R11448:11450 Coq.Init.Datatypes <> snd def
+R11452:11454 Order.graph_strict_partial_order <> st1:125 var
+R11408:11412 Order.attack_graph <> label proj
+R11404:11405 Order.graph_strict_partial_order <> G1:123 var
+R11420:11422 Coq.Init.Datatypes <> fst def
+R11424:11426 Order.graph_strict_partial_order <> st1:125 var
+R11472:11474 Coq.Init.Datatypes <> inl constr
+R11480:11482 Coq.Init.Datatypes <> inr constr
+R11491:11501 Order.graph_strict_partial_order <> existsb_ind ind
+binder 11510:11513 <> step:127
+R11524:11527 Order.graph_strict_partial_order <> step:127 var
+R11574:11574 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R11579:11580 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R11585:11585 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R11617:11620 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R11609:11611 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R11594:11598 Order.attack_graph <> label proj
+R11590:11591 Order.graph_strict_partial_order <> G2:124 var
+R11612:11614 Coq.Init.Datatypes <> inr constr
+R11640:11642 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R11625:11629 Order.attack_graph <> label proj
+R11621:11622 Order.graph_strict_partial_order <> G2:124 var
+R11643:11645 Coq.Init.Datatypes <> inl constr
+R11691:11691 Order.graph_strict_partial_order <> y:126 var
+R11727:11730 Coq.Init.Logic <> True ind
+ind 11802:11816 <> time_subset_ind
+constr 11964:11971 <> time_nil
+constr 12010:12018 <> time_head
+R11827:11837 Order.attack_graph <> attackgraph rec
+R11839:11849 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R11851:11860 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 11819:11820 <> G1:129
+binder 11822:11823 <> G2:130
+R11905:11908 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R11867:11870 Coq.Init.Datatypes <> list ind
+R11887:11889 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R11877:11881 Order.attack_graph <> state proj
+R11894:11898 Order.attack_graph <> state proj
+R11909:11909 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R11948:11952 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R11910:11913 Coq.Init.Datatypes <> list ind
+R11930:11932 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R11920:11924 Order.attack_graph <> state proj
+R11937:11941 Order.attack_graph <> state proj
+binder 11982:11982 <> y:133
+R11985:11999 Order.graph_strict_partial_order <> time_subset_ind:131 ind
+R12005:12005 Order.graph_strict_partial_order <> y:133 var
+R12001:12003 Coq.Init.Datatypes <> nil constr
+binder 12029:12029 <> x:134
+binder 12031:12032 <> xs:135
+binder 12034:12034 <> y:136
+R12050:12053 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R12037:12045 Order.graph_strict_partial_order <> find_time def
+R12049:12049 Order.graph_strict_partial_order <> y:136 var
+R12047:12047 Order.graph_strict_partial_order <> x:134 var
+R12074:12077 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R12054:12068 Order.graph_strict_partial_order <> time_subset_ind:131 ind
+R12073:12073 Order.graph_strict_partial_order <> y:136 var
+R12070:12071 Order.graph_strict_partial_order <> xs:135 var
+R12078:12092 Order.graph_strict_partial_order <> time_subset_ind:131 ind
+R12102:12102 Order.graph_strict_partial_order <> y:136 var
+R12096:12097 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R12095:12095 Order.graph_strict_partial_order <> x:134 var
+R12098:12099 Order.graph_strict_partial_order <> xs:135 var
+scheme 11802:11816 <> time_subset_ind_ind
+scheme 11802:11816 <> time_subset_ind_sind
+prf 12175:12188 <> time_subset_eq
+binder 12199:12200 <> G1:137
+binder 12202:12203 <> G2:138
+R12210:12213 Coq.Init.Datatypes <> list ind
+R12230:12232 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R12220:12224 Order.attack_graph <> state proj
+R12216:12217 Order.graph_strict_partial_order <> G1:137 var
+R12237:12241 Order.attack_graph <> state proj
+R12233:12234 Order.graph_strict_partial_order <> G1:137 var
+binder 12206:12207 <> xs:139
+R12257:12260 Coq.Init.Datatypes <> list ind
+R12277:12279 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R12267:12271 Order.attack_graph <> state proj
+R12263:12264 Order.graph_strict_partial_order <> G2:138 var
+R12284:12288 Order.attack_graph <> state proj
+R12280:12281 Order.graph_strict_partial_order <> G2:138 var
+binder 12252:12253 <> ys:140
+R12319:12323 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R12298:12312 Order.graph_strict_partial_order <> time_subset_ind ind
+R12317:12318 Order.graph_strict_partial_order <> ys:140 var
+R12314:12315 Order.graph_strict_partial_order <> xs:139 var
+R12324:12334 Order.graph_strict_partial_order <> time_subset def
+R12339:12340 Order.graph_strict_partial_order <> ys:140 var
+R12336:12337 Order.graph_strict_partial_order <> xs:139 var
+R12515:12519 Order.attack_graph <> label proj
+R12527:12529 Coq.Init.Datatypes <> fst def
+R12515:12519 Order.attack_graph <> label proj
+R12527:12529 Coq.Init.Datatypes <> fst def
+R12575:12579 Order.attack_graph <> label proj
+R12587:12589 Coq.Init.Datatypes <> snd def
+R12575:12579 Order.attack_graph <> label proj
+R12587:12589 Coq.Init.Datatypes <> snd def
+R12767:12775 Order.graph_strict_partial_order <> find_time def
+R12850:12869 Order.graph_strict_partial_order <> existsb_ind_impl_fix thm
+R12850:12869 Order.graph_strict_partial_order <> existsb_ind_impl_fix thm
+R13077:13085 Order.graph_strict_partial_order <> find_time def
+R13114:13118 Order.attack_graph <> label proj
+R13126:13128 Coq.Init.Datatypes <> fst def
+R13114:13118 Order.attack_graph <> label proj
+R13126:13128 Coq.Init.Datatypes <> fst def
+R13174:13178 Order.attack_graph <> label proj
+R13186:13188 Coq.Init.Datatypes <> snd def
+R13174:13178 Order.attack_graph <> label proj
+R13186:13188 Coq.Init.Datatypes <> snd def
+R13301:13320 Order.graph_strict_partial_order <> existsb_fix_impl_ind thm
+R13301:13320 Order.graph_strict_partial_order <> existsb_fix_impl_ind thm
+R13370:13374 Order.attack_graph <> label proj
+R13382:13384 Coq.Init.Datatypes <> fst def
+R13370:13374 Order.attack_graph <> label proj
+R13382:13384 Coq.Init.Datatypes <> fst def
+R13431:13435 Order.attack_graph <> label proj
+R13443:13445 Coq.Init.Datatypes <> snd def
+R13431:13435 Order.attack_graph <> label proj
+R13443:13445 Coq.Init.Datatypes <> snd def
+R13691:13695 Order.attack_graph <> label proj
+R13703:13705 Coq.Init.Datatypes <> snd def
+R13691:13695 Order.attack_graph <> label proj
+R13703:13705 Coq.Init.Datatypes <> snd def
+prf 13882:13897 <> find_time_helper
+binder 13908:13909 <> G1:141
+binder 13911:13912 <> G2:142
+binder 13914:13915 <> G3:143
+R13936:13938 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13926:13930 Order.attack_graph <> state proj
+R13922:13923 Order.graph_strict_partial_order <> G1:141 var
+R13943:13947 Order.attack_graph <> state proj
+R13939:13940 Order.graph_strict_partial_order <> G1:141 var
+binder 13918:13918 <> x:144
+R13986:13989 Coq.Init.Datatypes <> list ind
+R14023:14025 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13992:13996 Order.attack_graph <> state proj
+R13998:14008 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R14010:14019 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+R14021:14022 Order.graph_strict_partial_order <> G2:142 var
+R14026:14030 Order.attack_graph <> state proj
+R14032:14042 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R14044:14053 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+R14055:14056 Order.graph_strict_partial_order <> G2:142 var
+binder 13983:13984 <> ys:145
+R14102:14105 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R14088:14096 Order.graph_strict_partial_order <> find_time def
+R14100:14101 Order.graph_strict_partial_order <> ys:145 var
+R14098:14098 Order.graph_strict_partial_order <> x:144 var
+R14119:14122 Coq.Init.Datatypes <> list ind
+R14139:14141 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R14129:14133 Order.attack_graph <> state proj
+R14125:14126 Order.graph_strict_partial_order <> G3:143 var
+R14146:14150 Order.attack_graph <> state proj
+R14142:14143 Order.graph_strict_partial_order <> G3:143 var
+binder 14114:14115 <> zs:146
+R14181:14184 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R14160:14174 Order.graph_strict_partial_order <> time_subset_ind ind
+R14179:14180 Order.graph_strict_partial_order <> zs:146 var
+R14176:14177 Order.graph_strict_partial_order <> ys:145 var
+R14185:14193 Order.graph_strict_partial_order <> find_time def
+R14197:14198 Order.graph_strict_partial_order <> zs:146 var
+R14195:14195 Order.graph_strict_partial_order <> x:144 var
+R14259:14267 Order.graph_strict_partial_order <> find_time def
+R14289:14293 Order.attack_graph <> label proj
+R14301:14303 Coq.Init.Datatypes <> fst def
+R14289:14293 Order.attack_graph <> label proj
+R14301:14303 Coq.Init.Datatypes <> fst def
+R14335:14339 Order.attack_graph <> label proj
+R14347:14349 Coq.Init.Datatypes <> snd def
+R14335:14339 Order.attack_graph <> label proj
+R14347:14349 Coq.Init.Datatypes <> snd def
+R14468:14476 Order.graph_strict_partial_order <> find_time def
+R14499:14503 Order.attack_graph <> label proj
+R14511:14513 Coq.Init.Datatypes <> fst def
+R14499:14503 Order.attack_graph <> label proj
+R14511:14513 Coq.Init.Datatypes <> fst def
+R14598:14602 Order.attack_graph <> label proj
+R14610:14612 Coq.Init.Datatypes <> snd def
+R14598:14602 Order.attack_graph <> label proj
+R14610:14612 Coq.Init.Datatypes <> snd def
+R14996:15000 Order.attack_graph <> label proj
+R15008:15010 Coq.Init.Datatypes <> snd def
+R14996:15000 Order.attack_graph <> label proj
+R15008:15010 Coq.Init.Datatypes <> snd def
+prf 15251:15271 <> time_subset_ind_trans
+binder 15282:15283 <> G1:147
+binder 15285:15286 <> G2:148
+R15294:15297 Coq.Init.Datatypes <> list ind
+R15314:15316 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15304:15308 Order.attack_graph <> state proj
+R15300:15301 Order.graph_strict_partial_order <> G1:147 var
+R15321:15325 Order.attack_graph <> state proj
+R15317:15318 Order.graph_strict_partial_order <> G1:147 var
+binder 15289:15290 <> xs:149
+R15340:15343 Coq.Init.Datatypes <> list ind
+R15360:15362 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15350:15354 Order.attack_graph <> state proj
+R15346:15347 Order.graph_strict_partial_order <> G2:148 var
+R15367:15371 Order.attack_graph <> state proj
+R15363:15364 Order.graph_strict_partial_order <> G2:148 var
+binder 15335:15336 <> ys:150
+R15404:15409 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R15383:15397 Order.graph_strict_partial_order <> time_subset_ind ind
+R15402:15403 Order.graph_strict_partial_order <> ys:150 var
+R15399:15400 Order.graph_strict_partial_order <> xs:149 var
+binder 15417:15418 <> G3:151
+R15426:15429 Coq.Init.Datatypes <> list ind
+R15446:15448 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15436:15440 Order.attack_graph <> state proj
+R15432:15433 Order.graph_strict_partial_order <> G3:151 var
+R15453:15457 Order.attack_graph <> state proj
+R15449:15450 Order.graph_strict_partial_order <> G3:151 var
+binder 15421:15422 <> zs:152
+R15488:15492 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R15467:15481 Order.graph_strict_partial_order <> time_subset_ind ind
+R15486:15487 Order.graph_strict_partial_order <> zs:152 var
+R15483:15484 Order.graph_strict_partial_order <> ys:150 var
+R15493:15507 Order.graph_strict_partial_order <> time_subset_ind ind
+R15512:15513 Order.graph_strict_partial_order <> zs:152 var
+R15509:15510 Order.graph_strict_partial_order <> xs:149 var
+R15671:15686 Order.graph_strict_partial_order <> find_time_helper thm
+R15671:15686 Order.graph_strict_partial_order <> find_time_helper thm
+def 15801:15818 <> time_proper_subset
+R15829:15839 Order.attack_graph <> attackgraph rec
+R15841:15851 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R15853:15862 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 15821:15822 <> G1:153
+binder 15824:15825 <> G2:154
+R15872:15875 Coq.Init.Datatypes <> list ind
+R15892:15894 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15882:15886 Order.attack_graph <> state proj
+R15878:15879 Order.graph_strict_partial_order <> G1:153 var
+R15899:15903 Order.attack_graph <> state proj
+R15895:15896 Order.graph_strict_partial_order <> G1:153 var
+binder 15868:15868 <> x:155
+R15917:15920 Coq.Init.Datatypes <> list ind
+R15937:15939 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15927:15931 Order.attack_graph <> state proj
+R15923:15924 Order.graph_strict_partial_order <> G2:154 var
+R15944:15948 Order.attack_graph <> state proj
+R15940:15941 Order.graph_strict_partial_order <> G2:154 var
+binder 15913:15913 <> y:156
+R15979:15982 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R15960:15974 Order.graph_strict_partial_order <> time_subset_ind ind
+R15978:15978 Order.graph_strict_partial_order <> y:156 var
+R15976:15976 Order.graph_strict_partial_order <> x:155 var
+R15983:15984 Coq.Init.Logic <> ::type_scope:'~'_x not
+R15985:15999 Order.graph_strict_partial_order <> time_subset_ind ind
+R16003:16003 Order.graph_strict_partial_order <> x:155 var
+R16001:16001 Order.graph_strict_partial_order <> y:156 var
+prf 16017:16024 <> time_irr
+R16041:16051 Order.attack_graph <> attackgraph rec
+R16053:16063 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R16065:16074 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 16036:16037 <> g1:157
+R16082:16085 Coq.Init.Datatypes <> list ind
+R16102:16104 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16092:16096 Order.attack_graph <> state proj
+R16088:16089 Order.graph_strict_partial_order <> g1:157 var
+R16109:16113 Order.attack_graph <> state proj
+R16105:16106 Order.graph_strict_partial_order <> g1:157 var
+binder 16078:16078 <> x:158
+R16124:16125 Coq.Init.Logic <> ::type_scope:'~'_x not
+R16126:16143 Order.graph_strict_partial_order <> time_proper_subset def
+R16147:16147 Order.graph_strict_partial_order <> x:158 var
+R16145:16145 Order.graph_strict_partial_order <> x:158 var
+R16178:16195 Order.graph_strict_partial_order <> time_proper_subset def
+R16205:16207 Coq.Init.Logic <> not def
+prf 16263:16271 <> time_asym
+R16291:16301 Order.attack_graph <> attackgraph rec
+R16303:16313 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R16315:16324 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 16283:16284 <> g1:159
+binder 16286:16287 <> g2:160
+R16333:16336 Coq.Init.Datatypes <> list ind
+R16353:16355 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16343:16347 Order.attack_graph <> state proj
+R16339:16340 Order.graph_strict_partial_order <> g1:159 var
+R16360:16364 Order.attack_graph <> state proj
+R16356:16357 Order.graph_strict_partial_order <> g1:159 var
+binder 16329:16329 <> x:161
+R16379:16382 Coq.Init.Datatypes <> list ind
+R16399:16401 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16389:16393 Order.attack_graph <> state proj
+R16385:16386 Order.graph_strict_partial_order <> g2:160 var
+R16406:16410 Order.attack_graph <> state proj
+R16402:16403 Order.graph_strict_partial_order <> g2:160 var
+binder 16375:16375 <> y:162
+R16443:16446 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R16421:16438 Order.graph_strict_partial_order <> time_proper_subset def
+R16442:16442 Order.graph_strict_partial_order <> y:162 var
+R16440:16440 Order.graph_strict_partial_order <> x:161 var
+R16447:16448 Coq.Init.Logic <> ::type_scope:'~'_x not
+R16449:16466 Order.graph_strict_partial_order <> time_proper_subset def
+R16470:16470 Order.graph_strict_partial_order <> x:161 var
+R16468:16468 Order.graph_strict_partial_order <> y:162 var
+R16501:16518 Order.graph_strict_partial_order <> time_proper_subset def
+R16546:16548 Coq.Init.Logic <> not def
+prf 16596:16605 <> time_trans
+R16628:16638 Order.attack_graph <> attackgraph rec
+R16640:16650 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R16652:16661 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 16617:16618 <> g1:163
+binder 16620:16621 <> g2:164
+binder 16623:16624 <> g3:165
+R16670:16673 Coq.Init.Datatypes <> list ind
+R16690:16692 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16680:16684 Order.attack_graph <> state proj
+R16676:16677 Order.graph_strict_partial_order <> g1:163 var
+R16697:16701 Order.attack_graph <> state proj
+R16693:16694 Order.graph_strict_partial_order <> g1:163 var
+binder 16665:16666 <> xs:166
+R16717:16720 Coq.Init.Datatypes <> list ind
+R16737:16739 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16727:16731 Order.attack_graph <> state proj
+R16723:16724 Order.graph_strict_partial_order <> g2:164 var
+R16744:16748 Order.attack_graph <> state proj
+R16740:16741 Order.graph_strict_partial_order <> g2:164 var
+binder 16712:16713 <> ys:167
+R16785:16790 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R16761:16778 Order.graph_strict_partial_order <> time_proper_subset def
+R16783:16784 Order.graph_strict_partial_order <> ys:167 var
+R16780:16781 Order.graph_strict_partial_order <> xs:166 var
+R16804:16807 Coq.Init.Datatypes <> list ind
+R16824:16826 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16814:16818 Order.attack_graph <> state proj
+R16810:16811 Order.graph_strict_partial_order <> g3:165 var
+R16831:16835 Order.attack_graph <> state proj
+R16827:16828 Order.graph_strict_partial_order <> g3:165 var
+binder 16799:16800 <> zs:168
+R16870:16875 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R16846:16863 Order.graph_strict_partial_order <> time_proper_subset def
+R16868:16869 Order.graph_strict_partial_order <> zs:168 var
+R16865:16866 Order.graph_strict_partial_order <> ys:167 var
+R16876:16893 Order.graph_strict_partial_order <> time_proper_subset def
+R16898:16899 Order.graph_strict_partial_order <> zs:168 var
+R16895:16896 Order.graph_strict_partial_order <> xs:166 var
+R16922:16939 Order.graph_strict_partial_order <> time_proper_subset def
+R16979:16999 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R16979:16999 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R17023:17025 Coq.Init.Logic <> not def
+R17064:17084 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R17064:17084 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+def 17207:17226 <> strict_partial_order
+R17237:17247 Order.attack_graph <> attackgraph rec
+R17249:17259 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R17261:17270 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 17229:17230 <> g1:169
+binder 17232:17233 <> g2:170
+R17287:17287 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R17389:17394 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R17502:17502 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R17336:17339 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R17288:17301 Order.graph_strict_partial_order <> cor_subset_ind ind
+R17325:17329 Order.attack_graph <> steps proj
+R17321:17322 Order.graph_strict_partial_order <> g2:170 var
+R17308:17312 Order.attack_graph <> steps proj
+R17304:17305 Order.graph_strict_partial_order <> g1:169 var
+R17340:17354 Order.graph_strict_partial_order <> time_subset_ind ind
+R17378:17382 Order.attack_graph <> steps proj
+R17374:17375 Order.graph_strict_partial_order <> g2:170 var
+R17361:17365 Order.attack_graph <> steps proj
+R17357:17358 Order.graph_strict_partial_order <> g1:169 var
+R17446:17449 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R17395:17411 Order.graph_strict_partial_order <> cor_proper_subset def
+R17435:17439 Order.attack_graph <> steps proj
+R17431:17432 Order.graph_strict_partial_order <> g2:170 var
+R17418:17422 Order.attack_graph <> steps proj
+R17414:17415 Order.graph_strict_partial_order <> g1:169 var
+R17450:17467 Order.graph_strict_partial_order <> time_proper_subset def
+R17491:17495 Order.attack_graph <> steps proj
+R17487:17488 Order.graph_strict_partial_order <> g2:170 var
+R17474:17478 Order.attack_graph <> steps proj
+R17470:17471 Order.graph_strict_partial_order <> g1:169 var
+prf 17516:17522 <> spo_irr
+R17539:17549 Order.attack_graph <> attackgraph rec
+R17551:17561 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R17563:17572 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 17534:17535 <> g1:171
+R17576:17577 Coq.Init.Logic <> ::type_scope:'~'_x not
+R17578:17597 Order.graph_strict_partial_order <> strict_partial_order def
+R17599:17600 Order.graph_strict_partial_order <> g1:171 var
+R17602:17603 Order.graph_strict_partial_order <> g1:171 var
+R17634:17653 Order.graph_strict_partial_order <> strict_partial_order def
+R17663:17665 Coq.Init.Logic <> not def
+R17701:17717 Order.graph_strict_partial_order <> cor_proper_subset def
+R17760:17777 Order.graph_strict_partial_order <> time_proper_subset def
+prf 17823:17830 <> spo_asym
+R17850:17860 Order.attack_graph <> attackgraph rec
+R17862:17872 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R17874:17883 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 17842:17843 <> g1:172
+binder 17845:17846 <> g2:173
+R17913:17916 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R17887:17906 Order.graph_strict_partial_order <> strict_partial_order def
+R17908:17909 Order.graph_strict_partial_order <> g1:172 var
+R17911:17912 Order.graph_strict_partial_order <> g2:173 var
+R17917:17918 Coq.Init.Logic <> ::type_scope:'~'_x not
+R17919:17938 Order.graph_strict_partial_order <> strict_partial_order def
+R17940:17941 Order.graph_strict_partial_order <> g2:173 var
+R17943:17944 Order.graph_strict_partial_order <> g1:172 var
+R17975:17994 Order.graph_strict_partial_order <> strict_partial_order def
+R18009:18011 Coq.Init.Logic <> not def
+R18047:18063 Order.graph_strict_partial_order <> cor_proper_subset def
+R18104:18121 Order.graph_strict_partial_order <> time_proper_subset def
+R18162:18178 Order.graph_strict_partial_order <> cor_proper_subset def
+R18219:18236 Order.graph_strict_partial_order <> time_proper_subset def
+R18302:18310 Order.graph_strict_partial_order <> cor_trans thm
+R18353:18362 Order.graph_strict_partial_order <> time_trans thm
+prf 18383:18391 <> spo_trans
+R18414:18424 Order.attack_graph <> attackgraph rec
+R18426:18436 Order.graph_strict_partial_order <> Strict_Partial_Order.measurement var
+R18438:18447 Order.graph_strict_partial_order <> Strict_Partial_Order.corruption var
+binder 18403:18404 <> g1:174
+binder 18406:18407 <> g2:175
+binder 18409:18410 <> g3:176
+R18479:18484 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R18453:18472 Order.graph_strict_partial_order <> strict_partial_order def
+R18474:18475 Order.graph_strict_partial_order <> g1:174 var
+R18477:18478 Order.graph_strict_partial_order <> g2:175 var
+binder 18492:18493 <> g3:177
+R18522:18527 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R18496:18515 Order.graph_strict_partial_order <> strict_partial_order def
+R18517:18518 Order.graph_strict_partial_order <> g2:175 var
+R18520:18521 Order.graph_strict_partial_order <> g3:177 var
+R18528:18547 Order.graph_strict_partial_order <> strict_partial_order def
+R18549:18550 Order.graph_strict_partial_order <> g1:174 var
+R18552:18553 Order.graph_strict_partial_order <> g3:177 var
+R18587:18606 Order.graph_strict_partial_order <> strict_partial_order def
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18642:18661 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18684:18704 Order.graph_strict_partial_order <> time_subset_ind_trans thm
+R18752:18768 Order.graph_strict_partial_order <> cor_proper_subset def
+R18799:18818 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18799:18818 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18864:18883 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18864:18883 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18913:18929 Order.graph_strict_partial_order <> cor_proper_subset def
+R18960:18979 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R18960:18979 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R19025:19044 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R19025:19044 Order.graph_strict_partial_order <> cor_subset_ind_trans thm
+R19169:19188 Order.graph_strict_partial_order Strict_Partial_Order <> sec

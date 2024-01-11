@@ -1,0 +1,940 @@
+DIGEST 28b0dc37eddcca7706bf8661fa5362c7
+FOrder.example
+R151:164 Coq.Lists.List <> <> lib
+R183:200 Order.attack_graph <> <> lib
+R218:243 Order.strict_partial_order <> <> lib
+R261:272 Order.reduce <> <> lib
+R290:306 Order.graph_equiv <> <> lib
+R324:338 Order.utilities <> <> lib
+R356:374 Order.partial_order <> <> lib
+R392:405 Order.supports <> <> lib
+R423:435 Order.compare <> <> lib
+mod 589:611 <> vc_sys_seq_supports_sys
+ind 659:669 vc_sys_seq_supports_sys measurement
+constr 687:688 vc_sys_seq_supports_sys ms
+constr 710:712 vc_sys_seq_supports_sys ms4
+R692:702 Order.example <> measurement:1 ind
+R716:726 Order.example <> measurement:1 ind
+scheme 659:669 vc_sys_seq_supports_sys measurement_rect
+scheme 659:669 vc_sys_seq_supports_sys measurement_ind
+scheme 659:669 vc_sys_seq_supports_sys measurement_rec
+scheme 659:669 vc_sys_seq_supports_sys measurement_sind
+ind 744:753 vc_sys_seq_supports_sys corruption
+constr 771:773 vc_sys_seq_supports_sys sys
+constr 794:796 vc_sys_seq_supports_sys ker
+constr 817:818 vc_sys_seq_supports_sys vc
+constr 839:839 vc_sys_seq_supports_sys a
+constr 860:860 vc_sys_seq_supports_sys c
+R777:786 Order.example <> corruption:3 ind
+R800:809 Order.example <> corruption:3 ind
+R822:831 Order.example <> corruption:3 ind
+R843:852 Order.example <> corruption:3 ind
+R864:873 Order.example <> corruption:3 ind
+scheme 744:753 vc_sys_seq_supports_sys corruption_rect
+scheme 744:753 vc_sys_seq_supports_sys corruption_ind
+scheme 744:753 vc_sys_seq_supports_sys corruption_rec
+scheme 744:753 vc_sys_seq_supports_sys corruption_sind
+ind 891:900 vc_sys_seq_supports_sys states_sys
+constr 918:924 vc_sys_seq_supports_sys sys_sys
+constr 946:952 vc_sys_seq_supports_sys sys_ker
+constr 973:978 vc_sys_seq_supports_sys sys_vc
+constr 999:1005 vc_sys_seq_supports_sys sys_ms4
+R928:937 Order.example <> states_sys:5 ind
+R956:965 Order.example <> states_sys:5 ind
+R982:991 Order.example <> states_sys:5 ind
+R1009:1018 Order.example <> states_sys:5 ind
+scheme 891:900 vc_sys_seq_supports_sys states_sys_rect
+scheme 891:900 vc_sys_seq_supports_sys states_sys_ind
+scheme 891:900 vc_sys_seq_supports_sys states_sys_rec
+scheme 891:900 vc_sys_seq_supports_sys states_sys_sind
+def 1037:1045 vc_sys_seq_supports_sys label_sys
+R1053:1062 Order.example vc_sys_seq_supports_sys states_sys ind
+binder 1048:1049 <> st:7
+R1078:1080 Coq.Init.Datatypes <> ::type_scope:x_'+'_x not
+R1067:1077 Order.example vc_sys_seq_supports_sys measurement ind
+R1081:1090 Order.example vc_sys_seq_supports_sys corruption ind
+R1105:1106 Order.example <> st:7 var
+R1119:1125 Order.example vc_sys_seq_supports_sys sys_sys constr
+R1130:1132 Coq.Init.Datatypes <> inr constr
+R1134:1136 Order.example vc_sys_seq_supports_sys sys constr
+R1144:1150 Order.example vc_sys_seq_supports_sys sys_ker constr
+R1155:1157 Coq.Init.Datatypes <> inr constr
+R1159:1161 Order.example vc_sys_seq_supports_sys ker constr
+R1169:1174 Order.example vc_sys_seq_supports_sys sys_vc constr
+R1179:1181 Coq.Init.Datatypes <> inr constr
+R1183:1184 Order.example vc_sys_seq_supports_sys vc constr
+R1192:1198 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R1203:1205 Coq.Init.Datatypes <> inl constr
+R1207:1209 Order.example vc_sys_seq_supports_sys ms4 constr
+def 1278:1286 vc_sys_seq_supports_sys steps_m1a
+R1290:1293 Coq.Init.Datatypes <> list ind
+R1306:1308 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1296:1305 Order.example vc_sys_seq_supports_sys states_sys ind
+R1309:1318 Order.example vc_sys_seq_supports_sys states_sys ind
+R1351:1363 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1333:1333 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1341:1342 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1350:1350 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1334:1340 Order.example vc_sys_seq_supports_sys sys_sys constr
+R1343:1349 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R1381:1392 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1364:1364 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1371:1372 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1380:1380 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1365:1370 Order.example vc_sys_seq_supports_sys sys_vc constr
+R1373:1379 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R1393:1395 Coq.Init.Datatypes <> nil constr
+def 1418:1420 vc_sys_seq_supports_sys m1a
+R1424:1434 Order.attack_graph <> attackgraph rec
+R1436:1446 Order.example vc_sys_seq_supports_sys measurement ind
+R1448:1457 Order.example vc_sys_seq_supports_sys corruption ind
+R1478:1482 Order.attack_graph <> state proj
+R1478:1482 Order.attack_graph <> state proj
+R1478:1482 Order.attack_graph <> state proj
+R1508:1512 Order.attack_graph <> steps proj
+R1508:1512 Order.attack_graph <> steps proj
+R1537:1541 Order.attack_graph <> label proj
+R1537:1541 Order.attack_graph <> label proj
+R1487:1496 Order.example vc_sys_seq_supports_sys states_sys ind
+R1517:1525 Order.example vc_sys_seq_supports_sys steps_m1a def
+R1546:1554 Order.example vc_sys_seq_supports_sys label_sys def
+def 1580:1588 vc_sys_seq_supports_sys steps_m2a
+R1592:1595 Coq.Init.Datatypes <> list ind
+R1608:1610 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1598:1607 Order.example vc_sys_seq_supports_sys states_sys ind
+R1611:1620 Order.example vc_sys_seq_supports_sys states_sys ind
+R1653:1665 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1635:1635 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1643:1644 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1652:1652 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1636:1642 Order.example vc_sys_seq_supports_sys sys_sys constr
+R1645:1651 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R1684:1695 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1666:1666 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1674:1675 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1683:1683 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1667:1673 Order.example vc_sys_seq_supports_sys sys_ker constr
+R1676:1682 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R1696:1698 Coq.Init.Datatypes <> nil constr
+def 1721:1723 vc_sys_seq_supports_sys m2a
+R1727:1737 Order.attack_graph <> attackgraph rec
+R1739:1749 Order.example vc_sys_seq_supports_sys measurement ind
+R1751:1760 Order.example vc_sys_seq_supports_sys corruption ind
+R1781:1785 Order.attack_graph <> state proj
+R1781:1785 Order.attack_graph <> state proj
+R1781:1785 Order.attack_graph <> state proj
+R1811:1815 Order.attack_graph <> steps proj
+R1811:1815 Order.attack_graph <> steps proj
+R1840:1844 Order.attack_graph <> label proj
+R1840:1844 Order.attack_graph <> label proj
+R1790:1799 Order.example vc_sys_seq_supports_sys states_sys ind
+R1820:1828 Order.example vc_sys_seq_supports_sys steps_m2a def
+R1849:1857 Order.example vc_sys_seq_supports_sys label_sys def
+ind 1882:1898 vc_sys_seq_supports_sys states_vc_sys_seq
+constr 1916:1925 vc_sys_seq_supports_sys vc_sys_sys
+constr 1954:1963 vc_sys_seq_supports_sys vc_sys_ker
+constr 1991:1999 vc_sys_seq_supports_sys vc_sys_vc
+constr 2027:2034 vc_sys_seq_supports_sys vc_sys_a
+constr 2062:2069 vc_sys_seq_supports_sys vc_sys_c
+constr 2097:2106 vc_sys_seq_supports_sys vc_sys_ms3
+constr 2134:2143 vc_sys_seq_supports_sys vc_sys_ms4
+R1929:1945 Order.example <> states_vc_sys_seq:9 ind
+R1967:1983 Order.example <> states_vc_sys_seq:9 ind
+R2003:2019 Order.example <> states_vc_sys_seq:9 ind
+R2038:2054 Order.example <> states_vc_sys_seq:9 ind
+R2073:2089 Order.example <> states_vc_sys_seq:9 ind
+R2110:2126 Order.example <> states_vc_sys_seq:9 ind
+R2147:2163 Order.example <> states_vc_sys_seq:9 ind
+scheme 1882:1898 vc_sys_seq_supports_sys states_vc_sys_seq_rect
+scheme 1882:1898 vc_sys_seq_supports_sys states_vc_sys_seq_ind
+scheme 1882:1898 vc_sys_seq_supports_sys states_vc_sys_seq_rec
+scheme 1882:1898 vc_sys_seq_supports_sys states_vc_sys_seq_sind
+def 2182:2197 vc_sys_seq_supports_sys label_vc_sys_seq
+R2205:2221 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+binder 2200:2201 <> st:11
+R2237:2239 Coq.Init.Datatypes <> ::type_scope:x_'+'_x not
+R2226:2236 Order.example vc_sys_seq_supports_sys measurement ind
+R2240:2249 Order.example vc_sys_seq_supports_sys corruption ind
+R2264:2265 Order.example <> st:11 var
+R2278:2287 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R2292:2294 Coq.Init.Datatypes <> inr constr
+R2296:2298 Order.example vc_sys_seq_supports_sys sys constr
+R2306:2315 Order.example vc_sys_seq_supports_sys vc_sys_ker constr
+R2320:2322 Coq.Init.Datatypes <> inr constr
+R2324:2326 Order.example vc_sys_seq_supports_sys ker constr
+R2334:2342 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R2347:2349 Coq.Init.Datatypes <> inr constr
+R2351:2352 Order.example vc_sys_seq_supports_sys vc constr
+R2360:2367 Order.example vc_sys_seq_supports_sys vc_sys_a constr
+R2372:2374 Coq.Init.Datatypes <> inr constr
+R2376:2376 Order.example vc_sys_seq_supports_sys a constr
+R2384:2391 Order.example vc_sys_seq_supports_sys vc_sys_c constr
+R2396:2398 Coq.Init.Datatypes <> inr constr
+R2400:2400 Order.example vc_sys_seq_supports_sys c constr
+R2409:2418 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R2423:2425 Coq.Init.Datatypes <> inl constr
+R2427:2428 Order.example vc_sys_seq_supports_sys ms constr
+R2437:2446 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R2451:2453 Coq.Init.Datatypes <> inl constr
+R2455:2457 Order.example vc_sys_seq_supports_sys ms4 constr
+def 2513:2521 vc_sys_seq_supports_sys steps_m1b
+R2525:2528 Coq.Init.Datatypes <> list ind
+R2548:2550 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2531:2547 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R2551:2567 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R2605:2617 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2582:2582 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2593:2594 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2604:2604 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2583:2592 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R2595:2603 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R2641:2652 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2618:2618 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2628:2629 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2640:2640 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2619:2627 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R2630:2639 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R2677:2688 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2653:2653 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2664:2665 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2676:2676 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2654:2663 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R2666:2675 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R2689:2691 Coq.Init.Datatypes <> nil constr
+def 2710:2712 vc_sys_seq_supports_sys m1b
+R2716:2726 Order.attack_graph <> attackgraph rec
+R2728:2738 Order.example vc_sys_seq_supports_sys measurement ind
+R2740:2749 Order.example vc_sys_seq_supports_sys corruption ind
+R2770:2774 Order.attack_graph <> state proj
+R2770:2774 Order.attack_graph <> state proj
+R2770:2774 Order.attack_graph <> state proj
+R2807:2811 Order.attack_graph <> steps proj
+R2807:2811 Order.attack_graph <> steps proj
+R2836:2840 Order.attack_graph <> label proj
+R2836:2840 Order.attack_graph <> label proj
+R2779:2795 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R2816:2824 Order.example vc_sys_seq_supports_sys steps_m1b def
+R2845:2860 Order.example vc_sys_seq_supports_sys label_vc_sys_seq def
+def 2886:2894 vc_sys_seq_supports_sys steps_m2b
+R2898:2901 Coq.Init.Datatypes <> list ind
+R2921:2923 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2904:2920 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R2924:2940 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R2979:2991 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2955:2955 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2966:2967 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2978:2978 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2956:2965 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R2968:2977 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R3015:3026 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2992:2992 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3002:3003 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3014:3014 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2993:3001 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R3004:3013 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R3051:3062 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3027:3027 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3038:3039 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3050:3050 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3028:3037 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R3040:3049 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R3063:3065 Coq.Init.Datatypes <> nil constr
+def 3084:3086 vc_sys_seq_supports_sys m2b
+R3090:3100 Order.attack_graph <> attackgraph rec
+R3102:3112 Order.example vc_sys_seq_supports_sys measurement ind
+R3114:3123 Order.example vc_sys_seq_supports_sys corruption ind
+R3144:3148 Order.attack_graph <> state proj
+R3144:3148 Order.attack_graph <> state proj
+R3144:3148 Order.attack_graph <> state proj
+R3181:3185 Order.attack_graph <> steps proj
+R3181:3185 Order.attack_graph <> steps proj
+R3210:3214 Order.attack_graph <> label proj
+R3210:3214 Order.attack_graph <> label proj
+R3153:3169 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R3190:3198 Order.example vc_sys_seq_supports_sys steps_m2b def
+R3219:3234 Order.example vc_sys_seq_supports_sys label_vc_sys_seq def
+def 3260:3268 vc_sys_seq_supports_sys steps_m3b
+R3272:3275 Coq.Init.Datatypes <> list ind
+R3295:3297 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3278:3294 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R3298:3314 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R3352:3363 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3329:3329 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3339:3340 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3351:3351 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3330:3338 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R3341:3350 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R3386:3397 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3364:3364 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3373:3374 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3385:3385 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3365:3372 Order.example vc_sys_seq_supports_sys vc_sys_a constr
+R3375:3384 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R3422:3434 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3398:3398 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3409:3410 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3421:3421 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3399:3408 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R3411:3420 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R3459:3470 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3435:3435 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3446:3447 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3458:3458 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3436:3445 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R3448:3457 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R3471:3473 Coq.Init.Datatypes <> nil constr
+def 3492:3494 vc_sys_seq_supports_sys m3b
+R3498:3508 Order.attack_graph <> attackgraph rec
+R3510:3520 Order.example vc_sys_seq_supports_sys measurement ind
+R3522:3531 Order.example vc_sys_seq_supports_sys corruption ind
+R3552:3556 Order.attack_graph <> state proj
+R3552:3556 Order.attack_graph <> state proj
+R3552:3556 Order.attack_graph <> state proj
+R3589:3593 Order.attack_graph <> steps proj
+R3589:3593 Order.attack_graph <> steps proj
+R3618:3622 Order.attack_graph <> label proj
+R3618:3622 Order.attack_graph <> label proj
+R3561:3577 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R3598:3606 Order.example vc_sys_seq_supports_sys steps_m3b def
+R3627:3642 Order.example vc_sys_seq_supports_sys label_vc_sys_seq def
+def 3668:3676 vc_sys_seq_supports_sys steps_m4b
+R3680:3683 Coq.Init.Datatypes <> list ind
+R3703:3705 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3686:3702 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R3706:3722 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R3760:3771 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3737:3737 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3747:3748 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3759:3759 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3738:3746 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R3749:3758 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R3794:3805 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3772:3772 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3781:3782 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3793:3793 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3773:3780 Order.example vc_sys_seq_supports_sys vc_sys_c constr
+R3783:3792 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R3830:3842 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3806:3806 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3817:3818 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3829:3829 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3807:3816 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R3819:3828 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R3867:3878 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3843:3843 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3854:3855 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3866:3866 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3844:3853 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R3856:3865 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R3879:3881 Coq.Init.Datatypes <> nil constr
+def 3900:3902 vc_sys_seq_supports_sys m4b
+R3906:3916 Order.attack_graph <> attackgraph rec
+R3918:3928 Order.example vc_sys_seq_supports_sys measurement ind
+R3930:3939 Order.example vc_sys_seq_supports_sys corruption ind
+R3960:3964 Order.attack_graph <> state proj
+R3960:3964 Order.attack_graph <> state proj
+R3960:3964 Order.attack_graph <> state proj
+R3997:4001 Order.attack_graph <> steps proj
+R3997:4001 Order.attack_graph <> steps proj
+R4026:4030 Order.attack_graph <> label proj
+R4026:4030 Order.attack_graph <> label proj
+R3969:3985 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4006:4014 Order.example vc_sys_seq_supports_sys steps_m4b def
+R4035:4050 Order.example vc_sys_seq_supports_sys label_vc_sys_seq def
+def 4117:4126 vc_sys_seq_supports_sys steps_m2b'
+R4130:4133 Coq.Init.Datatypes <> list ind
+R4153:4155 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4136:4152 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4156:4172 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4210:4221 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4187:4187 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4197:4198 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4209:4209 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4188:4196 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R4199:4208 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R4246:4257 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4222:4222 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4233:4234 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4245:4245 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4223:4232 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R4235:4244 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R4258:4260 Coq.Init.Datatypes <> nil constr
+def 4279:4282 vc_sys_seq_supports_sys m2b'
+R4286:4296 Order.attack_graph <> attackgraph rec
+R4298:4308 Order.example vc_sys_seq_supports_sys measurement ind
+R4310:4319 Order.example vc_sys_seq_supports_sys corruption ind
+R4340:4344 Order.attack_graph <> state proj
+R4340:4344 Order.attack_graph <> state proj
+R4340:4344 Order.attack_graph <> state proj
+R4377:4381 Order.attack_graph <> steps proj
+R4377:4381 Order.attack_graph <> steps proj
+R4407:4411 Order.attack_graph <> label proj
+R4407:4411 Order.attack_graph <> label proj
+R4349:4365 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4386:4395 Order.example vc_sys_seq_supports_sys steps_m2b' def
+R4416:4431 Order.example vc_sys_seq_supports_sys label_vc_sys_seq def
+def 4457:4466 vc_sys_seq_supports_sys steps_m3b'
+R4470:4473 Coq.Init.Datatypes <> list ind
+R4493:4495 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4476:4492 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4496:4512 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4550:4561 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4527:4527 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4537:4538 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4549:4549 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4528:4536 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R4539:4548 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R4584:4595 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4562:4562 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4571:4572 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4583:4583 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4563:4570 Order.example vc_sys_seq_supports_sys vc_sys_a constr
+R4573:4582 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R4620:4631 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4596:4596 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4607:4608 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4619:4619 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4597:4606 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R4609:4618 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R4632:4634 Coq.Init.Datatypes <> nil constr
+def 4653:4656 vc_sys_seq_supports_sys m3b'
+R4660:4670 Order.attack_graph <> attackgraph rec
+R4672:4682 Order.example vc_sys_seq_supports_sys measurement ind
+R4684:4693 Order.example vc_sys_seq_supports_sys corruption ind
+R4714:4718 Order.attack_graph <> state proj
+R4714:4718 Order.attack_graph <> state proj
+R4714:4718 Order.attack_graph <> state proj
+R4751:4755 Order.attack_graph <> steps proj
+R4751:4755 Order.attack_graph <> steps proj
+R4781:4785 Order.attack_graph <> label proj
+R4781:4785 Order.attack_graph <> label proj
+R4723:4739 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4760:4769 Order.example vc_sys_seq_supports_sys steps_m3b' def
+R4790:4805 Order.example vc_sys_seq_supports_sys label_vc_sys_seq def
+def 4831:4840 vc_sys_seq_supports_sys steps_m4b'
+R4844:4847 Coq.Init.Datatypes <> list ind
+R4867:4869 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4850:4866 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4870:4886 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R4924:4935 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4901:4901 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4911:4912 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4923:4923 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4902:4910 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R4913:4922 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R4958:4969 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4936:4936 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4945:4946 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4957:4957 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4937:4944 Order.example vc_sys_seq_supports_sys vc_sys_c constr
+R4947:4956 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R4994:5005 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4970:4970 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4981:4982 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4993:4993 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4971:4980 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R4983:4992 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R5006:5008 Coq.Init.Datatypes <> nil constr
+def 5027:5030 vc_sys_seq_supports_sys m4b'
+R5034:5044 Order.attack_graph <> attackgraph rec
+R5046:5056 Order.example vc_sys_seq_supports_sys measurement ind
+R5058:5067 Order.example vc_sys_seq_supports_sys corruption ind
+R5088:5092 Order.attack_graph <> state proj
+R5088:5092 Order.attack_graph <> state proj
+R5088:5092 Order.attack_graph <> state proj
+R5125:5129 Order.attack_graph <> steps proj
+R5125:5129 Order.attack_graph <> steps proj
+R5155:5159 Order.attack_graph <> label proj
+R5155:5159 Order.attack_graph <> label proj
+R5097:5113 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R5134:5143 Order.example vc_sys_seq_supports_sys steps_m4b' def
+R5164:5179 Order.example vc_sys_seq_supports_sys label_vc_sys_seq def
+prf 5200:5216 vc_sys_seq_supports_sys eqDec_measurement
+R5234:5244 Order.example vc_sys_seq_supports_sys measurement ind
+binder 5228:5228 <> x:13
+binder 5230:5230 <> y:14
+R5248:5248 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5254:5258 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5265:5265 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5250:5252 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R5249:5249 Order.example <> x:13 var
+R5253:5253 Order.example <> y:14 var
+R5260:5263 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R5259:5259 Order.example <> x:13 var
+R5264:5264 Order.example <> y:14 var
+prf 5380:5395 vc_sys_seq_supports_sys eqDec_corruption
+R5413:5422 Order.example vc_sys_seq_supports_sys corruption ind
+binder 5407:5407 <> x:15
+binder 5409:5409 <> y:16
+R5426:5426 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5432:5436 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5443:5443 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5428:5430 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R5427:5427 Order.example <> x:15 var
+R5431:5431 Order.example <> y:16 var
+R5438:5441 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R5437:5437 Order.example <> x:15 var
+R5442:5442 Order.example <> y:16 var
+prf 5558:5569 vc_sys_seq_supports_sys eqDec_state2
+R5591:5595 Order.attack_graph <> state proj
+R5586:5588 Order.example vc_sys_seq_supports_sys m2b def
+binder 5580:5580 <> x:17
+binder 5582:5582 <> y:18
+R5604:5604 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5610:5614 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5621:5621 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5606:5608 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R5605:5605 Order.example <> x:17 var
+R5609:5609 Order.example <> y:18 var
+R5616:5619 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R5615:5615 Order.example <> x:17 var
+R5620:5620 Order.example <> y:18 var
+prf 5736:5747 vc_sys_seq_supports_sys eqDec_state3
+R5769:5773 Order.attack_graph <> state proj
+R5764:5766 Order.example vc_sys_seq_supports_sys m3b def
+binder 5758:5758 <> x:19
+binder 5760:5760 <> y:20
+R5782:5782 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5788:5792 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5799:5799 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5784:5786 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R5783:5783 Order.example <> x:19 var
+R5787:5787 Order.example <> y:20 var
+R5794:5797 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R5793:5793 Order.example <> x:19 var
+R5798:5798 Order.example <> y:20 var
+prf 5914:5925 vc_sys_seq_supports_sys eqDec_state4
+R5947:5951 Order.attack_graph <> state proj
+R5942:5944 Order.example vc_sys_seq_supports_sys m4b def
+binder 5936:5936 <> x:21
+binder 5938:5938 <> y:22
+R5960:5960 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5966:5970 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5977:5977 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R5962:5964 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R5961:5961 Order.example <> x:21 var
+R5965:5965 Order.example <> y:22 var
+R5972:5975 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R5971:5971 Order.example <> x:21 var
+R5976:5976 Order.example <> y:22 var
+R6149:6158 Order.reduce <> eqDec_step thm
+R6289:6298 Order.reduce <> eqDec_step thm
+prf 6612:6630 vc_sys_seq_supports_sys example_m2b_reduce1
+R6669:6675 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R6639:6645 Order.reduce <> reduce1 def
+R6660:6668 Order.example vc_sys_seq_supports_sys steps_m2b def
+R6647:6658 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R6676:6685 Order.example vc_sys_seq_supports_sys steps_m2b' def
+R6711:6717 Order.reduce <> reduce1 def
+R6749:6749 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6760:6761 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6772:6772 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6750:6759 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6762:6771 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6774:6774 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6785:6786 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6797:6797 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6775:6784 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6787:6796 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6749:6749 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6760:6761 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6772:6772 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6750:6759 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6762:6771 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6774:6774 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6785:6786 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6797:6797 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6775:6784 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6787:6796 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6799:6810 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R6835:6835 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6846:6847 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6858:6858 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6836:6845 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6848:6857 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6860:6860 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6870:6871 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6882:6882 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6861:6869 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R6872:6881 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6835:6835 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6846:6847 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6858:6858 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6836:6845 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6848:6857 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6860:6860 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6870:6871 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6882:6882 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6861:6869 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R6872:6881 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6884:6895 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R6920:6920 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6931:6932 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6943:6943 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6921:6930 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6933:6942 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6945:6945 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6956:6957 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6968:6968 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6946:6955 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R6958:6967 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6920:6920 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6931:6932 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6943:6943 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6921:6930 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R6933:6942 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6945:6945 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6956:6957 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6968:6968 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6946:6955 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R6958:6967 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R6970:6981 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R7019:7027 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R7029:7038 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7040:7051 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R7077:7086 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7088:7097 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7099:7110 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R7136:7145 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R7147:7156 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7158:7169 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R7184:7193 Order.example vc_sys_seq_supports_sys steps_m2b' def
+prf 7230:7240 vc_sys_seq_supports_sys m2b_reduced
+R7244:7250 Order.reduce <> reducer ind
+R7265:7273 Order.example vc_sys_seq_supports_sys steps_m2b def
+R7275:7284 Order.example vc_sys_seq_supports_sys steps_m2b' def
+R7252:7263 Order.example vc_sys_seq_supports_sys eqDec_state2 thm
+R7313:7323 Order.reduce <> reduce_more constr
+R7313:7323 Order.reduce <> reduce_more constr
+R7344:7362 Order.example vc_sys_seq_supports_sys example_m2b_reduce1 thm
+R7344:7362 Order.example vc_sys_seq_supports_sys example_m2b_reduce1 thm
+R7344:7362 Order.example vc_sys_seq_supports_sys example_m2b_reduce1 thm
+R7372:7374 Coq.Init.Logic <> not def
+R7417:7435 Order.example vc_sys_seq_supports_sys example_m2b_reduce1 thm
+R7417:7435 Order.example vc_sys_seq_supports_sys example_m2b_reduce1 thm
+R7417:7435 Order.example vc_sys_seq_supports_sys example_m2b_reduce1 thm
+R7444:7454 Order.reduce <> reduce_done constr
+R7444:7454 Order.reduce <> reduce_done constr
+prf 7485:7503 vc_sys_seq_supports_sys example_m3b_reduce1
+R7542:7548 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R7512:7518 Order.reduce <> reduce1 def
+R7533:7541 Order.example vc_sys_seq_supports_sys steps_m3b def
+R7520:7531 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R7549:7558 Order.example vc_sys_seq_supports_sys steps_m3b' def
+R7584:7590 Order.reduce <> reduce1 def
+R7623:7623 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7634:7635 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7646:7646 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7624:7633 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7636:7645 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7648:7648 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7658:7659 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7670:7670 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7649:7657 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R7660:7669 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7623:7623 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7634:7635 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7646:7646 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7624:7633 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7636:7645 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7648:7648 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7658:7659 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7670:7670 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7649:7657 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R7660:7669 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7672:7683 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R7708:7708 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7719:7720 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7731:7731 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7709:7718 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7721:7730 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7733:7733 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7742:7743 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7754:7754 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7734:7741 Order.example vc_sys_seq_supports_sys vc_sys_a constr
+R7744:7753 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7708:7708 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7719:7720 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7731:7731 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7709:7718 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7721:7730 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7733:7733 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7742:7743 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7754:7754 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7734:7741 Order.example vc_sys_seq_supports_sys vc_sys_a constr
+R7744:7753 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7756:7767 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R7791:7791 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7802:7803 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7814:7814 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7792:7801 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7804:7813 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7816:7816 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7827:7828 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7839:7839 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7817:7826 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7829:7838 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7791:7791 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7802:7803 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7814:7814 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7792:7801 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7804:7813 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7816:7816 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7827:7828 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7839:7839 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7817:7826 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7829:7838 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7841:7852 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R7877:7877 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7888:7889 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7900:7900 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7878:7887 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7890:7899 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7902:7902 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7913:7914 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7925:7925 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7903:7912 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R7915:7924 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7877:7877 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7888:7889 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7900:7900 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7878:7887 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7890:7899 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7902:7902 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7913:7914 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7925:7925 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7903:7912 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R7915:7924 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R7927:7938 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R7976:7984 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R7986:7995 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R7997:8008 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R8034:8041 Order.example vc_sys_seq_supports_sys vc_sys_a constr
+R8043:8052 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8054:8065 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R8090:8099 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8101:8110 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8112:8123 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R8149:8158 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R8160:8169 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8171:8182 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R8208:8217 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8219:8228 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8230:8241 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R8256:8265 Order.example vc_sys_seq_supports_sys steps_m3b' def
+prf 8302:8312 vc_sys_seq_supports_sys m3b_reduced
+R8316:8322 Order.reduce <> reducer ind
+R8337:8345 Order.example vc_sys_seq_supports_sys steps_m3b def
+R8347:8356 Order.example vc_sys_seq_supports_sys steps_m3b' def
+R8324:8335 Order.example vc_sys_seq_supports_sys eqDec_state3 thm
+R8385:8395 Order.reduce <> reduce_more constr
+R8385:8395 Order.reduce <> reduce_more constr
+R8416:8434 Order.example vc_sys_seq_supports_sys example_m3b_reduce1 thm
+R8416:8434 Order.example vc_sys_seq_supports_sys example_m3b_reduce1 thm
+R8416:8434 Order.example vc_sys_seq_supports_sys example_m3b_reduce1 thm
+R8444:8446 Coq.Init.Logic <> not def
+R8489:8507 Order.example vc_sys_seq_supports_sys example_m3b_reduce1 thm
+R8489:8507 Order.example vc_sys_seq_supports_sys example_m3b_reduce1 thm
+R8489:8507 Order.example vc_sys_seq_supports_sys example_m3b_reduce1 thm
+R8516:8526 Order.reduce <> reduce_done constr
+R8516:8526 Order.reduce <> reduce_done constr
+prf 8557:8575 vc_sys_seq_supports_sys example_m4b_reduce1
+R8614:8620 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R8584:8590 Order.reduce <> reduce1 def
+R8605:8613 Order.example vc_sys_seq_supports_sys steps_m4b def
+R8592:8603 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R8621:8630 Order.example vc_sys_seq_supports_sys steps_m4b' def
+R8656:8662 Order.reduce <> reduce1 def
+R8695:8695 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8706:8707 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8718:8718 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8696:8705 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8708:8717 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8720:8720 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8730:8731 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8742:8742 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8721:8729 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R8732:8741 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8695:8695 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8706:8707 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8718:8718 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8696:8705 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8708:8717 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8720:8720 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8730:8731 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8742:8742 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8721:8729 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R8732:8741 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8744:8755 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R8780:8780 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8791:8792 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8803:8803 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8781:8790 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8793:8802 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8805:8805 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8814:8815 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8826:8826 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8806:8813 Order.example vc_sys_seq_supports_sys vc_sys_c constr
+R8816:8825 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8780:8780 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8791:8792 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8803:8803 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8781:8790 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8793:8802 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8805:8805 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8814:8815 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8826:8826 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8806:8813 Order.example vc_sys_seq_supports_sys vc_sys_c constr
+R8816:8825 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8828:8839 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R8863:8863 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8874:8875 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8886:8886 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8864:8873 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8876:8885 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8888:8888 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8899:8900 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8911:8911 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8889:8898 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8901:8910 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8863:8863 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8874:8875 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8886:8886 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8864:8873 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8876:8885 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8888:8888 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8899:8900 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8911:8911 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8889:8898 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8901:8910 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8913:8924 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R8949:8949 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8960:8961 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8972:8972 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8950:8959 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8962:8971 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8974:8974 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8985:8986 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8997:8997 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8975:8984 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R8987:8996 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8949:8949 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8960:8961 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8972:8972 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8950:8959 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R8962:8971 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8974:8974 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8985:8986 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8997:8997 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8975:8984 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R8987:8996 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R8999:9010 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R9048:9056 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R9058:9067 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R9069:9080 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R9106:9113 Order.example vc_sys_seq_supports_sys vc_sys_c constr
+R9115:9124 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R9126:9137 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R9162:9171 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R9173:9182 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R9184:9195 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R9221:9230 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R9232:9241 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R9243:9254 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R9280:9289 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R9291:9300 Order.example vc_sys_seq_supports_sys vc_sys_ms3 constr
+R9302:9313 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R9328:9337 Order.example vc_sys_seq_supports_sys steps_m4b' def
+prf 9374:9384 vc_sys_seq_supports_sys m4b_reduced
+R9388:9394 Order.reduce <> reducer ind
+R9409:9417 Order.example vc_sys_seq_supports_sys steps_m4b def
+R9419:9428 Order.example vc_sys_seq_supports_sys steps_m4b' def
+R9396:9407 Order.example vc_sys_seq_supports_sys eqDec_state4 thm
+R9457:9467 Order.reduce <> reduce_more constr
+R9457:9467 Order.reduce <> reduce_more constr
+R9488:9506 Order.example vc_sys_seq_supports_sys example_m4b_reduce1 thm
+R9488:9506 Order.example vc_sys_seq_supports_sys example_m4b_reduce1 thm
+R9488:9506 Order.example vc_sys_seq_supports_sys example_m4b_reduce1 thm
+R9516:9518 Coq.Init.Logic <> not def
+R9561:9579 Order.example vc_sys_seq_supports_sys example_m4b_reduce1 thm
+R9561:9579 Order.example vc_sys_seq_supports_sys example_m4b_reduce1 thm
+R9561:9579 Order.example vc_sys_seq_supports_sys example_m4b_reduce1 thm
+R9588:9598 Order.reduce <> reduce_done constr
+R9588:9598 Order.reduce <> reduce_done constr
+def 9672:9672 vc_sys_seq_supports_sys f
+R9679:9688 Order.example vc_sys_seq_supports_sys states_sys ind
+binder 9675:9675 <> x:23
+R9693:9709 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+R9728:9728 Order.example <> x:23 var
+R9746:9752 Order.example vc_sys_seq_supports_sys sys_sys constr
+R9757:9766 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R9779:9784 Order.example vc_sys_seq_supports_sys sys_vc constr
+R9789:9797 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R9809:9815 Order.example vc_sys_seq_supports_sys sys_ker constr
+R9820:9829 Order.example vc_sys_seq_supports_sys vc_sys_ker constr
+R9841:9847 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R9852:9861 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+def 9888:9888 vc_sys_seq_supports_sys g
+R9895:9911 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+binder 9891:9891 <> x:25
+R9916:9921 Coq.Init.Datatypes <> option ind
+R9924:9933 Order.example vc_sys_seq_supports_sys states_sys ind
+R9953:9953 Order.example <> x:25 var
+R9971:9980 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R9985:9988 Coq.Init.Datatypes <> Some constr
+R9990:9996 Order.example vc_sys_seq_supports_sys sys_sys constr
+R10009:10017 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R10022:10025 Coq.Init.Datatypes <> Some constr
+R10027:10032 Order.example vc_sys_seq_supports_sys sys_vc constr
+R10044:10053 Order.example vc_sys_seq_supports_sys vc_sys_ker constr
+R10058:10061 Coq.Init.Datatypes <> Some constr
+R10063:10069 Order.example vc_sys_seq_supports_sys sys_ker constr
+R10081:10090 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R10095:10098 Coq.Init.Datatypes <> Some constr
+R10100:10106 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R10123:10126 Coq.Init.Datatypes <> None constr
+def 10153:10154 vc_sys_seq_supports_sys g'
+R10161:10177 Order.example vc_sys_seq_supports_sys states_vc_sys_seq ind
+binder 10157:10157 <> x:27
+R10183:10192 Order.example vc_sys_seq_supports_sys states_sys ind
+R10212:10212 Order.example <> x:27 var
+R10230:10239 Order.example vc_sys_seq_supports_sys vc_sys_sys constr
+R10245:10251 Order.example vc_sys_seq_supports_sys sys_sys constr
+R10264:10272 Order.example vc_sys_seq_supports_sys vc_sys_vc constr
+R10278:10283 Order.example vc_sys_seq_supports_sys sys_vc constr
+R10295:10304 Order.example vc_sys_seq_supports_sys vc_sys_ker constr
+R10310:10316 Order.example vc_sys_seq_supports_sys sys_ker constr
+R10328:10337 Order.example vc_sys_seq_supports_sys vc_sys_ms4 constr
+R10343:10349 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+R10366:10372 Order.example vc_sys_seq_supports_sys sys_ms4 constr
+def 10403:10409 vc_sys_seq_supports_sys sys_all
+R10413:10416 Coq.Init.Datatypes <> list ind
+R10419:10429 Order.attack_graph <> attackgraph rec
+R10431:10441 Order.example vc_sys_seq_supports_sys measurement ind
+R10443:10452 Order.example vc_sys_seq_supports_sys corruption ind
+R10462:10465 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10459:10461 Order.example vc_sys_seq_supports_sys m1a def
+R10469:10472 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10466:10468 Order.example vc_sys_seq_supports_sys m2a def
+R10473:10475 Coq.Init.Datatypes <> nil constr
+def 10495:10508 vc_sys_seq_supports_sys vc_sys_seq_all
+R10516:10519 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10513:10515 Order.example vc_sys_seq_supports_sys m1b def
+R10524:10527 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10520:10523 Order.example vc_sys_seq_supports_sys m2b' def
+R10532:10535 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10528:10531 Order.example vc_sys_seq_supports_sys m3b' def
+R10540:10543 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10536:10539 Order.example vc_sys_seq_supports_sys m4b' def
+R10544:10546 Coq.Init.Datatypes <> nil constr
+R10587:10593 Order.strict_partial_order <> ex_head constr
+R10639:10645 Order.strict_partial_order <> ex_tail constr
+prf 10665:10680 vc_sys_seq_supports_sys m1a_supports_m1b
+R10684:10691 Order.supports <> supports def
+R10698:10701 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10695:10697 Order.example vc_sys_seq_supports_sys m1a def
+R10702:10704 Coq.Init.Datatypes <> nil constr
+R10712:10715 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R10709:10711 Order.example vc_sys_seq_supports_sys m1b def
+R10716:10718 Coq.Init.Datatypes <> nil constr
+R10746:10753 Order.supports <> supports def

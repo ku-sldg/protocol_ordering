@@ -1,0 +1,208 @@
+DIGEST 92aaf709212de1cc02067698535d416a
+Fgraph.EqClass
+R112:117 Coq.Setoids.Setoid <> <> lib
+rec 127:133 <> EqClass
+proj 153:155 <> eqb
+proj 180:190 <> eqb_leibniz
+binder 136:136 <> A:1
+R160:163 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R159:159 graph.EqClass <> A:1 var
+R165:168 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R164:164 graph.EqClass <> A:1 var
+R169:172 Coq.Init.Datatypes <> bool ind
+binder 201:201 <> x:4
+binder 203:203 <> y:5
+R220:224 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R213:215 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R206:208 graph.EqClass <> eqb:3 meth
+R212:212 graph.EqClass <> y:5 var
+R210:210 graph.EqClass <> x:4 var
+R216:219 Coq.Init.Datatypes <> true constr
+R226:228 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R225:225 graph.EqClass <> x:4 var
+R229:229 graph.EqClass <> y:5 var
+prf 243:260 <> EqClass_impl_DecEq
+binder 271:271 <> A:7
+R287:293 graph.EqClass <> EqClass class
+R295:295 graph.EqClass <> A:7 var
+binder 283:283 <> H:8
+R317:317 graph.EqClass <> A:7 var
+binder 311:311 <> x:9
+binder 313:313 <> y:10
+R321:321 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R327:331 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R338:338 Coq.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R323:325 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R322:322 graph.EqClass <> x:9 var
+R326:326 graph.EqClass <> y:10 var
+R333:336 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R332:332 graph.EqClass <> x:9 var
+R337:337 graph.EqClass <> y:10 var
+def 514:538 <> general_list_eq_class_eqb
+binder 541:541 <> A:11
+R557:563 graph.EqClass <> EqClass class
+R565:565 graph.EqClass <> A:11 var
+binder 553:553 <> H:12
+R577:580 Coq.Init.Datatypes <> list ind
+R582:582 graph.EqClass <> A:11 var
+binder 569:570 <> l1:13
+binder 572:573 <> l2:14
+R587:590 Coq.Init.Datatypes <> bool ind
+R607:608 graph.EqClass <> l2:14 var
+R603:604 graph.EqClass <> l1:13 var
+R619:621 Coq.Init.Datatypes <> nil constr
+R624:626 Coq.Init.Datatypes <> nil constr
+R631:634 Coq.Init.Datatypes <> true constr
+R640:643 Coq.Init.Datatypes <> cons constr
+R652:655 Coq.Init.Datatypes <> cons constr
+R666:669 Coq.Init.Datatypes <> andb def
+R684:708 graph.EqClass <> general_list_eq_class_eqb:15 def
+R672:674 graph.EqClass <> eqb meth
+R729:733 Coq.Init.Datatypes <> false constr
+prf 751:774 <> general_list_eqb_leibniz
+binder 786:786 <> A:18
+R802:808 graph.EqClass <> EqClass class
+R810:810 graph.EqClass <> A:18 var
+binder 798:798 <> H:19
+R832:835 Coq.Init.Datatypes <> list ind
+R837:837 graph.EqClass <> A:18 var
+binder 824:825 <> a1:20
+binder 827:828 <> a2:21
+R879:883 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R872:874 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R841:865 graph.EqClass <> general_list_eq_class_eqb def
+R870:871 graph.EqClass <> a2:21 var
+R867:868 graph.EqClass <> a1:20 var
+R875:878 Coq.Init.Datatypes <> true constr
+R886:888 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R884:885 graph.EqClass <> a1:20 var
+R889:890 graph.EqClass <> a2:21 var
+R990:993 Coq.Init.Datatypes <> andb def
+R1012:1014 graph.EqClass <> eqb meth
+R1012:1014 graph.EqClass <> eqb meth
+R1043:1053 graph.EqClass <> eqb_leibniz meth
+R1043:1053 graph.EqClass <> eqb_leibniz meth
+R1043:1053 graph.EqClass <> eqb_leibniz meth
+R1156:1159 Coq.Init.Datatypes <> andb def
+R1172:1174 graph.EqClass <> eqb meth
+R1172:1174 graph.EqClass <> eqb meth
+R1234:1244 graph.EqClass <> eqb_leibniz meth
+R1234:1244 graph.EqClass <> eqb_leibniz meth
+inst 1299:1321 <> EqClass_extends_to_list
+binder 1324:1324 <> A:22
+R1340:1346 graph.EqClass <> EqClass class
+R1348:1348 graph.EqClass <> A:22 var
+binder 1336:1336 <> H:23
+R1353:1359 graph.EqClass <> EqClass class
+R1362:1365 Coq.Init.Datatypes <> list ind
+R1367:1367 graph.EqClass <> A:22 var
+R1414:1424 graph.EqClass <> eqb_leibniz meth
+R1377:1379 graph.EqClass <> eqb meth
+R1384:1408 graph.EqClass <> general_list_eq_class_eqb def
+R1429:1452 graph.EqClass <> general_list_eqb_leibniz thm
+prf 1464:1473 <> nat_eqb_eq
+R1492:1494 Coq.Init.Datatypes <> nat ind
+binder 1484:1485 <> n1:24
+binder 1487:1488 <> n2:25
+R1519:1523 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R1512:1514 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1499:1505 Coq.Init.Nat <> eqb def
+R1507:1508 graph.EqClass <> n1:24 var
+R1510:1511 graph.EqClass <> n2:25 var
+R1515:1518 Coq.Init.Datatypes <> true constr
+R1526:1528 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1524:1525 graph.EqClass <> n1:24 var
+R1529:1530 graph.EqClass <> n2:25 var
+inst 1708:1718 <> nat_EqClass
+R1722:1728 graph.EqClass <> EqClass class
+R1730:1732 Coq.Init.Datatypes <> nat ind
+R1760:1770 graph.EqClass <> eqb_leibniz meth
+R1741:1743 graph.EqClass <> eqb meth
+R1747:1753 Coq.Init.Nat <> eqb def
+R1775:1784 graph.EqClass <> nat_eqb_eq thm
+def 1801:1807 <> eqbPair
+binder 1809:1809 <> A:26
+binder 1811:1811 <> B:27
+R1822:1828 graph.EqClass <> EqClass class
+R1830:1830 graph.EqClass <> A:26 var
+binder 1820:1820 <> H:28
+R1837:1843 graph.EqClass <> EqClass class
+R1845:1845 graph.EqClass <> B:27 var
+binder 1834:1835 <> H':29
+R1853:1853 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1852:1852 graph.EqClass <> A:26 var
+R1854:1854 graph.EqClass <> B:27 var
+binder 1849:1850 <> p1:30
+R1862:1862 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1861:1861 graph.EqClass <> A:26 var
+R1863:1863 graph.EqClass <> B:27 var
+binder 1858:1859 <> p2:31
+R1868:1871 Coq.Init.Datatypes <> bool ind
+R1884:1884 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1887:1887 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1890:1890 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1885:1886 graph.EqClass <> p1:30 var
+R1888:1889 graph.EqClass <> p2:31 var
+R1901:1901 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1909:1910 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1918:1918 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1902:1902 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1905:1905 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1908:1908 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1911:1911 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1914:1914 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1917:1917 Coq.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1923:1926 Coq.Init.Datatypes <> andb def
+R1941:1943 graph.EqClass <> eqb meth
+R1929:1931 graph.EqClass <> eqb meth
+prf 1966:1978 <> beq_pair_true
+binder 1980:1980 <> A:32
+binder 1982:1982 <> B:33
+R1993:1999 graph.EqClass <> EqClass class
+R2001:2001 graph.EqClass <> A:32 var
+binder 1991:1991 <> H:34
+R2008:2014 graph.EqClass <> EqClass class
+R2016:2016 graph.EqClass <> B:33 var
+binder 2005:2006 <> H':35
+R2037:2037 Coq.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2036:2036 graph.EqClass <> A:32 var
+R2038:2038 graph.EqClass <> B:33 var
+binder 2029:2030 <> p1:36
+binder 2032:2033 <> p2:37
+R2067:2070 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2060:2062 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2047:2053 graph.EqClass <> eqbPair def
+R2058:2059 graph.EqClass <> p2:37 var
+R2055:2056 graph.EqClass <> p1:36 var
+R2063:2066 Coq.Init.Datatypes <> true constr
+R2073:2075 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2071:2072 graph.EqClass <> p1:36 var
+R2076:2077 graph.EqClass <> p2:37 var
+R2106:2112 graph.EqClass <> eqbPair def
+R2150:2152 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2150:2152 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2182:2184 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2174:2176 graph.EqClass <> eqb meth
+R2185:2188 Coq.Init.Datatypes <> true constr
+R2182:2184 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2174:2176 graph.EqClass <> eqb meth
+R2185:2188 Coq.Init.Datatypes <> true constr
+R2214:2216 graph.EqClass <> eqb meth
+R2214:2216 graph.EqClass <> eqb meth
+R2249:2259 graph.EqClass <> eqb_leibniz meth
+R2249:2259 graph.EqClass <> eqb_leibniz meth
+R2287:2289 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2287:2289 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2319:2321 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2311:2313 graph.EqClass <> eqb meth
+R2322:2325 Coq.Init.Datatypes <> true constr
+R2319:2321 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2311:2313 graph.EqClass <> eqb meth
+R2322:2325 Coq.Init.Datatypes <> true constr
+R2351:2353 graph.EqClass <> eqb meth
+R2389:2392 Coq.Init.Datatypes <> andb def
+R2411:2413 graph.EqClass <> eqb meth
+R2351:2353 graph.EqClass <> eqb meth
+R2411:2413 graph.EqClass <> eqb meth
+R2452:2462 graph.EqClass <> eqb_leibniz meth
+R2452:2462 graph.EqClass <> eqb_leibniz meth
