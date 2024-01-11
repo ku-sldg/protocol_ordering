@@ -7,11 +7,11 @@ SET EQUIVALENCE
 Require Import Coq.Lists.List.
 
 Require Import Order.attack_graph.
-Require Import Order.strict_partial_order.
-Require Import Order.reduce.
-Require Import Order.equiv.
+Require Import Order.graph_strict_partial_order.
+Require Import Order.graph_normalization.
+Require Import Order.graph_equiv.
 Require Import Order.utilities.
-Require Import Order.partial_order.
+Require Import Order.graph_partial_order.
 Require Import Order.supports_facts.
 
 Require Import Coq.Program.Equality.

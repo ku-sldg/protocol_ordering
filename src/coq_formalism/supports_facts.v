@@ -1,9 +1,9 @@
 Require Import Coq.Lists.List.
 
 Require Import Order.attack_graph.
-Require Import Order.strict_partial_order.
-Require Import Order.reduce.
-Require Import Order.equiv.
+Require Import Order.graph_strict_partial_order.
+Require Import Order.graph_normalization.
+Require Import Order.graph_equiv.
 Require Import Order.utilities.
 
 Require Import Coq.Program.Equality.
@@ -17,7 +17,7 @@ Context {corruption : Type}.
   * relation is applied *) 
 Definition supports_iso (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
     forall (H : (attackgraph measurement corruption)), In H TT ->
-    (exists (G : (attackgraph measurement corruption)), In G SS /\ isomorphism G H).
+    (exists (G : (attackgraph measurement corruption)), In G SS /\ bidir_homo G H).
     
     (* Prove properties of supports_iso 
     * reflexive, and transitive *)
@@ -25,7 +25,7 @@ Definition supports_iso (SS : list (attackgraph measurement corruption)) (TT : l
     Proof.
     intros. unfold supports_iso. intros.
     exists H. intuition.
-    pose proof (isomorphism_refl H). eauto.
+    pose proof (bidir_homo_refl H). eauto.
     Qed.
     
     Theorem  supports_iso_trans : forall x y z, supports_iso x y -> supports_iso y z -> supports_iso x z.
@@ -40,7 +40,7 @@ Definition supports_iso (SS : list (attackgraph measurement corruption)) (TT : l
     destruct H0 as [C H0].
     destruct H0 as [InCX H0]. 
     exists C; intuition.
-    eapply isomorphism_trans; eauto.
+    eapply bidir_homo_trans; eauto.
     Qed.
     
     (* TODO *)

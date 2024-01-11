@@ -14,16 +14,16 @@ To reason about comparisons, we divide this research into the following files.
 `attack_graph.v` 
 - contains data structure for attack graph 
 
-`reduce.v`
+`graph_normalization.v`
 - graph normalization code 
 
 `equiv.v`
-- equivalence operator for comparing two graphs (isomorphism)
+- equivalence operator for comparing two graphs (bidir_homo)
 
-`strict_partial_order.v` 
+`graph_strict_partial_order.v` 
 - defining and proving strict partial order between two graphs 
 
-`supports.v`
+`set_order.v`
 - proving properties of supports as motivated by Rowe's paper "On Orderings in Security Models"
 
 `example.v`

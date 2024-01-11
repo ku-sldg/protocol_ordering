@@ -8,12 +8,12 @@
 Require Import Coq.Lists.List.
 
 Require Import Order.attack_graph.
-Require Import Order.strict_partial_order.
-Require Import Order.reduce.
-Require Import Order.equiv.
+Require Import Order.graph_strict_partial_order.
+Require Import Order.graph_normalization.
+Require Import Order.graph_equiv.
 Require Import Order.utilities.
-Require Import Order.partial_order.
-Require Import Order.supports.
+Require Import Order.graph_partial_order.
+Require Import Order.set_order.
 Require Import Order.compare. 
 
 
@@ -364,7 +364,7 @@ Module vc_sys_seq_supports_sys.
           simpl in *. destruct H0. inversion H0. subst. invc H0. subst. 
           destruct H1. simpl in *. invc H. subst. invc H1.
       + subst. exists m1a. unfold sys_all. intuition. left.
-        unfold isomorphism. split.
+        unfold bidir_homo. split.
       ++ simpl. exists f. unfold homomorphism. split.
       +++ intros. simpl in *. intuition.
       ++++ invc H0. right. left. unfold f. eauto.

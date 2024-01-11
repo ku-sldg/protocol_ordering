@@ -1,11 +1,11 @@
 -Q . Order
 utilities.v
 attack_graph.v
-reduce.v
-strict_partial_order.v
-equiv.v
-partial_order.v
+graph_normalization.v
+graph_strict_partial_order.v
+graph_equiv.v
+graph_partial_order.v
 supports_facts.v
 set_equiv.v
-supports.v
+set_order.v
 compare.v

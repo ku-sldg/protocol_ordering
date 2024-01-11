@@ -8,7 +8,7 @@ Assumptions
 By: Sarah Johnson and Anna Fritz
 Date: Sept 11, 2023 *)
 
-(* proved the isomorphism is an equivalence relation 
+(* proved the bidir_homo is an equivalence relation 
     - equivalence to only take into consideration states in the steps *)
 
 Require Import Coq.Lists.List.

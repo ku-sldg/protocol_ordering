@@ -1,18 +1,20 @@
 (************************
- * comparison over sets of
+ * COMPARE SETS 
+ * top level file used to
+ * obtain over sets of
  * attack graphs 
  *************************)
 
 Require Import Coq.Lists.List.
 
 Require Import Order.attack_graph.
-Require Import Order.strict_partial_order.
-Require Import Order.reduce.
-Require Import Order.equiv.
+Require Import Order.graph_strict_partial_order.
+Require Import Order.graph_normalization.
+Require Import Order.graph_equiv.
 Require Import Order.utilities.
-Require Import Order.partial_order.
+Require Import Order.graph_partial_order.
 Require Import Order.set_equiv.
-Require Import Order.supports.
+Require Import Order.set_order.
 
 Section Compare.
 
