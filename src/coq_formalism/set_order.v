@@ -117,6 +117,15 @@ Proof.
 Qed.   
 
 
+Theorem  supports_antisym : forall x y,
+supports x y -> supports y x -> set_eq x y.
+Proof.
+  intros; unfold supports in *. simpl in *. induction x.
+  Abort.
+
+
+(* FUTURE WORK 
+   Not included in Fritz Dissertation work *)
 (*****************************
  graph_normalization SET TO EASIEST GRAPHS 
 *****************************)
@@ -125,6 +134,7 @@ Inductive reduce_set (orig : list (attackgraph measurement corruption)) : list (
 | set_nil : reduce_set orig nil nil
 (* there does not exist anything that is less than a1 *)
 | set_keep : forall a1 SS TT, (forall a2, In a2 orig -> ~ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) (a1 :: TT) 
+(* set_remove case causes problems *)
 | set_remove : forall a1 SS TT, (exists a2, In a2 orig /\ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) TT. 
 
 Check reduce_set. 
