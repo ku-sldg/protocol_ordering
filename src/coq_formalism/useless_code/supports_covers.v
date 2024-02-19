@@ -205,7 +205,7 @@ End homomorphism.
  (* defining partial order
   * this way is called the "reflexive kernel" 
   * <= *)
-  Definition supports (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := supports_iso SS TT \/ supports_spo SS TT. 
+  Definition supports (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := supports_iso SS TT \/ supports_spo SS TT. 
 
   Theorem supports_refl : forall SS,  supports SS SS.
   Proof.

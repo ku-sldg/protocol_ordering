@@ -22,19 +22,19 @@ Section Graph_Equivalence.
  * We assume we are reasoning over the reduced graph form *)
 
 Context {measurement : Type}.
-Context {corruption : Type}.
+Context {adversary : Type}.
 
 (* Labels and States must have decidable equality *)
 Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
-Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
-Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
+Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
+Hypothesis eqDec_state : forall (G : attackgraph measurement adversary) (x y : G.(state _ _)), {x = y} + {x <> y}.
 
 
 (************************
  * DEFINING HOMOMORPHISM 
  * state condition and 
  * label condition *)
-Definition homomorphism (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  
+Definition homomorphism (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  
     (forall st1 st2, In (st1,st2) g1.(steps _ _) -> In ((f st1) ,(f st2)) g2.(steps _ _))    
     /\
     (forall st1 st2, In (st1,st2) g1.(steps _ _) -> 
@@ -76,8 +76,8 @@ specialize H3 with (f12 st1) (f12 st2); intuition.
 rewrite  H5. eauto.
 Qed. 
 
-Theorem in_dec_state : forall (G : attackgraph measurement corruption) (a : state measurement corruption G) (l : list (state measurement corruption G)), 
-(forall (x y : state measurement corruption G),
+Theorem in_dec_state : forall (G : attackgraph measurement adversary) (a : state measurement adversary G) (l : list (state measurement adversary G)), 
+(forall (x y : state measurement adversary G),
 {x = y} + {x <> y}) -> 
 {In a l} + {~ In a l} .
 Proof.
@@ -92,10 +92,10 @@ Proof.
   ++++ contradiction.  
 Qed.
 
-Theorem in_dec_steps : forall (a : attackgraph measurement corruption) 
-(a' : (state measurement corruption a * state measurement corruption a))
-(l :list ((state measurement corruption a * state measurement corruption a))), 
-(forall x y : (state measurement corruption a * state measurement corruption a),
+Theorem in_dec_steps : forall (a : attackgraph measurement adversary) 
+(a' : (state measurement adversary a * state measurement adversary a))
+(l :list ((state measurement adversary a * state measurement adversary a))), 
+(forall x y : (state measurement adversary a * state measurement adversary a),
 {x = y} + {x <> y}) -> 
 {In a' l} + {~ In a' l} .
 Proof.
@@ -110,7 +110,7 @@ Proof.
   ++++ contradiction.
 Qed.            
 
-Theorem  step_eq_dec : forall (a: attackgraph measurement corruption) (x y : state measurement corruption a * state measurement corruption a), {x = y} + {x <> y}.
+Theorem  step_eq_dec : forall (a: attackgraph measurement adversary) (x y : state measurement adversary a * state measurement adversary a), {x = y} + {x <> y}.
 Proof.
   intros. destruct x. destruct y.
   destruct (eqDec_state a s s1); subst.
@@ -122,8 +122,8 @@ Proof.
     contradiction.
 Qed.       
 
-Lemma list_eq_dec' : forall (a: attackgraph measurement corruption) 
-(l l' :list (state measurement corruption a * state measurement corruption a)),
+Lemma list_eq_dec' : forall (a: attackgraph measurement adversary) 
+(l l' :list (state measurement adversary a * state measurement adversary a)),
 {l = l'} + {l <> l'}.
 Proof.
   intros. 
@@ -135,7 +135,7 @@ Qed.
  * DEFINING BIDIRECTIONAL HOMOMORPHISM 
  * state condition and 
  * label condition *)
-Definition bidir_homo (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) : Prop := 
+Definition bidir_homo (G1 : attackgraph measurement adversary) (G2: attackgraph measurement adversary) : Prop := 
   (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f) /\  
   (exists (g : G2.(state _ _) -> G1.(state _ _)), homomorphism G2 G1 g).
 

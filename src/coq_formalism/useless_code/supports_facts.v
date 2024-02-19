@@ -119,9 +119,9 @@ End Supports_Facts.
   * relation is applied 
   
   * strict partial order = irreflexive, asymmetric, transitive *)
-  Definition supports_spo (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
-    (forall (H : (attackgraph measurement corruption)), In H TT ->  
-    (exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order G H)).
+  Definition supports_spo (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
+    (forall (H : (attackgraph measurement adversary)), In H TT ->  
+    (exists (G : (attackgraph measurement adversary)), In G SS /\ strict_partial_order G H)).
 
   (* supports is irreflexive for everything except nil.
    * need to disallow the first parameter to be nil  *)  

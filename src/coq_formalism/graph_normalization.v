@@ -16,12 +16,12 @@ Require Import Order.utilities.
 Section Reducer.
 
     Context {measurement : Type}.
-    Context {corruption : Type}.
-    Context {G : attackgraph measurement corruption}.
+    Context {adversary : Type}.
+    Context {G : attackgraph measurement adversary}.
 
     (* Labels and States must have decidable equality *)
     Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
-    Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+    Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
     Hypothesis eqDec_state :  forall (x y : G.(state _ _)), {x = y} + {x <> y}.
 
     (* steps are equivalent or not equivalent *)
@@ -109,7 +109,7 @@ Section Reducer.
     | reduce_done : forall x, reduce1 x = x -> reducer x x
     | reduce_more : forall x y, reduce1 x <> x -> reducer (reduce1 x) y -> reducer x y.  
 
-    Definition step_update (g1 : attackgraph measurement corruption) (newSteps : list (g1.(state _ _) * g1.(state _ _))) :=  {| state := g1.(state _ _) ; steps := newSteps ; label := g1.(label _ _) |}. 
+    Definition step_update (g1 : attackgraph measurement adversary) (newSteps : list (g1.(state _ _) * g1.(state _ _))) :=  {| state := g1.(state _ _) ; steps := newSteps ; label := g1.(label _ _) |}. 
 
     Theorem  reducer_deterministic : forall (x y z : list (G.(state _ _) * G.(state _ _))), 
         reducer x y -> reducer x z -> y = z.

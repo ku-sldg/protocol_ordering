@@ -1,12 +1,12 @@
 Require Import Coq.Lists.List.
 
 
-(* Attack graph is parameterized over measurement and corruption events *)
-Record attackgraph (measurement corruption : Type) : Type := 
+(* Attack graph is parameterized over measurement and adversary events *)
+Record attackgraph (measurement adversary : Type) : Type := 
 {
     state : Type ;
     steps : list (state * state) ;
-    label : state -> measurement + corruption
+    label : state -> measurement + adversary
 }.
 
 (************************
@@ -20,16 +20,16 @@ Record attackgraph (measurement corruption : Type) : Type :=
    Definition ListInjective' (A B: Type) (f: A -> B) (l: list A) :=
     (forall x y: A, In x l -> In y l -> f x = f y -> x = y).
 
-   (* Definition ListInjective (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) (l :list (state measurement corruption g1 * state measurement corruption g1))  :=
+   (* Definition ListInjective (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(state _ _) -> g2.(state _ _)) (l :list (state measurement adversary g1 * state measurement adversary g1))  :=
     (forall x y, In x l -> In y l -> f x = f y -> x = y).*)
   
   Definition ListSurjective' (A B: Type) (f: A -> B) (l: list B) (l': list A) :=
     (forall x: B, In x l -> exists y, In y l' /\ f y = x).
 
-  Definition ListSurjective (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) l l' :=
+  Definition ListSurjective (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(state _ _) -> g2.(state _ _)) l l' :=
     (forall x, In x l -> exists y, In y l' /\ f y = x).
 
-  Definition ListLabelPreserve (g1 : attackgraph measurement corruption) (g2: attackgraph measurement corruption) (f : g1.(state _ _) -> g2.(state _ _)) :=  
+  Definition ListLabelPreserve (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(state _ _) -> g2.(state _ _)) :=  
     (forall st1 st2, In (st1,st2) g1.(steps _ _) -> 
     g1.(label _ _) st1 = g2.(label _ _) (f st1) /\ g1.(label _ _) st2 = g2.(label _ _) (f st2)).
   
@@ -47,12 +47,12 @@ Record attackgraph (measurement corruption : Type) : Type :=
 
 
   (* injective = one-to-one*)
-Definition injective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := forall x y, (f x = f y) -> x = y. 
+Definition injective `{g1 : attackgraph measurement adversary } `{g2: attackgraph measurement adversary} (f : g1.(state _ _) -> g2.(state _ _)) := forall x y, (f x = f y) -> x = y. 
 (* surjective = onto *)
-Definition surjective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := forall x, exists y,  x = f y. 
-Definition bijective `{g1 : attackgraph measurement corruption } `{g2: attackgraph measurement corruption} (f : g1.(state _ _) -> g2.(state _ _)) := injective f /\ surjective f.
+Definition surjective `{g1 : attackgraph measurement adversary } `{g2: attackgraph measurement adversary} (f : g1.(state _ _) -> g2.(state _ _)) := forall x, exists y,  x = f y. 
+Definition bijective `{g1 : attackgraph measurement adversary } `{g2: attackgraph measurement adversary} (f : g1.(state _ _) -> g2.(state _ _)) := injective f /\ surjective f.
 
-Lemma inverse {X Y : attackgraph measurement corruption} (f : (X.(state _ _)) -> (Y.(state _ _))) :
+Lemma inverse {X Y : attackgraph measurement adversary} (f : (X.(state _ _)) -> (Y.(state _ _))) :
   bijective f -> {g : (Y.(state _ _)) -> (X.(state _ _)) | (forall x, g (f x) = x) /\
                                (forall y, f (g y) = y) }.
 Proof.
@@ -81,7 +81,7 @@ split.
   now rewrite <- e, H1.
 Qed.
     
-  Definition isomorphism' (G1 : attackgraph measurement corruption) (G2: attackgraph measurement corruption) : Prop := 
+  Definition isomorphism' (G1 : attackgraph measurement adversary) (G2: attackgraph measurement adversary) : Prop := 
   (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f /\ bijective f).
 
   Theorem isomorphism'_refl : forall g1, isomorphism' g1 g1.

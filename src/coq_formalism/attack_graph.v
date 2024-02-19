@@ -3,10 +3,10 @@ Require Import Coq.Lists.List.
 (*************************
  ** ATTACK GRAPHS 
  ** Represented as a record type parameterized over 
- ** measurement and corruption events *)
-Record attackgraph (measurement corruption : Type) : Type := 
+ ** measurement and adversary events *)
+Record attackgraph (measurement adversary : Type) : Type := 
 {
     state : Type ;
     steps : list (state * state) ;
-    label : state -> measurement + corruption
+    label : state -> measurement + adversary
 }.

@@ -11,13 +11,13 @@ Require Import Coq.Program.Equality.
 Section Supports_Facts. 
 
 Context {measurement : Type}.
-Context {corruption : Type}.
+Context {adversary : Type}.
 
 (* prove supports is a bidirectional homomorphism when the graph equivalence 
   * relation is applied *) 
-Definition supports_iso (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
-    forall (H : (attackgraph measurement corruption)), In H TT ->
-    (exists (G : (attackgraph measurement corruption)), In G SS /\ bidir_homo G H).
+Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
+    forall (H : (attackgraph measurement adversary)), In H TT ->
+    (exists (G : (attackgraph measurement adversary)), In G SS /\ bidir_homo G H).
     
     (* Prove properties of supports_iso 
     * reflexive, and transitive *)
@@ -56,9 +56,9 @@ Definition supports_iso (SS : list (attackgraph measurement corruption)) (TT : l
   * relation is applied 
   
   * strict partial order = irreflexive, asymmetric, transitive *)
-  Definition supports_spo (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
-    (forall (H : (attackgraph measurement corruption)), In H TT ->  
-    (exists (G : (attackgraph measurement corruption)), In G SS /\ strict_partial_order G H)).
+  Definition supports_spo (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
+    (forall (H : (attackgraph measurement adversary)), In H TT ->  
+    (exists (G : (attackgraph measurement adversary)), In G SS /\ strict_partial_order G H)).
 
   (* supports is irreflexive for everything except nil.
    * need to disallow the first parameter to be nil  *)  

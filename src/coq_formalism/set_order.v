@@ -35,28 +35,28 @@ Require Import Coq.Program.Equality.
 Section Supports_List. 
 
 Context {measurement : Type}.
-Context {corruption : Type}.
+Context {adversary : Type}.
 
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
- Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
- Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
+ Hypothesis eqDec_state : forall (G : attackgraph measurement adversary) (x y : G.(state _ _)), {x = y} + {x <> y}.
 
  (* if g1 < g2 then g1 cannot equal g2. Important sanity check that our definitions make sense. *)
- Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement corruption), strict_partial_order g1 g2 -> ~ bidir_homo g1 g2.
+ Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement adversary), strict_partial_order g1 g2 -> ~ bidir_homo g1 g2.
  Proof.
     intros. unfold bidir_homo, strict_partial_order in *. intuition.
     + destruct H as [fg1g2]. destruct H3 as [fg2g1]. destruct H1.
       unfold homomorphism in *. destruct H as [fsteps flab]. destruct H2 as [gsteps glab]. intuition. apply H3.
       clear H4. clear H1. clear H3. clear fsteps. clear flab.
       clear H0.
-      induction (steps measurement corruption g2).    
+      induction (steps measurement adversary g2).    
     ++ econstructor.
     ++ econstructor.
     +++ unfold find_cor. 
-        destruct (label measurement corruption g2 (fst a)) eqn:lab_g2; eauto. destruct a.  specialize glab with s s0. specialize gsteps with s s0. simpl in *. intuition.
+        destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto. destruct a.  specialize glab with s s0. specialize gsteps with s s0. simpl in *. intuition.
         clear H0. clear H2. clear IHl. clear H4.  
-        induction (steps measurement corruption g1).
+        induction (steps measurement adversary g1).
     ++++ simpl in *. intuition.
     ++++ simpl in H1. destruct H1.
     +++++ destruct a. inversion H0. econstructor.
@@ -67,14 +67,14 @@ Context {corruption : Type}.
     unfold homomorphism in *. destruct H as [fsteps flab]. destruct H2 as [gsteps glab]. intuition. apply H3.
     clear H4. clear H0. clear H3. clear fsteps. clear flab.
     clear H1.
-    induction (steps measurement corruption g2).    
+    induction (steps measurement adversary g2).    
   ++ econstructor.
   ++ econstructor.
   +++ unfold find_time. 
-      destruct (label measurement corruption g2 (fst a)) eqn:lab_g2; eauto.  
-      destruct (label measurement corruption g2 (snd a)) eqn:lab_g22; eauto. destruct a.  specialize glab with s s0. specialize gsteps with s s0. simpl in *. intuition.
+      destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto.  
+      destruct (label measurement adversary g2 (snd a)) eqn:lab_g22; eauto. destruct a.  specialize glab with s s0. specialize gsteps with s s0. simpl in *. intuition.
       clear H0. clear H2. clear IHl.  
-      induction (steps measurement corruption g1).
+      induction (steps measurement adversary g1).
   ++++ simpl in *. intuition.
   ++++ simpl in H1. destruct H1.
   +++++ destruct a. inversion H0. econstructor. intuition.
@@ -89,9 +89,9 @@ Context {corruption : Type}.
   SUPPORTS AS PREORDER 
 ********************************)
 
-Definition supports (SS : list (attackgraph measurement corruption)) (TT : list (attackgraph measurement corruption)) : Prop := 
-  forall (H : (attackgraph measurement corruption)), In H TT ->
-(exists (G : (attackgraph measurement corruption)), In G SS /\ (bidir_homo G H \/ strict_partial_order G H)).
+Definition supports (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
+  forall (H : (attackgraph measurement adversary)), In H TT ->
+(exists (G : (attackgraph measurement adversary)), In G SS /\ (bidir_homo G H \/ strict_partial_order G H)).
 
 Theorem supports_refl : forall SS,  supports SS SS.
 Proof.
@@ -130,7 +130,7 @@ Proof.
  graph_normalization SET TO EASIEST GRAPHS 
 *****************************)
 
-Inductive reduce_set (orig : list (attackgraph measurement corruption)) : list (attackgraph measurement corruption) ->  list (attackgraph measurement corruption) -> Prop :=
+Inductive reduce_set (orig : list (attackgraph measurement adversary)) : list (attackgraph measurement adversary) ->  list (attackgraph measurement adversary) -> Prop :=
 | set_nil : reduce_set orig nil nil
 (* there does not exist anything that is less than a1 *)
 | set_keep : forall a1 SS TT, (forall a2, In a2 orig -> ~ strict_partial_order a2 a1) -> reduce_set orig SS TT -> reduce_set orig (a1 :: SS) (a1 :: TT) 

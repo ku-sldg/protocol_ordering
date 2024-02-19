@@ -32,12 +32,12 @@ Module vc_sys_seq_supports_sys.
     | ms : measurement
     | ms4 : measurement.
 
-    Inductive corruption : Type :=
-    | sys : corruption
-    | ker : corruption
-    | vc : corruption
-    | a : corruption
-    | c : corruption.
+    Inductive adversary : Type :=
+    | sys : adversary
+    | ker : adversary
+    | vc : adversary
+    | a : adversary
+    | c : adversary.
 
     Inductive states_sys : Type :=
     | sys_sys : states_sys 
@@ -45,7 +45,7 @@ Module vc_sys_seq_supports_sys.
     | sys_vc : states_sys
     | sys_ms4 : states_sys.
 
-    Definition label_sys (st : states_sys) : measurement + corruption :=
+    Definition label_sys (st : states_sys) : measurement + adversary :=
     match st with
     | sys_sys => inr sys
     | sys_ker => inr ker
@@ -59,7 +59,7 @@ Module vc_sys_seq_supports_sys.
         (sys_vc, sys_ms4) ::
         nil.
     
-    Definition m1a : attackgraph measurement corruption := 
+    Definition m1a : attackgraph measurement adversary := 
     {|
         state := states_sys ;
         steps := steps_m1a ;
@@ -71,7 +71,7 @@ Module vc_sys_seq_supports_sys.
         (sys_ker, sys_ms4) ::
         nil.
     
-    Definition m2a : attackgraph measurement corruption := 
+    Definition m2a : attackgraph measurement adversary := 
     {|
         state := states_sys ;
         steps := steps_m2a ;
@@ -87,7 +87,7 @@ Module vc_sys_seq_supports_sys.
     | vc_sys_ms3 : states_vc_sys_seq
     | vc_sys_ms4 : states_vc_sys_seq.
 
-    Definition label_vc_sys_seq (st : states_vc_sys_seq) : measurement + corruption :=
+    Definition label_vc_sys_seq (st : states_vc_sys_seq) : measurement + adversary :=
     match st with
     | vc_sys_sys => inr sys
     | vc_sys_ker => inr ker
@@ -106,7 +106,7 @@ Module vc_sys_seq_supports_sys.
         (vc_sys_sys, vc_sys_ms4) ::
         nil.
 
-    Definition m1b : attackgraph measurement corruption := 
+    Definition m1b : attackgraph measurement adversary := 
     {|
         state := states_vc_sys_seq ;
         steps := steps_m1b ;
@@ -119,7 +119,7 @@ Module vc_sys_seq_supports_sys.
         (vc_sys_sys, vc_sys_ms4) ::
         nil.
 
-    Definition m2b : attackgraph measurement corruption := 
+    Definition m2b : attackgraph measurement adversary := 
     {|
         state := states_vc_sys_seq ;
         steps := steps_m2b ;
@@ -133,7 +133,7 @@ Module vc_sys_seq_supports_sys.
         (vc_sys_sys, vc_sys_ms4) ::
         nil.
 
-    Definition m3b : attackgraph measurement corruption := 
+    Definition m3b : attackgraph measurement adversary := 
     {|
         state := states_vc_sys_seq ;
         steps := steps_m3b ;
@@ -147,7 +147,7 @@ Module vc_sys_seq_supports_sys.
         (vc_sys_sys, vc_sys_ms4) ::
         nil.
 
-    Definition m4b : attackgraph measurement corruption := 
+    Definition m4b : attackgraph measurement adversary := 
     {|
         state := states_vc_sys_seq ;
         steps := steps_m4b ;
@@ -161,7 +161,7 @@ Module vc_sys_seq_supports_sys.
         (vc_sys_sys, vc_sys_ms4) ::
         nil.
 
-    Definition m2b' : attackgraph measurement corruption := 
+    Definition m2b' : attackgraph measurement adversary := 
     {|
         state := states_vc_sys_seq ;
         steps := steps_m2b' ;
@@ -174,7 +174,7 @@ Module vc_sys_seq_supports_sys.
         (vc_sys_sys, vc_sys_ms4) ::
         nil.
 
-    Definition m3b' : attackgraph measurement corruption := 
+    Definition m3b' : attackgraph measurement adversary := 
     {|
         state := states_vc_sys_seq ;
         steps := steps_m3b' ;
@@ -187,7 +187,7 @@ Module vc_sys_seq_supports_sys.
         (vc_sys_sys, vc_sys_ms4) ::
         nil.
 
-    Definition m4b' : attackgraph measurement corruption := 
+    Definition m4b' : attackgraph measurement adversary := 
     {|
         state := states_vc_sys_seq ;
         steps := steps_m4b' ;
@@ -196,7 +196,7 @@ Module vc_sys_seq_supports_sys.
 
     Lemma eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
-    Lemma eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+    Lemma eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
     Lemma eqDec_state2: forall (x y : m2b.(state _ _)), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
@@ -313,7 +313,7 @@ Module vc_sys_seq_supports_sys.
         | _ => sys_ms4
     end.
     
-    Definition sys_all : list (attackgraph measurement corruption) :=  m1a :: m2a :: nil .
+    Definition sys_all : list (attackgraph measurement adversary) :=  m1a :: m2a :: nil .
 
     Definition vc_sys_seq_all := m1b :: m2b' :: m3b' :: m4b' :: nil.
 
@@ -442,9 +442,9 @@ Module m3b.
     | ms : measurement
     | ms4 : measurement.
     
-    Inductive corruption : Type :=
-    | sys : corruption
-    | ker : corruption.
+    Inductive adversary : Type :=
+    | sys : adversary
+    | ker : adversary.
     
     Inductive state_m3b : Type :=
     | s : state_m3b 
@@ -452,7 +452,7 @@ Module m3b.
     | m : state_m3b
     | m4 : state_m3b.
     
-    Definition label_m3b (st : state_m3b) : measurement + corruption :=
+    Definition label_m3b (st : state_m3b) : measurement + adversary :=
     match st with
     | s => inr sys
     | k => inr ker
@@ -466,7 +466,7 @@ Module m3b.
         (s, m4) ::
         nil.
     
-    Definition m3b : attackgraph measurement corruption := 
+    Definition m3b : attackgraph measurement adversary := 
     {|
         state := state_m3b ;
         steps := steps_m3b ;
@@ -475,7 +475,7 @@ Module m3b.
     
     Lemma eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
-    Lemma eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+    Lemma eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
     Lemma eqDec_state: forall (x y : m3b.(state _ _)), {x = y} + {x <> y}.
     Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
@@ -536,9 +536,9 @@ Inductive measurement : Type :=
 | ms : measurement
 | ms4 : measurement.
 
-Inductive corruption : Type :=
-| sys : corruption
-| ker : corruption.
+Inductive adversary : Type :=
+| sys : adversary
+| ker : adversary.
 
 Inductive state_m2c : Type :=
 | s : state_m2c
@@ -547,7 +547,7 @@ Inductive state_m2c : Type :=
 | m' : state_m2c
 | m4 : state_m2c.
 
-Definition label_m2c (st : state_m2c) : measurement + corruption :=
+Definition label_m2c (st : state_m2c) : measurement + adversary :=
 match st with
 | s => inr sys
 | k => inr ker
@@ -575,28 +575,28 @@ Definition steps_m2a : list (state_m2c * state_m2c) :=
     nil.
 
 
-Definition m2c : attackgraph measurement corruption := 
+Definition m2c : attackgraph measurement adversary := 
 {|
     state := state_m2c ;
     steps := steps_m2c ;
     label := label_m2c
 |}.
 
-Definition m2b : attackgraph measurement corruption := 
+Definition m2b : attackgraph measurement adversary := 
 {|
     state := state_m2c ;
     steps := steps_m2b ;
     label := label_m2c
 |}.
 
-Definition m2a : attackgraph measurement corruption := 
+Definition m2a : attackgraph measurement adversary := 
 {|
     state := state_m2c ;
     steps := steps_m2a ;
     label := label_m2c
 |}.
 
-Definition m2a_nil : attackgraph measurement corruption := 
+Definition m2a_nil : attackgraph measurement adversary := 
 {|
     state := state_m2c ;
     steps := nil ;
@@ -606,7 +606,7 @@ Definition m2a_nil : attackgraph measurement corruption :=
 
 Lemma eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
 Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
-Lemma eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+Lemma eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
 Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
 Lemma eqDec_state : forall (x y : m2c.(state _ _)), {x = y} + {x <> y}.
 Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
@@ -674,10 +674,10 @@ Inductive measurement : Type :=
 | ms : measurement
 | ms4 : measurement.
 
-Inductive corruption : Type :=
-| sys : corruption
-| vc : corruption
-| cc : corruption.
+Inductive adversary : Type :=
+| sys : adversary
+| vc : adversary
+| cc : adversary.
 
 Inductive state_m5c : Type :=
 | s : state_m5c
@@ -687,7 +687,7 @@ Inductive state_m5c : Type :=
 | m' : state_m5c
 | m4 : state_m5c.
 
-Definition label_m5c (st : state_m5c) : measurement + corruption :=
+Definition label_m5c (st : state_m5c) : measurement + adversary :=
 match st with
 | s => inr sys
 | v => inr vc
@@ -705,7 +705,7 @@ Definition steps_m5c : list (state_m5c * state_m5c) :=
     (s, m4) ::
     nil.
 
-Definition m5c : attackgraph measurement corruption := 
+Definition m5c : attackgraph measurement adversary := 
 {|
     state := state_m5c ;
     steps := steps_m5c ;
@@ -721,7 +721,7 @@ Definition steps_m5c' : list (state_m5c * state_m5c) :=
     nil.
 
 (* new graph that would be proper subset *)
-Definition m5c' : attackgraph measurement corruption := 
+Definition m5c' : attackgraph measurement adversary := 
 {|
     state := state_m5c ;
     steps := steps_m5c' ;
@@ -730,7 +730,7 @@ Definition m5c' : attackgraph measurement corruption :=
 
 Lemma eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
 Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
-Lemma eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+Lemma eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
 Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.
 Lemma eqDec_state : forall (x y : m5c.(state _ _)), {x = y} + {x <> y}.
 Proof. destruct x, y; try (left; reflexivity); try (right; intros contra; inversion contra). Qed.

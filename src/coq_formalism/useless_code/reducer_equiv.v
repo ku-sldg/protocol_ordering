@@ -12,13 +12,13 @@
    Import Equivalence.
  
    Context {measurement : Type}.
-   Context {corruption : Type}.
-   Context {G1 : attackgraph measurement corruption}.
-   Context {G2 : attackgraph measurement corruption}.
+   Context {adversary : Type}.
+   Context {G1 : attackgraph measurement adversary}.
+   Context {G2 : attackgraph measurement adversary}.
  
    (* Labels and States must have decidable equality *)
    Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
-   Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
+   Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
    Hypothesis eqDec_state1 : forall (x y : G1.(state _ _)), {x = y} + {x <> y}.
    Hypothesis eqDec_state2 : forall (x y : G2.(state _ _)), {x = y} + {x <> y}.
    
