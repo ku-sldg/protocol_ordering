@@ -19,9 +19,9 @@ Require Import Order.compare.
 
 (* ******************* 
      sys & 
-   vc sys seq 
+   ker-vc-sys-seq 
 ************************
-   Proving vc sys seq 
+   Proving ker vc sys seq 
    supports sys 
  * ****************** *)
 Module vc_sys_seq_supports_sys. 
@@ -322,25 +322,25 @@ Module vc_sys_seq_supports_sys.
 
     Lemma m1a_supports_m1b : supports ( m1a :: nil ) (m1b :: nil).
     Proof.
-      unfold supports. right.
-      unfold supports_spo. intros. simpl in H0.
-      destruct H0.
-      + exists m1a. simp_int.
-        unfold strict_partial_order. intuition; subst.
-      ++ econstructor.
-      +++  simpl. unfold find_cor. simpl. apply ex_tail. simpl.
-           apply ex_tail. apply ex_head. simpl. eauto.
-      +++ econstructor.
-      ++++ unfold find_cor. simpl. apply ex_tail. apply ex_head. simp_int. 
-      ++++ econstructor.
-      ++ econstructor; try econstructor; try econstructor.
-      ++ right. unfold time_proper_subset. split.
-      +++ unfold find_time. repeat econstructor.
-      +++ unfold not. intros. inversion H. subst. unfold find_time in H2. simpl in *. inversion H2.
-      ++++ subst. invc H1. simpl in *. invc H0.
-      ++++ subst. invc H1. subst. invc H3. simpl in *. invc H0.
-           subst. invc H3.
-    + invc H0.
+        unfold supports. intros. simpl in H0. intuition. 
+        exists m1a. simpl in *. split.
+        + left. reflexivity.
+        + right. subst. unfold strict_partial_order. intuition.
+        ++ econstructor.
+        +++ simpl. unfold steps_m1b. apply ex_tail. apply ex_tail. apply ex_head. simpl. intuition.
+        +++  econstructor. simpl. unfold steps_m1b. apply ex_tail. apply ex_head. simpl. eauto. econstructor.
+        ++ econstructor.
+        +++ simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+        +++ econstructor. simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+            econstructor.
+        ++ right. unfold time_proper_subset. split.
+        +++ econstructor.
+        ++++ simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+        ++++ econstructor. simpl. unfold steps_m1b. unfold find_time. simpl. eauto.
+            econstructor.
+        +++ unfold not. intros. invc H. subst. simpl in *. invc H2. subst.
+            simpl in *. destruct H0. inversion H0. subst. invc H0. subst. 
+            destruct H1. simpl in *. invc H. subst. invc H1.
     Qed.
 
     Lemma vc_sys_seq_supports_sys : supports sys_all vc_sys_seq_all.
@@ -407,7 +407,7 @@ Module vc_sys_seq_supports_sys.
         subst. invc H0. subst. invc H1. invc H1.
  Qed.
 
- (* *)
+ (* TO DO... random example. Not part of dissertation. *)
  Theorem vc_sys_seq_set_reduced : reduce_set vc_sys_seq_all vc_sys_seq_all (m2b' :: nil).
  Proof.
     unfold vc_sys_seq_all. apply set_remove. 
