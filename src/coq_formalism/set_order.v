@@ -43,46 +43,59 @@ Context {adversary : Type}.
  Hypothesis eqDec_state : forall (G : attackgraph measurement adversary) (x y : G.(state _ _)), {x = y} + {x <> y}.
 
  (* if g1 < g2 then g1 cannot equal g2. Important sanity check that our definitions make sense. *)
- Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement adversary), strict_partial_order g1 g2 -> ~ bidir_homo g1 g2.
+ Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement adversary), strict_partial_order g1 g2 -> ~ isomorphism g1 g2.
  Proof.
-    intros. unfold bidir_homo, strict_partial_order in *. intuition.
-    + destruct H as [fg1g2]. destruct H3 as [fg2g1]. destruct H1.
-      unfold homomorphism in *. destruct H as [fsteps flab]. destruct H2 as [gsteps glab]. intuition. apply H3.
-      clear H4. clear H1. clear H3. clear fsteps. clear flab.
-      clear H0.
+    intros. unfold strict_partial_order in *. intros H0.
+    assert (isomorphism g2 g1).
+    { apply iso_sym. auto. }
+    unfold isomorphism in *.
+    destruct H0 as [f iso]. 
+    destruct iso as [ste iso]. destruct iso as [lab iso]. destruct iso as [inj sur].
+    destruct H1 as [g giso].
+    destruct giso as [gste' giso]. destruct giso as [glab giso]. destruct giso as [ginj gsur].
+    assert (forall st1 st2 : state measurement adversary g2,
+            In (st1, st2) (steps measurement adversary g2) ->
+            In (g st1, g st2) (steps measurement adversary g1)) as gste.
+    { intros. apply gste'. auto. } clear gste'. clear ste. clear lab.
+     intuition.
+    + destruct H0. intuition. apply H1.
+      clear H1. clear H2. clear H. clear H0. 
       induction (steps measurement adversary g2).    
     ++ econstructor.
     ++ econstructor.
     +++ unfold find_cor. 
-        destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto. destruct a.  specialize glab with s s0. specialize gsteps with s s0. simpl in *. intuition.
-        clear H0. clear H2. clear IHl. clear H4.  
+        destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto. destruct a.
+        specialize gste with s s0. simpl in *. intuition.
+        clear H0. clear IHl.
         induction (steps measurement adversary g1).
     ++++ simpl in *. intuition.
     ++++ simpl in H1. destruct H1.
-    +++++ destruct a. inversion H0. econstructor.
-          rewrite <- lab_g2. rewrite H. eauto.
+    +++++ destruct a. inversion H. econstructor.
+          pose proof (glab s) as glabs.
+          rewrite <- lab_g2. rewrite glabs. auto.
     +++++ apply ex_tail. apply IHl0. intuition.
     +++ apply IHl; auto with *.
-    + destruct H as [fg1g2]. destruct H3 as [fg2g1]. destruct H1.
-    unfold homomorphism in *. destruct H as [fsteps flab]. destruct H2 as [gsteps glab]. intuition. apply H3.
-    clear H4. clear H0. clear H3. clear fsteps. clear flab.
-    clear H1.
-    induction (steps measurement adversary g2).    
-  ++ econstructor.
-  ++ econstructor.
-  +++ unfold find_time. 
-      destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto.  
-      destruct (label measurement adversary g2 (snd a)) eqn:lab_g22; eauto. destruct a.  specialize glab with s s0. specialize gsteps with s s0. simpl in *. intuition.
-      clear H0. clear H2. clear IHl.  
-      induction (steps measurement adversary g1).
+    + destruct H0. intuition. apply H1.
+      clear H1. clear H2. clear H0. clear H.
+      induction (steps measurement adversary g2).    
+    ++ econstructor.
+    ++ econstructor.
+    +++ unfold find_time. 
+        destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto.
+        destruct (label measurement adversary g2 (snd a)) eqn:lab_g22; eauto. 
+        destruct a. specialize gste with s s0. simpl in *. intuition.
+        clear H0. clear IHl.  
+        induction (steps measurement adversary g1).
   ++++ simpl in *. intuition.
   ++++ simpl in H1. destruct H1.
-  +++++ destruct a. inversion H0. econstructor. intuition.
-        rewrite <- lab_g22. rewrite H4. eauto.
-        rewrite <- lab_g2. rewrite H. eauto.
+  +++++ destruct a. inversion H. econstructor. intuition.
+        pose proof (glab s0) as glabs0.
+        rewrite <- lab_g22. rewrite glabs0. auto.
+        pose proof (glab s) as glabs.
+        rewrite <- lab_g2. rewrite glabs. auto.
   +++++ apply ex_tail. apply IHl0. intuition.
   +++ apply IHl; auto with *.
- Qed.   
+Qed.
  
 
 (******************************* 
@@ -91,12 +104,12 @@ Context {adversary : Type}.
 
 Definition supports (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
   forall (H : (attackgraph measurement adversary)), In H TT ->
-(exists (G : (attackgraph measurement adversary)), In G SS /\ (bidir_homo G H \/ strict_partial_order G H)).
+(exists (G : (attackgraph measurement adversary)), In G SS /\ (isomorphism G H \/ strict_partial_order G H)).
 
 Theorem supports_refl : forall SS,  supports SS SS.
 Proof.
  intros. unfold supports. intros. exists H. split; intuition.  left.
- pose proof (bidir_homo_refl H).
+ pose proof (iso_refl H).
  eauto.  
 Qed.
 
@@ -110,7 +123,7 @@ Proof.
   apply H in H2.
   destruct H2. destruct H2.
   exists x1. intuition.
-  + left. eapply bidir_homo_trans;eauto.
+  + left. eapply iso_trans;eauto.
   + right. eapply po_trans_helper; eauto.
   + right. eapply po_trans_helper'; eauto.
   + right. eapply spo_trans; eauto.
@@ -158,7 +171,7 @@ intros H HIn.
 induction XRed; subst.
 - inversion HIn.
 - destruct HIn; subst.
--- exists H. split; auto with *. left. apply bidir_homo_refl.
+-- exists H. split; auto with *. left. apply iso_refl.
 -- apply IHXRed in H1. destruct H1 as [G H1]. destruct H1.
  exists G. split; auto with *.
 - apply IHXRed in HIn. destruct HIn as [G H1]. destruct H1.

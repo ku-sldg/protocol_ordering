@@ -4,10 +4,11 @@
     Date: Sept 10, 2023
  **************************)
 
- (* proved an bidirectional homomorphism between
+ (* proved an isomomorphism between
   * attack graphs is an equivalence 
   * relation *)
 
+Require Import Coq.Logic.Description.
 Require Import Coq.Lists.List.
 Require Import Order.utilities.
 Require Import Order.attack_graph.
@@ -18,7 +19,7 @@ Set Implicit Arguments.
 
 Section Graph_Equivalence. 
 
-(* We aim to say two graphs are equivalent if they are bidirectionally homomorphic. 
+(* We aim to say two graphs are equivalent if they are isomomorphic. 
  * We assume we are reasoning over the reduced graph form *)
 
 Context {measurement : Type}.
@@ -130,19 +131,78 @@ Proof.
   pose proof (list_eq_dec ). apply X.
   apply step_eq_dec.
 Qed. 
-    
+
+
 (************************
- * DEFINING BIDIRECTIONAL HOMOMORPHISM 
+ * DEFINING ISOMORPHISM 
  * state condition and 
- * label condition *)
-Definition bidir_homo (G1 : attackgraph measurement adversary) (G2: attackgraph measurement adversary) : Prop := 
-  (exists (f : G1.(state _ _) -> G2.(state _ _)), homomorphism G1 G2 f) /\  
-  (exists (g : G2.(state _ _) -> G1.(state _ _)), homomorphism G2 G1 g).
+ * label condition and
+ * injective condition and
+ * surjective condition *)
+ Definition iso (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  
+    (forall st1 st2, In (st1,st2) g1.(steps _ _) <-> In ((f st1) ,(f st2)) g2.(steps _ _))    
+    /\
+    (forall st, g1.(label _ _) st = g2.(label _ _) (f st))
+    /\
+    (forall st1 st2, (f st1) = (f st2) -> st1 = st2)
+    /\
+    (forall st', exists st, (f st) = st').
+
+Definition isomorphism (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) :=
+    exists f, iso g1 g2 f.
+
+(**************************
+    First we need to show that 
+    a function is bijective
+    if and only if
+    it is invertible *)
+
+    Definition injection {X Y : Type} (f : X -> Y) := forall x1 x2, f x1 = f x2 -> x1 = x2.
+    Definition surjection {X Y : Type} (f : X -> Y) := forall y, exists x, f x = y.
+    Definition bijection {X Y : Type} (f : X -> Y) := injection f /\ surjection f.
+
+    Definition left_inverse {X Y : Type} (f : X -> Y) g := forall x, g (f x) = x.
+    Definition right_inverse {X Y : Type} (f : X -> Y) g := forall y, f (g y) = y.
+    Definition inverse {X Y : Type} (f : X -> Y) g := left_inverse f g /\ right_inverse f g.
+
+    Lemma inverse_sym : forall X Y (f : X -> Y) g,
+        inverse f g -> inverse g f.
+    Proof.
+        intros X Y f g HInv. destruct HInv as [HL HR]. split.
+        - intros x. apply HR.
+        - intros y. apply HL.
+    Qed.
+
+    Lemma bijection_iff_inverse : forall X Y (f : X -> Y),
+        bijection f <->
+        exists g, inverse f g.
+    Proof.
+        intros X Y f. split.
+        - intros HBij. destruct HBij as [HInj HSur].
+          assert (HUniq : forall y, exists! x, f x = y).
+          { intros y. destruct (HSur y). 
+            exists x. split; auto.
+            intros x' H'.
+            apply HInj. rewrite H, H'. auto. }
+          assert (HSig : forall y, { x | f x  = y}).
+          { intros y. apply constructive_definite_description. apply HUniq. }
+          exists (fun y => proj1_sig ((HSig y))).
+          split.
+        -- intros x. destruct (HSig (f x)); auto.
+        -- intros y. destruct (HSig y); auto.
+        - intros HInv. destruct HInv as [g HInv].
+          destruct HInv as [HL HR].
+          split.
+        -- intros x1 x2 H. eapply f_equal with (f:=g) in H.
+           repeat rewrite HL in H; auto.
+        -- intros y. exists (g y). apply HR.
+    Qed.
+
 
 
 (****************************
-  We want the bidir_homo to be
-  and equivlance relation.
+  We want the isomorphism to be
+  and equivalence relation.
 
   These are the properties:
 
@@ -151,48 +211,59 @@ Definition bidir_homo (G1 : attackgraph measurement adversary) (G2: attackgraph 
     symmetric := forall a b : X, R a b -> R b a ;
     transitive := forall a b c: X, R a b -> R b c -> R a c 
     } . *)
+    Theorem iso_refl : forall x, isomorphism x x.
+    Proof.
+      unfold isomorphism, iso. intros. exists (fun x => x). repeat split; eauto.
+    Qed.
   
-  Theorem bidir_homo_refl : forall x, bidir_homo x x .
-  Proof.
-    unfold bidir_homo. intros. split; exists (fun x => x); eexists; eauto.
-  Qed.
-
-  Theorem bidir_homo_sym : forall g1 g2, 
-  bidir_homo g1 g2 -> 
-  bidir_homo g2 g1.
-  Proof.
-    intros. destruct H as [H1 H2]. destruct H1 as [f12].
-    destruct H2 as [f21]. unfold bidir_homo; split; eexists; eauto.
-  Qed.
-
-  Theorem bidir_homo_trans : forall g1 g2 g3, 
-  (bidir_homo g1 g2) -> 
-  (bidir_homo g2 g3) ->
-  (bidir_homo g1 g3) .
-  Proof.
-    intros. destruct H. destruct H0.  
-    unfold bidir_homo. split; pose proof homomorphism_trans as H3; eapply H3; eauto.
-  Qed. 
-
-  (* TODO *)
-  Theorem bidir_homo_dec : forall g1 g2, {bidir_homo g1 g2} + {~ bidir_homo g1 g2}.
-  Proof.
-    intros. generalize dependent g1. unfold bidir_homo. destruct g2. induction steps.
-    + intros. destruct g1. induction steps.
-    ++ left. unfold bidir_homo. unfold homomorphism. split.
-    +++ eexists. split; intros.
-    ++++ simpl in H. intuition.
-    ++++ simpl in H. intuition.
-    +++ eexists. split; intros; simpl in H; intuition.
-    ++ right.         
-  Abort.
-
-  Infix "==" := bidir_homo (at level 80).
+    Theorem iso_sym : forall g1 g2, 
+    isomorphism g1 g2 -> 
+    isomorphism g2 g1.
+    Proof.
+      unfold isomorphism. intros g1 g2 H. destruct H as [f H].
+      destruct H as [HSt H]. destruct H as [HLab H]. destruct H as [HInj HSur].
+      assert (HInv : exists g, inverse f g).
+      { apply bijection_iff_inverse. unfold bijection, injection, surjection; auto. }
+      destruct HInv as [g HInv]. exists g. repeat split; intros.
+      - specialize HSt with (g st1) (g st2). apply HSt. 
+        destruct HInv as [HL HR]. repeat rewrite HR. auto.
+      - specialize HSt with (g st1) (g st2). apply HSt in H. 
+        destruct HInv as [HL HR]. repeat rewrite HR in H. auto.
+      - specialize HLab with (g st). rewrite HLab.
+        destruct HInv as [HL HR]. rewrite HR. auto.
+      - apply inverse_sym in HInv. assert (HBij : bijection g).
+        { apply bijection_iff_inverse. exists f; auto. }
+        destruct HBij as [HInj' HSur']. apply HInj'. auto.
+      - apply inverse_sym in HInv. assert (HBij : bijection g).
+        { apply bijection_iff_inverse. exists f; auto. }
+        destruct HBij as [HInj' HSur']. apply HSur'.
+    Qed.
   
-  Add Relation  _ (bidir_homo)
-    reflexivity proved by bidir_homo_refl
-    symmetry proved by bidir_homo_sym
-    transitivity proved by bidir_homo_trans
-  as myeq.
+    Theorem iso_trans : forall g1 g2 g3, 
+    (isomorphism g1 g2) -> 
+    (isomorphism g2 g3) ->
+    (isomorphism g1 g3) .
+    Proof.
+      intros g1 g2 g3 H12 H23. destruct H12 as [f12 H12]. destruct H23 as [f23 H23].
+      destruct H12 as [HSt12 H12]. destruct H12 as [HLab12 H12]. destruct H12 as [HInj12 HSur12].
+      destruct H23 as [HSt23 H23]. destruct H23 as [HLab23 H23]. destruct H23 as [HInj23 HSur23].
+      exists (fun x => f23 (f12 (x))). repeat split; intros.
+      - apply HSt12 in H. apply HSt23 in H. auto.
+      - apply HSt12. apply HSt23. auto.
+      - rewrite HLab12. rewrite HLab23. auto.
+      - apply HInj12. apply HInj23. auto.
+      - specialize HSur23 with st'. destruct HSur23 as [st'' HSur23].
+        specialize HSur12 with st''. destruct HSur12 as [st''' HSur12].
+        rewrite <- HSur23. rewrite <- HSur12. exists st'''. auto.
+    Qed. 
+  
+  
+    Infix "==" := isomorphism (at level 80).
+    
+    Add Relation  _ (isomorphism)
+      reflexivity proved by iso_refl
+      symmetry proved by iso_sym
+      transitivity proved by iso_trans
+    as myeq.    
 
   End Graph_Equivalence.

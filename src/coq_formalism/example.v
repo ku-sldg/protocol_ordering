@@ -43,6 +43,9 @@ Module vc_sys_seq_supports_sys.
     | sys_sys : states_sys 
     | sys_ker : states_sys
     | sys_vc : states_sys
+    | sys_a : states_sys
+    | sys_c : states_sys
+    | sys_ms3 : states_sys
     | sys_ms4 : states_sys.
 
     Definition label_sys (st : states_sys) : measurement + adversary :=
@@ -50,6 +53,9 @@ Module vc_sys_seq_supports_sys.
     | sys_sys => inr sys
     | sys_ker => inr ker
     | sys_vc => inr vc
+    | sys_a => inr a
+    | sys_c => inr c
+    | sys_ms3 => inl ms
     | sys_ms4 => inl ms4
     end.
 
@@ -286,12 +292,15 @@ Module vc_sys_seq_supports_sys.
         + rewrite example_m4b_reduce1. apply reduce_done. eauto.
     Qed.
 
-    (* define homomorphism function *)
+    (* define isomorphism function *)
     Definition f (x : states_sys) : states_vc_sys_seq :=
         match x with 
         | sys_sys => vc_sys_sys 
         | sys_vc => vc_sys_vc
         | sys_ker => vc_sys_ker
+        | sys_a => vc_sys_a
+        | sys_c => vc_sys_c
+        | sys_ms3 => vc_sys_ms3
         | sys_ms4 => vc_sys_ms4
     end.
 
@@ -343,6 +352,11 @@ Module vc_sys_seq_supports_sys.
             destruct H1. simpl in *. invc H. subst. invc H1.
     Qed.
 
+    Ltac inversion_any :=
+      match goal with
+      | [H : _ |- _ ] => inversion H
+      end.
+
     Lemma vc_sys_seq_supports_sys : supports sys_all vc_sys_seq_all.
     Proof.
       unfold supports. intros. simpl in H0. intuition.
@@ -364,17 +378,19 @@ Module vc_sys_seq_supports_sys.
           simpl in *. destruct H0. inversion H0. subst. invc H0. subst. 
           destruct H1. simpl in *. invc H. subst. invc H1.
       + subst. exists m1a. unfold sys_all. intuition. left.
-        unfold bidir_homo. split.
-      ++ simpl. exists f. unfold homomorphism. split.
-      +++ intros. simpl in *. intuition.
-      ++++ invc H0. right. left. unfold f. eauto.
-      ++++ invc H. left. unfold f. eauto.
-      +++ intros. simpl in *. intuition; try (invc H0; simpl in *; eauto); try (invc H; simpl in *; eauto).
-      ++ simpl. exists g'. unfold homomorphism. split.
-      +++ intros. simpl in *. intuition.
-      ++++ invc H0. right. left. unfold f. eauto.
-      ++++ invc H. left. unfold f. eauto.
-      +++ intros. simpl in *. intuition; try (invc H0; simpl in *; eauto); try (invc H; simpl in *; eauto).
+        unfold isomorphism. exists f. unfold f. repeat split; intros.
+      ++ destruct st1, st2; try (simpl in *; intuition; inversion_any).
+      ++ destruct st1, st2; try (simpl in *; intuition; inversion_any).
+      ++ destruct st; auto.
+      ++ destruct st1, st2; try reflexivity; inversion_any.
+      ++ destruct st'.
+      +++ exists sys_sys; reflexivity.
+      +++ exists sys_ker; reflexivity.
+      +++ exists sys_vc; reflexivity.
+      +++ exists sys_a; reflexivity.
+      +++ exists sys_c; reflexivity.
+      +++ exists sys_ms3; reflexivity.
+      +++ exists sys_ms4; reflexivity.
       + exists m1a. unfold sys_all. intuition. right. subst.
         unfold strict_partial_order. intuition. 
       ++  econstructor. 

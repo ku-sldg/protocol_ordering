@@ -18,7 +18,7 @@ To reason about comparisons, we divide this research into the following files.
 - graph normalization code 
 
 `equiv.v`
-- equivalence operator for comparing two graphs (bidir_homo)
+- equivalence operator for comparing two graphs (isomorphism)
 
 `graph_strict_partial_order.v` 
 - defining and proving strict partial order between two graphs 
