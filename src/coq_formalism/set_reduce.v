@@ -20,7 +20,7 @@ Context {corruption : Type}.
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_corruption : forall (x y : corruption), {x = y} + {x <> y}.
- Hypothesis eqDec_state : forall (G : attackgraph measurement corruption) (x y : G.(state _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attackgraph measurement corruption) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
 Inductive getChain (orig : list (attackgraph measurement corruption)) (a : (attackgraph measurement corruption)) : (attackgraph measurement corruption) -> Prop :=
 | set_keep_chain : (forall a2, In a2 orig -> ~ strict_partial_order a2 a) -> getChain orig a a

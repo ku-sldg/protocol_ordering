@@ -24,7 +24,7 @@ Require Import Order.utilities.
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
- Hypothesis eqDec_state : forall (G : attackgraph measurement adversary) (x y : G.(state _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
  
  Fixpoint existsb ( A : Type) (f : A -> Prop) (l:list A) : Prop := 
      match l with 
@@ -101,7 +101,7 @@ Require Import Order.utilities.
  
  (* adversary events of x are a subset of adversary events in y *)
  Fixpoint cor_subset {G1 G2 : attackgraph measurement adversary} 
-                 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop :=
+                 (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop :=
    match x with 
    | nil => True
    | x :: xs => match (G1.(label _ _) (fst(x))) with 
@@ -115,11 +115,11 @@ Require Import Order.utilities.
  
  (* Proper subset using the fixpoint definition *)
  Definition cor_proper_subset' {G1 G2 : attackgraph measurement adversary} 
- (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := cor_subset x y /\ ~ cor_subset y x. 
+ (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) := cor_subset x y /\ ~ cor_subset y x. 
  
  (* determine if adversary event in G1 is present in y
-  * input: one state in G1 (no need to recurse through G1) and list to search (y) *)
- Definition find_cor {G1 G2 : attackgraph measurement adversary} (st : G1.(state _ _)) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop := 
+  * input: one event in G1 (no need to recurse through G1) and list to search (y) *)
+ Definition find_cor {G1 G2 : attackgraph measurement adversary} (st : G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
      match (G1.(label _ _) st) with 
      | inr c => existsb_ind _ (fun step => match step with 
                                      | (st2, _ ) => G2.(label _ _) st2 = inr c
@@ -129,18 +129,18 @@ Require Import Order.utilities.
  
  (* Inductively defined adversary subset *)
  Inductive cor_subset_ind {G1 G2 : attackgraph measurement adversary} : 
- list (G1.(state _ _) * G1.(state _ _)) -> (list (G2.(state _ _) * G2.(state _ _))) -> Prop :=
+ list (G1.(event _ _) * G1.(event _ _)) -> (list (G2.(event _ _) * G2.(event _ _))) -> Prop :=
  | sub_nil : forall y, cor_subset_ind nil y
  | sub_head : forall x xs y, find_cor (fst x) y -> cor_subset_ind xs y -> cor_subset_ind (x::xs) y.
  
  (* prove if x is nonempty then it cannot be a subset of nil *)
- Lemma subset_not_nil : forall G1 G2 a (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))), y = nil -> ~ cor_subset_ind (a::x) y.
+ Lemma subset_not_nil : forall G1 G2 a (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))), y = nil -> ~ cor_subset_ind (a::x) y.
  Proof. 
  (* proof won't work bc (a::x) could be list of measurement events *)
  Abort.
  
  (* If adversary event is in xs then it is in (x::xs) *)
- Lemma find_cons : forall G1 (x0: (G1.(state _ _) * G1.(state _ _))) x (xs : list (G1.(state _ _) * G1.(state _ _))), 
+ Lemma find_cons : forall G1 (x0: (G1.(event _ _) * G1.(event _ _))) x (xs : list (G1.(event _ _) * G1.(event _ _))), 
      find_cor (fst x0) (xs) -> find_cor (fst x0) (x :: xs).
  Proof.
      intros. unfold find_cor in *.
@@ -150,9 +150,9 @@ Require Import Order.utilities.
  Qed.
  
  (* Need this helper lemma to prove transitivity *)
- Lemma find_cor_helper : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _)))
-                          (ys:list (state measurement adversary G2 * state measurement adversary G2)), 
-                          find_cor (fst x) (ys) -> forall (zs : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind ys zs -> find_cor (fst x) zs.
+ Lemma find_cor_helper : forall G1 G2 G3 (x: (G1.(event _ _) * G1.(event _ _)))
+                          (ys:list (event measurement adversary G2 * event measurement adversary G2)), 
+                          find_cor (fst x) (ys) -> forall (zs : list (G3.(event _ _) * G3.(event _ _))), cor_subset_ind ys zs -> find_cor (fst x) zs.
  Proof.
      intros G1 G2 G3 x ys H. intros. 
      unfold find_cor in *. destruct (G1.(label _ _) (fst x)).
@@ -169,14 +169,14 @@ Require Import Order.utilities.
      +++ apply IHcor_subset_ind. auto. 
  Qed.  
  
-Lemma cor_subset_ind_asym : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), cor_subset_ind xs ys -> ~ cor_subset_ind ys xs. 
+Lemma cor_subset_ind_asym : forall G1 G2 (xs : list (G1.(event _ _) * G1.(event _ _))) (ys : list (G2.(event _ _) * G2.(event _ _))), cor_subset_ind xs ys -> ~ cor_subset_ind ys xs. 
 Proof.
     intros. unfold not. intros. induction ys. destruct xs.
 Abort. 
 
- Lemma cor_subset_ind_trans : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), 
+ Lemma cor_subset_ind_trans : forall G1 G2 (xs : list (G1.(event _ _) * G1.(event _ _))) (ys : list (G2.(event _ _) * G2.(event _ _))), 
  cor_subset_ind xs ys -> 
- forall G3 (zs : list (G3.(state _ _) * G3.(state _ _))), cor_subset_ind ys zs ->
+ forall G3 (zs : list (G3.(event _ _) * G3.(event _ _))), cor_subset_ind ys zs ->
  cor_subset_ind xs zs.
  Proof.
      intros G1 G2. intros xs ys Hxy. intros G3 zs Hyz.
@@ -188,7 +188,7 @@ Abort.
  Qed. 
  
  (* Prove fixpoint definition is equal to inductive def *)
- Theorem cor_subset_eq : forall G1 G2 (xs: list (G1.(state _ _) * G1.(state _ _))) ( ys : list (G2.(state _ _) * G2.(state _ _))), cor_subset_ind xs ys <-> cor_subset xs ys.
+ Theorem cor_subset_eq : forall G1 G2 (xs: list (G1.(event _ _) * G1.(event _ _))) ( ys : list (G2.(event _ _) * G2.(event _ _))), cor_subset_ind xs ys <-> cor_subset xs ys.
  Proof.
      intros; split; intros.
      (* prove inductive implies fixpoint *)
@@ -213,7 +213,7 @@ Abort.
  
  (* Proper subset using the inductive definition *)
  Definition cor_proper_subset {G1 G2 : attackgraph measurement adversary} 
- (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := cor_subset_ind x y /\ ~ cor_subset_ind y x. 
+ (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) := cor_subset_ind x y /\ ~ cor_subset_ind y x. 
  
  (*******************************************
  Prove the proper subset of adversary events is a strict partial order *)
@@ -225,19 +225,19 @@ Abort.
      transitive := forall a b c: X, R a b -> R b c -> R a c 
      }. *)
      
- Theorem cor_irr : forall (g1 : attackgraph measurement adversary) (x : list (g1.(state _ _) * g1.(state _ _)) ), ~ cor_proper_subset x x.
+ Theorem cor_irr : forall (g1 : attackgraph measurement adversary) (x : list (g1.(event _ _) * g1.(event _ _)) ), ~ cor_proper_subset x x.
      Proof.
      intros. unfold cor_proper_subset. unfold not. intros. inversion H. contradiction.
      Qed.
  
- Theorem cor_asym : forall (g1 g2 : attackgraph measurement adversary)  (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), cor_proper_subset x y -> ~ cor_proper_subset y x.
+ Theorem cor_asym : forall (g1 g2 : attackgraph measurement adversary)  (x : list (g1.(event _ _) * g1.(event _ _)) ) (y : list (g2.(event _ _) * g2.(event _ _)) ), cor_proper_subset x y -> ~ cor_proper_subset y x.
      Proof.
      intros. unfold cor_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
      Qed.
  
- Theorem cor_trans : forall (g1 g2 g3 : attackgraph measurement adversary) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
+ Theorem cor_trans : forall (g1 g2 g3 : attackgraph measurement adversary) (xs : list (g1.(event _ _) * g1.(event _ _)) ) (ys : list (g2.(event _ _) * g2.(event _ _)) ), 
  cor_proper_subset xs ys -> 
- forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), cor_proper_subset ys zs -> 
+ forall (zs : list (g3.(event _ _) * g3.(event _ _)) ), cor_proper_subset ys zs -> 
  cor_proper_subset xs zs.
      Proof.
      unfold cor_proper_subset in *. split.
@@ -249,7 +249,7 @@ Abort.
  
  (* adversary events of x are a subset of adversary events in y *)
  Fixpoint time_subset {G1 G2 : attackgraph measurement adversary} 
-                 (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop :=
+                 (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop :=
      match x with 
      | nil => True
      | (st1, st2 ) :: xs => match G1.(label _ _) st1 , G1.(label _ _) st2 with 
@@ -262,7 +262,7 @@ Abort.
  
  (* determine if a time constrained adversary event in G1 is present in y
  * input: one step in G1 (no need to recurse through G1) and list to search (y) *)
- Definition find_time {G1 G2 : attackgraph measurement adversary} (st1 : G1.(state _ _) *  G1.(state _ _)) (y : list (G2.(state _ _) * G2.(state _ _))) : Prop := 
+ Definition find_time {G1 G2 : attackgraph measurement adversary} (st1 : G1.(event _ _) *  G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
      match G1.(label _ _) (fst(st1)) , G1.(label _ _) (snd(st1))  with 
      | inl m , inr c => ( existsb_ind _ (fun step => match step with 
                                      | (st1', st2') => G2.(label _ _) st2' = inr c /\ G2.(label _ _) st1' = inl m
@@ -272,12 +272,12 @@ Abort.
  
  (* Inductively defined adversary subset *)
  Inductive time_subset_ind {G1 G2 : attackgraph measurement adversary} : 
- list (G1.(state _ _) * G1.(state _ _)) -> (list (G2.(state _ _) * G2.(state _ _))) -> Prop :=
+ list (G1.(event _ _) * G1.(event _ _)) -> (list (G2.(event _ _) * G2.(event _ _))) -> Prop :=
  | time_nil : forall y, time_subset_ind nil y
  | time_head : forall x xs y, find_time x y -> time_subset_ind xs y -> time_subset_ind (x::xs) y.
  
  (* Prove fixpoint definition is equal to inductive def *)
- Theorem time_subset_eq : forall G1 G2 (xs: list (G1.(state _ _) * G1.(state _ _))) ( ys : list (G2.(state _ _) * G2.(state _ _))), time_subset_ind xs ys <-> time_subset xs ys.
+ Theorem time_subset_eq : forall G1 G2 (xs: list (G1.(event _ _) * G1.(event _ _))) ( ys : list (G2.(event _ _) * G2.(event _ _))), time_subset_ind xs ys <-> time_subset xs ys.
  Proof.
      intros; split; intros.
      (* prove inductive implies fixpoint *)
@@ -312,9 +312,9 @@ Abort.
            rewrite Hfst in H. eauto.
  Qed.
  
- Lemma find_time_helper : forall G1 G2 G3 (x: (G1.(state _ _) * G1.(state _ _)))
-                          (ys:list (state measurement adversary G2 * state measurement adversary G2)), 
-                          find_time x ys -> forall (zs : list (G3.(state _ _) * G3.(state _ _))), time_subset_ind ys zs -> find_time x zs.
+ Lemma find_time_helper : forall G1 G2 G3 (x: (G1.(event _ _) * G1.(event _ _)))
+                          (ys:list (event measurement adversary G2 * event measurement adversary G2)), 
+                          find_time x ys -> forall (zs : list (G3.(event _ _) * G3.(event _ _))), time_subset_ind ys zs -> find_time x zs.
  Proof.
      intros G1 G2 G3 x ys H. intros. 
      unfold find_time in *. destruct (G1.(label _ _) (fst x)); auto.
@@ -339,9 +339,9 @@ Abort.
      ++ apply IHtime_subset_ind. auto. 
  Qed.
  
- Theorem time_subset_ind_trans : forall G1 G2 (xs : list (G1.(state _ _) * G1.(state _ _))) (ys : list (G2.(state _ _) * G2.(state _ _))), 
+ Theorem time_subset_ind_trans : forall G1 G2 (xs : list (G1.(event _ _) * G1.(event _ _))) (ys : list (G2.(event _ _) * G2.(event _ _))), 
  time_subset_ind xs ys -> 
- forall G3 (zs : list (G3.(state _ _) * G3.(state _ _))), time_subset_ind ys zs ->
+ forall G3 (zs : list (G3.(event _ _) * G3.(event _ _))), time_subset_ind ys zs ->
  time_subset_ind xs zs.
  Proof.
      intros G1 G2. intros xs ys Hxy. intros G3 zs Hyz.
@@ -354,21 +354,21 @@ Abort.
  
  (* Proper subset using the inductive definition *)
  Definition time_proper_subset {G1 G2 : attackgraph measurement adversary} 
- (x : list (G1.(state _ _) * G1.(state _ _))) (y : list (G2.(state _ _) * G2.(state _ _))) := time_subset_ind x y /\ ~ time_subset_ind y x.
+ (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) := time_subset_ind x y /\ ~ time_subset_ind y x.
  
- Theorem time_irr : forall (g1 : attackgraph measurement adversary) (x : list (g1.(state _ _) * g1.(state _ _)) ), ~ time_proper_subset x x.
+ Theorem time_irr : forall (g1 : attackgraph measurement adversary) (x : list (g1.(event _ _) * g1.(event _ _)) ), ~ time_proper_subset x x.
  Proof.
      intros. unfold time_proper_subset. unfold not. intros. inversion H. contradiction.
  Qed.
  
- Theorem time_asym : forall (g1 g2 : attackgraph measurement adversary)  (x : list (g1.(state _ _) * g1.(state _ _)) ) (y : list (g2.(state _ _) * g2.(state _ _)) ), time_proper_subset x y -> ~ time_proper_subset y x.
+ Theorem time_asym : forall (g1 g2 : attackgraph measurement adversary)  (x : list (g1.(event _ _) * g1.(event _ _)) ) (y : list (g2.(event _ _) * g2.(event _ _)) ), time_proper_subset x y -> ~ time_proper_subset y x.
  Proof.
      intros. unfold time_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
  Qed.
  
- Theorem time_trans : forall (g1 g2 g3 : attackgraph measurement adversary) (xs : list (g1.(state _ _) * g1.(state _ _)) ) (ys : list (g2.(state _ _) * g2.(state _ _)) ), 
+ Theorem time_trans : forall (g1 g2 g3 : attackgraph measurement adversary) (xs : list (g1.(event _ _) * g1.(event _ _)) ) (ys : list (g2.(event _ _) * g2.(event _ _)) ), 
  time_proper_subset xs ys -> 
- forall (zs : list (g3.(state _ _) * g3.(state _ _)) ), time_proper_subset ys zs -> 
+ forall (zs : list (g3.(event _ _) * g3.(event _ _)) ), time_proper_subset ys zs -> 
  time_proper_subset xs zs.
  Proof.
      unfold time_proper_subset in *. split.
@@ -381,7 +381,7 @@ Abort.
   ******************************)
 
  Definition strict_partial_order (g1 g2 : attackgraph measurement adversary) : Prop :=
-    (cor_subset_ind (g1.(steps _ _)) (g2.(steps _ _)) /\ time_subset_ind (g1.(steps _ _)) (g2.(steps _ _))) /\ (cor_proper_subset (g1.(steps _ _)) (g2.(steps _ _)) \/ time_proper_subset (g1.(steps _ _)) (g2.(steps _ _))).
+    (cor_subset_ind (g1.(edges _ _)) (g2.(edges _ _)) /\ time_subset_ind (g1.(edges _ _)) (g2.(edges _ _))) /\ (cor_proper_subset (g1.(edges _ _)) (g2.(edges _ _)) \/ time_proper_subset (g1.(edges _ _)) (g2.(edges _ _))).
  
  Theorem spo_irr : forall (g1 : attackgraph measurement adversary), ~ strict_partial_order g1 g1.
  Proof.

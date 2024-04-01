@@ -2,7 +2,7 @@
 By: Anna Fritz and Sarah Johnson
 Date: July 18, 2023 
 
-Idea of supports motivated by Paul Rowe's paper: 
+Idea of supports motivated by Paul Rowe'e paper: 
 "On Orderings in Security Models" *)
 
 Require Import Coq.Lists.List.
@@ -25,7 +25,7 @@ Require Import Coq.Program.Equality.
     CHASE analysis of a Copland Protocol generates 
     a set of graphs. We want to be able to compare 
     these sets of graphs so we introduce the idea 
-    of supports as motivated by Rowe's paper.
+    of supports as motivated by Rowe'e paper.
     *********)
 
 (********************************
@@ -41,7 +41,7 @@ Context {adversary : Type}.
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
- Hypothesis eqDec_state : forall (G : attackgraph measurement adversary) (x y : G.(state _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
  (* if g1 < g2 then g1 cannot equal g2. Important sanity check that our definitions make sense. *)
  Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement adversary), strict_partial_order g1 g2 -> ~ isomorphism g1 g2.
@@ -54,45 +54,45 @@ Context {adversary : Type}.
     destruct iso as [ste iso]. destruct iso as [lab iso]. destruct iso as [inj sur].
     destruct H1 as [g giso].
     destruct giso as [gste' giso]. destruct giso as [glab giso]. destruct giso as [ginj gsur].
-    assert (forall st1 st2 : state measurement adversary g2,
-            In (st1, st2) (steps measurement adversary g2) ->
-            In (g st1, g st2) (steps measurement adversary g1)) as gste.
+    assert (forall st1 st2 : event measurement adversary g2,
+            In (st1, st2) (edges measurement adversary g2) ->
+            In (g st1, g st2) (edges measurement adversary g1)) as gste.
     { intros. apply gste'. auto. } clear gste'. clear ste. clear lab.
      intuition.
     + destruct H0. intuition. apply H1.
       clear H1. clear H2. clear H. clear H0. 
-      induction (steps measurement adversary g2).    
+      induction (edges measurement adversary g2).    
     ++ econstructor.
     ++ econstructor.
     +++ unfold find_cor. 
         destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto. destruct a.
-        specialize gste with s s0. simpl in *. intuition.
+        specialize gste with e e0. simpl in *. intuition.
         clear H0. clear IHl.
-        induction (steps measurement adversary g1).
+        induction (edges measurement adversary g1).
     ++++ simpl in *. intuition.
     ++++ simpl in H1. destruct H1.
     +++++ destruct a. inversion H. econstructor.
-          pose proof (glab s) as glabs.
+          pose proof (glab e) as glabs.
           rewrite <- lab_g2. rewrite glabs. auto.
     +++++ apply ex_tail. apply IHl0. intuition.
     +++ apply IHl; auto with *.
     + destruct H0. intuition. apply H1.
       clear H1. clear H2. clear H0. clear H.
-      induction (steps measurement adversary g2).    
+      induction (edges measurement adversary g2).    
     ++ econstructor.
     ++ econstructor.
     +++ unfold find_time. 
         destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto.
         destruct (label measurement adversary g2 (snd a)) eqn:lab_g22; eauto. 
-        destruct a. specialize gste with s s0. simpl in *. intuition.
+        destruct a. specialize gste with e e0. simpl in *. intuition.
         clear H0. clear IHl.  
-        induction (steps measurement adversary g1).
+        induction (edges measurement adversary g1).
   ++++ simpl in *. intuition.
   ++++ simpl in H1. destruct H1.
   +++++ destruct a. inversion H. econstructor. intuition.
-        pose proof (glab s0) as glabs0.
+        pose proof (glab e0) as glabs0.
         rewrite <- lab_g22. rewrite glabs0. auto.
-        pose proof (glab s) as glabs.
+        pose proof (glab e) as glabs.
         rewrite <- lab_g2. rewrite glabs. auto.
   +++++ apply ex_tail. apply IHl0. intuition.
   +++ apply IHl; auto with *.

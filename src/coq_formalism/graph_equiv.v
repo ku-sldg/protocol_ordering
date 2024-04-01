@@ -28,22 +28,22 @@ Context {adversary : Type}.
 (* Labels and States must have decidable equality *)
 Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
 Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
-Hypothesis eqDec_state : forall (G : attackgraph measurement adversary) (x y : G.(state _ _)), {x = y} + {x <> y}.
+Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
 
 (************************
  * DEFINING HOMOMORPHISM 
- * state condition and 
+ * event condition and 
  * label condition *)
-Definition homomorphism (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  
-    (forall st1 st2, In (st1,st2) g1.(steps _ _) -> In ((f st1) ,(f st2)) g2.(steps _ _))    
+Definition homomorphism (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(event _ _) -> g2.(event _ _)) : Prop :=  
+    (forall st1 st2, In (st1,st2) g1.(edges _ _) -> In ((f st1) ,(f st2)) g2.(edges _ _))    
     /\
-    (forall st1 st2, In (st1,st2) g1.(steps _ _) -> 
+    (forall st1 st2, In (st1,st2) g1.(edges _ _) -> 
         g1.(label _ _) st1 = g2.(label _ _) (f st1) /\ g1.(label _ _) st2 = g2.(label _ _) (f st2)).
 
 
 (* might be helpful to prove homomorphism is reflexive and transitive *)
-Lemma homomorphism_refl : forall g1, exists (f : g1.(state _ _) -> g1.(state _ _)), homomorphism g1 g1 f.
+Lemma homomorphism_refl : forall g1, exists (f : g1.(event _ _) -> g1.(event _ _)), homomorphism g1 g1 f.
 Proof.
     intros.
     unfold homomorphism.
@@ -77,8 +77,8 @@ specialize H3 with (f12 st1) (f12 st2); intuition.
 rewrite  H5. eauto.
 Qed. 
 
-Theorem in_dec_state : forall (G : attackgraph measurement adversary) (a : state measurement adversary G) (l : list (state measurement adversary G)), 
-(forall (x y : state measurement adversary G),
+Theorem in_dec_event : forall (G : attackgraph measurement adversary) (a : event measurement adversary G) (l : list (event measurement adversary G)), 
+(forall (x y : event measurement adversary G),
 {x = y} + {x <> y}) -> 
 {In a l} + {~ In a l} .
 Proof.
@@ -93,10 +93,10 @@ Proof.
   ++++ contradiction.  
 Qed.
 
-Theorem in_dec_steps : forall (a : attackgraph measurement adversary) 
-(a' : (state measurement adversary a * state measurement adversary a))
-(l :list ((state measurement adversary a * state measurement adversary a))), 
-(forall x y : (state measurement adversary a * state measurement adversary a),
+Theorem in_dec_edges : forall (a : attackgraph measurement adversary) 
+(a' : (event measurement adversary a * event measurement adversary a))
+(l :list ((event measurement adversary a * event measurement adversary a))), 
+(forall x y : (event measurement adversary a * event measurement adversary a),
 {x = y} + {x <> y}) -> 
 {In a' l} + {~ In a' l} .
 Proof.
@@ -111,11 +111,11 @@ Proof.
   ++++ contradiction.
 Qed.            
 
-Theorem  step_eq_dec : forall (a: attackgraph measurement adversary) (x y : state measurement adversary a * state measurement adversary a), {x = y} + {x <> y}.
+Theorem  step_eq_dec : forall (a: attackgraph measurement adversary) (x y : event measurement adversary a * event measurement adversary a), {x = y} + {x <> y}.
 Proof.
   intros. destruct x. destruct y.
-  destruct (eqDec_state a s s1); subst.
-  + destruct (eqDec_state a s0 s2); subst.
+  destruct (eqDec_event a e e1); subst.
+  + destruct (eqDec_event a e0 e2); subst.
   ++ left. reflexivity.
   ++ right. unfold not. intros. inversion H.
      contradiction.
@@ -124,7 +124,7 @@ Proof.
 Qed.       
 
 Lemma list_eq_dec' : forall (a: attackgraph measurement adversary) 
-(l l' :list (state measurement adversary a * state measurement adversary a)),
+(l l' :list (event measurement adversary a * event measurement adversary a)),
 {l = l'} + {l <> l'}.
 Proof.
   intros. 
@@ -135,12 +135,12 @@ Qed.
 
 (************************
  * DEFINING ISOMORPHISM 
- * state condition and 
+ * event condition and 
  * label condition and
  * injective condition and
  * surjective condition *)
- Definition iso (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(state _ _) -> g2.(state _ _)) : Prop :=  
-    (forall st1 st2, In (st1,st2) g1.(steps _ _) <-> In ((f st1) ,(f st2)) g2.(steps _ _))    
+ Definition iso (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(event _ _) -> g2.(event _ _)) : Prop :=  
+    (forall st1 st2, In (st1,st2) g1.(edges _ _) <-> In ((f st1) ,(f st2)) g2.(edges _ _))    
     /\
     (forall st, g1.(label _ _) st = g2.(label _ _) (f st))
     /\

@@ -23,7 +23,7 @@ Context {adversary : Type}.
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
- Hypothesis eqDec_state : forall (G : attackgraph measurement adversary) (x y : G.(state _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
  (******* DEFINING PARTIAL ORDER (PO) ********
   **         =  \/  <   ->     <= *)
@@ -51,7 +51,7 @@ Qed.
  ** helper lemmas which prove 
  ** useful for transitivity *)
 Lemma cor_meas_label_ : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary) 
-(l : (list (state measurement adversary G3 * state measurement adversary G3))) m (l' : list (state measurement adversary G2 * state measurement adversary G2)) a,  label measurement adversary G3 (fst a) = inl m -> cor_subset_ind l' (a :: l) -> cor_subset_ind l' l.
+(l : (list (event measurement adversary G3 * event measurement adversary G3))) m (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  label measurement adversary G3 (fst a) = inl m -> cor_subset_ind l' (a :: l) -> cor_subset_ind l' l.
 Proof.
   intros. remember (a::l) as list1.   induction H0.
   + econstructor.   
@@ -68,7 +68,7 @@ Proof.
 Qed. 
 
 Lemma time_meas_label_ : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary) 
-(l : (list (state measurement adversary G3 * state measurement adversary G3))) m1 m2 c (l' : list (state measurement adversary G2 * state measurement adversary G2)) a,  ((label measurement adversary G3 (fst a) = inl m1 /\ label measurement adversary G3 (snd a) = inl m2) \/  (label measurement adversary G3 (fst a)) = inr c) -> time_subset_ind l' (a :: l) -> time_subset_ind l' l.
+(l : (list (event measurement adversary G3 * event measurement adversary G3))) m1 m2 c (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  ((label measurement adversary G3 (fst a) = inl m1 /\ label measurement adversary G3 (snd a) = inl m2) \/  (label measurement adversary G3 (fst a)) = inr c) -> time_subset_ind l' (a :: l) -> time_subset_ind l' l.
 Proof.
   intros. remember (a::l) as list1. destruct H as [ms | cs].
   + induction H0.
@@ -92,7 +92,7 @@ Proof.
   +++ inversion H3; subst. eauto.
 Qed. 
 
-Lemma cor_subset_not_nil_if_c : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary)  a (l : (list (state measurement adversary G3 * state measurement adversary G3))) (l' : (list (state measurement adversary G2 * state measurement adversary G2))) c, 
+Lemma cor_subset_not_nil_if_c : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary)  a (l : (list (event measurement adversary G3 * event measurement adversary G3))) (l' : (list (event measurement adversary G2 * event measurement adversary G2))) c, 
 l' = nil -> label measurement adversary G3 (fst a) = inr c -> cor_subset_ind (a :: l) l' -> False.
 Proof.
   intros. subst. simpl in *. inversion H1; subst.
@@ -105,47 +105,47 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
   unfold isomorphism in H0.
   destruct H0 as [f iso].
   destruct iso as [ste' iso]. destruct iso as [lab iso]. destruct iso as [inj sur].
-  assert (forall st1 st2 : state measurement adversary G1,
-          In (st1, st2) (steps measurement adversary G1) ->
-          In (f st1, f st2) (steps measurement adversary G2)) as ste.
+  assert (forall st1 st2 : event measurement adversary G1,
+          In (st1, st2) (edges measurement adversary G1) ->
+          In (f st1, f st2) (edges measurement adversary G2)) as ste.
   { intros. apply ste'. auto. }
   clear ste'.
   unfold strict_partial_order in *...
   (* goal: cor subset *)
   + clear H. clear H2. 
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a.
      eapply find_cor_helper;  eauto.
      unfold find_cor.
-     destruct (label measurement adversary G1 (fst (s, s0))) eqn:lab'; eauto.
+     destruct (label measurement adversary G1 (fst (e, e0))) eqn:lab'; eauto.
      simpl in *. intuition. clear IHl.
      clear H1.
-     specialize ste with s s0.
+     specialize ste with e e0.
      intuition.
-     induction (steps measurement adversary G2)...
+     induction (edges measurement adversary G2)...
      simpl in *. inversion H1.
      simpl in *. destruct a0... 
   +++ inversion H. econstructor. 
-      pose proof (lab s) as labs.
+      pose proof (lab e) as labs.
       rewrite <- lab'. rewrite labs. auto.
   +++ apply ex_tail. apply H2. 
   ++ apply IHl; auto with *.
   (* goal: time subset  *)
   + clear H. clear H1.
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a.
      eapply find_time_helper; eauto.
      unfold find_time.
-     destruct (label measurement adversary G1 (fst (s, s0))) eqn:fst; eauto.
-     destruct (label measurement adversary G1 (snd (s, s0))) eqn:snd; eauto.
+     destruct (label measurement adversary G1 (fst (e, e0))) eqn:fst; eauto.
+     destruct (label measurement adversary G1 (snd (e, e0))) eqn:snd; eauto.
      simpl in *... clear IHl. clear H2.
-     specialize ste with s s0.
+     specialize ste with e e0.
      intuition. 
-     induction (steps measurement adversary G2).
+     induction (edges measurement adversary G2).
      simpl in *. inversion H1.
      simpl in *. destruct a0...
   +++ inversion H. econstructor.
-      pose proof (lab s) as labs. pose proof (lab s0) as labs0. 
+      pose proof (lab e) as labs. pose proof (lab e0) as labs0. 
       split; intuition. rewrite <- snd. rewrite labs0. auto.
       rewrite <- fst. rewrite labs. auto.
   +++ apply ex_tail. apply H2.
@@ -155,33 +155,33 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
     unfold cor_proper_subset. intuition.
   ++ unfold cor_proper_subset in H...
      clear H2. clear H1. clear H3.
-     induction (steps measurement adversary G1); econstructor.
+     induction (edges measurement adversary G1); econstructor.
   +++ destruct a.
       eapply find_cor_helper;  eauto.
       unfold find_cor.
-      destruct (label measurement adversary G1 (fst (s, s0))) eqn:lab'; eauto.
+      destruct (label measurement adversary G1 (fst (e, e0))) eqn:lab'; eauto.
       simpl in *. intuition. clear IHl. clear H0.
-      specialize ste with s s0.
+      specialize ste with e e0.
       intuition. 
-      induction (steps measurement adversary G2).
+      induction (edges measurement adversary G2).
       simpl in *. inversion H1.
       simpl in *. destruct a0...
-  ++++ inversion H. econstructor. pose proof (lab s) as labs.
+  ++++ inversion H. econstructor. pose proof (lab e) as labs.
        intuition. rewrite <- lab'. rewrite labs. auto.
   ++++ apply ex_tail. apply H2.
   +++ apply IHl; auto with *.
   ++ unfold cor_proper_subset in H... apply H4.
       clear H4. clear H1. clear H2. clear H3.
-      induction (steps measurement adversary G3); econstructor. 
+      induction (edges measurement adversary G3); econstructor. 
   +++ destruct a.
       inversion H0; subst.
       eapply find_cor_helper; eauto. clear IHl. clear H4. clear H2. clear H0.
-      induction (steps measurement adversary G1); econstructor.
+      induction (edges measurement adversary G1); econstructor.
   ++++ unfold find_cor in *. 
       destruct (label measurement adversary G1 (fst a)) eqn:lab'; eauto.
-      destruct a. pose proof (lab s1) as labs1. pose proof (lab s2) as labs2. simpl in *...
-      specialize ste with s1 s2. simpl in *... clear IHl0.
-      induction (steps measurement adversary G2).
+      destruct a. pose proof (lab e1) as labs1. pose proof (lab e2) as labs2. simpl in *...
+      specialize ste with e1 e2. simpl in *... clear IHl0.
+      induction (edges measurement adversary G2).
       inversion H1.
       simpl in *.
       destruct H1.
@@ -191,36 +191,36 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
   +++ eapply IHl. inversion H0...
   (* goal adversary subset *)
   + clear H. clear H2.
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a.
      eapply find_cor_helper;  eauto.
      unfold find_cor.
-     destruct (label measurement adversary G1 (fst (s, s0))) eqn:lab'; eauto.
+     destruct (label measurement adversary G1 (fst (e, e0))) eqn:lab'; eauto.
      simpl in *. intuition. clear IHl.
-     clear H1. specialize ste with s s0. intuition. 
-     induction (steps measurement adversary G2)...
+     clear H1. specialize ste with e e0. intuition. 
+     induction (edges measurement adversary G2)...
      simpl in *. inversion H1.
      simpl in *. destruct a0... 
-  +++ inversion H. econstructor. pose proof (lab s) as labs.
+  +++ inversion H. econstructor. pose proof (lab e) as labs.
       rewrite <- lab'. rewrite labs. auto.
   +++ apply ex_tail. apply H2.
   ++ apply IHl; auto with *.
   (* goal : time subset *) 
   + clear H. clear H1. 
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a.
      eapply find_time_helper; eauto.
      unfold find_time.
-     destruct (label measurement adversary G1 (fst (s, s0))) eqn:fst; eauto.
-     destruct (label measurement adversary G1 (snd (s, s0))) eqn:snd; eauto.
+     destruct (label measurement adversary G1 (fst (e, e0))) eqn:fst; eauto.
+     destruct (label measurement adversary G1 (snd (e, e0))) eqn:snd; eauto.
      simpl in *... clear IHl. clear H2.
-     specialize ste with s s0.
+     specialize ste with e e0.
      intuition. 
-     induction (steps measurement adversary G2).
+     induction (edges measurement adversary G2).
      simpl in *. inversion H1.
      simpl in *. destruct a0...
   +++ inversion H. econstructor. 
-      pose proof (lab s) as labs. pose proof (lab s0) as labs0. 
+      pose proof (lab e) as labs. pose proof (lab e0) as labs0. 
       split; intuition. rewrite <- snd. rewrite labs0. auto.
       rewrite <- fst. rewrite labs. auto.
   +++ apply ex_tail. apply H2.
@@ -229,38 +229,38 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
   + right.
     unfold time_proper_subset. intuition.
   ++ unfold time_proper_subset in H... clear H2. clear H1. clear H3.
-     induction (steps measurement adversary G1); econstructor.
+     induction (edges measurement adversary G1); econstructor.
   +++ destruct a.
       eapply find_time_helper;  eauto; unfold find_time.
-      destruct (label measurement adversary G1 (fst (s, s0))) eqn:lab'; eauto.
-      destruct (label measurement adversary G1 (snd (s, s0))) eqn:lab''; eauto.
+      destruct (label measurement adversary G1 (fst (e, e0))) eqn:lab'; eauto.
+      destruct (label measurement adversary G1 (snd (e, e0))) eqn:lab''; eauto.
       simpl in *... clear IHl. clear H0.
-      specialize ste with s s0...
-      induction (steps measurement adversary G2).
+      specialize ste with e e0...
+      induction (edges measurement adversary G2).
       simpl in *. inversion H1.
       simpl in *. destruct a0...
   ++++ inversion H. econstructor. 
-       pose proof (lab s) as labs. pose proof (lab s0) as labs0. 
+       pose proof (lab e) as labs. pose proof (lab e0) as labs0. 
        split; intuition. rewrite <- lab''. rewrite labs0. eauto.
        rewrite <- lab'. rewrite labs...
   ++++ apply ex_tail. apply H2.
   +++ apply IHl; auto with *.
   ++ unfold time_proper_subset in H... apply H4.
      clear H4. clear H1. clear H2. clear H3.
-     induction (steps measurement adversary G3); econstructor. 
+     induction (edges measurement adversary G3); econstructor. 
   +++ destruct a.
       inversion H0; subst.
       eapply find_time_helper; eauto. clear IHl. clear H4. clear H2. clear H0.
-      induction (steps measurement adversary G1); econstructor.
+      induction (edges measurement adversary G1); econstructor.
   ++++ unfold find_time in *. 
        destruct (label measurement adversary G1 (fst a)) eqn:lab'; eauto.
        destruct (label measurement adversary G1 (snd a)) eqn:lab''; eauto.
        destruct a. simpl in *...
-       specialize ste with s1 s2. simpl in *... clear IHl0.
-       induction (steps measurement adversary G2).
+       specialize ste with e1 e2. simpl in *... clear IHl0.
+       induction (edges measurement adversary G2).
        inversion H1. simpl in *. destruct H1.
   +++++ destruct a. inversion H.
-        pose proof (lab s1) as labs1. pose proof (lab s2) as labs2.
+        pose proof (lab e1) as labs1. pose proof (lab e2) as labs2.
         apply ex_head... rewrite <- lab''. rewrite labs2. reflexivity.
         rewrite <- lab'. rewrite labs1...
   +++++ apply ex_tail. eapply IHl1...
@@ -275,48 +275,48 @@ Proof with intuition.
   unfold isomorphism in H0.
   destruct H0 as [f iso].
   destruct iso as [ste' iso]. destruct iso as [lab iso]. destruct iso as [inj sur].
-  assert (forall st1 st2 : state measurement adversary G2,
-          In (st1, st2) (steps measurement adversary G2) ->
-          In (f st1, f st2) (steps measurement adversary G3)) as ste.
+  assert (forall st1 st2 : event measurement adversary G2,
+          In (st1, st2) (edges measurement adversary G2) ->
+          In (f st1, f st2) (edges measurement adversary G3)) as ste.
   { intros. apply ste'. auto. }
   clear ste'.
   unfold strict_partial_order in *...
   (* goal: cor subset *)
   + clear H. clear H2. 
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a.
      inversion H1; subst.  
      eapply find_cor_helper;  eauto.
      unfold find_cor. clear IHl. clear H1. clear H2. clear H4.
-     induction (steps measurement adversary G2); econstructor.
+     induction (edges measurement adversary G2); econstructor.
   +++ destruct a.  unfold find_cor. 
-      destruct (label measurement adversary G2 (fst (s1, s2))) eqn:lab'; 
+      destruct (label measurement adversary G2 (fst (e1, e2))) eqn:lab'; 
       eauto. simpl in *.
-      specialize ste with s1 s2. simpl in *... clear IHl0.
-      induction (steps measurement adversary G3)... inversion H1. simpl in *...
-      econstructor. destruct a0. inversion H. pose proof (lab s1) as labs1.
+      specialize ste with e1 e2. simpl in *... clear IHl0.
+      induction (edges measurement adversary G3)... inversion H1. simpl in *...
+      econstructor. destruct a0. inversion H. pose proof (lab e1) as labs1.
       rewrite <- lab'. rewrite labs1... apply ex_tail...
   +++ apply IHl0; auto with *.
   ++ inversion H1... 
   (* goal: time subset *) 
   + clear H. clear H1.
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a.
      inversion H2; subst.  
      eapply find_time_helper;  eauto. 
      clear IHl. clear H1. clear H2. clear H4.
-     induction (steps measurement adversary G2); econstructor.
+     induction (edges measurement adversary G2); econstructor.
   +++ destruct a.  unfold find_time. 
-      destruct (label measurement adversary G2 (fst (s1, s2))) eqn:lab'; eauto. 
-      destruct (label measurement adversary G2 (snd (s1, s2))) eqn:lab''; eauto. 
+      destruct (label measurement adversary G2 (fst (e1, e2))) eqn:lab'; eauto. 
+      destruct (label measurement adversary G2 (snd (e1, e2))) eqn:lab''; eauto. 
       simpl in *.
-      specialize ste with s1 s2. simpl in *... clear IHl0.
-      induction (steps measurement adversary G3)... inversion H1.
+      specialize ste with e1 e2. simpl in *... clear IHl0.
+      induction (edges measurement adversary G3)... inversion H1.
       simpl in *...
       econstructor. destruct a0. inversion H...
-      pose proof (lab s2) as labs2.
+      pose proof (lab e2) as labs2.
       rewrite <- lab''; rewrite labs2...
-      pose proof (lab s1) as labs1.
+      pose proof (lab e1) as labs1.
       rewrite <- lab'; rewrite labs1...
       apply ex_tail...
   +++ apply IHl0; auto with *.
@@ -324,70 +324,70 @@ Proof with intuition.
   (* goal: cor proper *)
   + left. unfold cor_proper_subset in *...
   ++ clear H3. clear H2. clear H1.
-     induction (steps measurement adversary G1); econstructor.
+     induction (edges measurement adversary G1); econstructor.
   +++ destruct a.
       inversion H0; subst.  
       eapply find_cor_helper;  eauto.
       clear IHl. clear H0. clear H2. clear H4.
-      induction (steps measurement adversary G2); econstructor.
+      induction (edges measurement adversary G2); econstructor.
   ++++ destruct a.  unfold find_cor. 
-       destruct (label measurement adversary G2 (fst (s1, s2))) eqn:lab'; eauto. 
-       specialize ste with s1 s2.
+       destruct (label measurement adversary G2 (fst (e1, e2))) eqn:lab'; eauto. 
+       specialize ste with e1 e2.
        simpl in *... clear IHl0.
-       induction (steps measurement adversary G3)... inversion H1.
+       induction (edges measurement adversary G3)... inversion H1.
        simpl in *...
        econstructor. destruct a0. inversion H.
-       pose proof (lab s1) as labs1. rewrite <- lab'. rewrite labs1. auto.
+       pose proof (lab e1) as labs1. rewrite <- lab'. rewrite labs1. auto.
        apply ex_tail...
   ++++ apply IHl0; auto with *.
   +++ inversion H0...
   ++ apply H3. clear H1. clear H2. clear H0. clear H3.
-     induction (steps measurement adversary G2); econstructor.
+     induction (edges measurement adversary G2); econstructor.
   +++ eapply find_cor_helper; eauto. destruct a.
-      unfold find_cor. destruct (label measurement adversary G2 (fst (s,s0))) eqn:lab'; eauto.
-      specialize ste with s s0. simpl in *... clear IHl.
-      induction (steps measurement adversary G3).
+      unfold find_cor. destruct (label measurement adversary G2 (fst (e,e0))) eqn:lab'; eauto.
+      specialize ste with e e0. simpl in *... clear IHl.
+      induction (edges measurement adversary G3).
       inversion H2. simpl in *. destruct H2.
       destruct a0. inversion H0. apply ex_head.
-      pose proof (lab s) as labs. rewrite <- lab'. rewrite labs...
+      pose proof (lab e) as labs. rewrite <- lab'. rewrite labs...
       apply ex_tail. eapply IHl0... auto with *.
       inversion H; eauto.
   +++ apply IHl; auto with *.  
   (* goal: cor subset *)
   + clear H. clear H2.
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a.
      inversion H1; subst.  
      eapply find_cor_helper;  eauto.
      unfold find_cor. clear IHl. clear H1. clear H2. clear H4.
-     induction (steps measurement adversary G2); econstructor.
+     induction (edges measurement adversary G2); econstructor.
   +++ destruct a.  unfold find_cor. 
-      destruct (label measurement adversary G2 (fst (s1, s2))) eqn:lab'; eauto. 
+      destruct (label measurement adversary G2 (fst (e1, e2))) eqn:lab'; eauto. 
       simpl in *.
-      specialize ste with s1 s2. simpl in *... clear IHl0.
-      induction (steps measurement adversary G3)... inversion H1. simpl in *...
+      specialize ste with e1 e2. simpl in *... clear IHl0.
+      induction (edges measurement adversary G3)... inversion H1. simpl in *...
       econstructor. destruct a0. inversion H.
-      pose proof (lab s1) as labs1. rewrite <- lab'. rewrite labs1...
+      pose proof (lab e1) as labs1. rewrite <- lab'. rewrite labs1...
       apply ex_tail...
   +++ apply IHl0; auto with *.
   ++ inversion H1...
   (* goal: time subset *) 
   + clear H. clear H1.
-    induction (steps measurement adversary G1); econstructor.
+    induction (edges measurement adversary G1); econstructor.
   ++ destruct a. inversion H2; subst.  
      eapply find_time_helper;  eauto. clear IHl. clear H1. clear H2. clear H4.
-     induction (steps measurement adversary G2); econstructor.
+     induction (edges measurement adversary G2); econstructor.
   +++ destruct a.  unfold find_time. 
-      destruct (label measurement adversary G2 (fst (s1, s2))) eqn:lab'; eauto. 
-      destruct (label measurement adversary G2 (snd (s1, s2))) eqn:lab''; eauto.
+      destruct (label measurement adversary G2 (fst (e1, e2))) eqn:lab'; eauto. 
+      destruct (label measurement adversary G2 (snd (e1, e2))) eqn:lab''; eauto.
       simpl in *.
-      specialize ste with s1 s2. simpl in *... clear IHl0.
-      induction (steps measurement adversary G3)... inversion H1.
+      specialize ste with e1 e2. simpl in *... clear IHl0.
+      induction (edges measurement adversary G3)... inversion H1.
       simpl in *...
       econstructor. destruct a0. inversion H...
-      pose proof (lab s2) as labs2.
+      pose proof (lab e2) as labs2.
       rewrite <- lab''; rewrite labs2...
-      pose proof (lab s1) as labs1.
+      pose proof (lab e1) as labs1.
       rewrite <- lab'; rewrite labs1...
       apply ex_tail...
   +++ apply IHl0; auto with *.
@@ -395,38 +395,38 @@ Proof with intuition.
   (* goal: time proper *)
   + right. unfold time_proper_subset in *...
   ++ clear H1. clear H2. clear H3.
-     induction (steps measurement adversary G1); econstructor.
+     induction (edges measurement adversary G1); econstructor.
   +++ destruct a. inversion H0; subst.  
       eapply find_time_helper;  eauto.
       clear IHl. clear H0. clear H2. clear H4.
-      induction (steps measurement adversary G2); econstructor.
+      induction (edges measurement adversary G2); econstructor.
   ++++ destruct a.  unfold find_time. 
-       destruct (label measurement adversary G2 (fst (s1, s2))) eqn:lab'; eauto.
-       destruct (label measurement adversary G2 (snd (s1, s2))) eqn:lab''; eauto.
+       destruct (label measurement adversary G2 (fst (e1, e2))) eqn:lab'; eauto.
+       destruct (label measurement adversary G2 (snd (e1, e2))) eqn:lab''; eauto.
        simpl in *.
-       specialize ste with s1 s2. simpl in *... clear IHl0.
-       induction (steps measurement adversary G3)... inversion H1.
+       specialize ste with e1 e2. simpl in *... clear IHl0.
+       induction (edges measurement adversary G3)... inversion H1.
        simpl in *...
        econstructor. destruct a0; inversion H...
-       pose proof (lab s2) as labs2.
+       pose proof (lab e2) as labs2.
        rewrite <- lab''. rewrite labs2...
-       pose proof (lab s1) as labs1.
+       pose proof (lab e1) as labs1.
        rewrite <- lab'. rewrite labs1... 
        apply ex_tail...
   ++++ apply IHl0; auto with *.
   +++ inversion H0...
   ++ apply H3. clear H1. clear H2. clear H0. clear H3.
-     induction (steps measurement adversary G2); econstructor.
+     induction (edges measurement adversary G2); econstructor.
   +++ eapply find_time_helper; eauto. destruct a.
       unfold find_time. 
-      destruct (label measurement adversary G2 (fst (s,s0))) eqn:lab'; eauto.
-      destruct (label measurement adversary G2 (snd (s, s0))) eqn:lab''; eauto.
-      specialize ste with s s0. simpl in *... clear IHl.
-      induction (steps measurement adversary G3).
+      destruct (label measurement adversary G2 (fst (e,e0))) eqn:lab'; eauto.
+      destruct (label measurement adversary G2 (snd (e, e0))) eqn:lab''; eauto.
+      specialize ste with e e0. simpl in *... clear IHl.
+      induction (edges measurement adversary G3).
       inversion H2. simpl in *. destruct H2.
       destruct a0. inversion H0. apply ex_head. split.
-      pose proof (lab s0) as labs0. rewrite <- labs0. rewrite lab''...
-      pose proof (lab s) as labs. rewrite <- lab'. rewrite labs...
+      pose proof (lab e0) as labs0. rewrite <- labs0. rewrite lab''...
+      pose proof (lab e) as labs. rewrite <- lab'. rewrite labs...
       apply ex_tail. eapply IHl0... auto with *.
       inversion H; eauto.
   +++ apply IHl; auto with *.

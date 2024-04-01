@@ -6,7 +6,7 @@ Require Import Coq.Lists.List.
  ** measurement and adversary events *)
 Record attackgraph (measurement adversary : Type) : Type := 
 {
-    state : Type ;
-    steps : list (state * state) ;
-    label : state -> measurement + adversary
+    event : Type ;
+    edges : list (event * event) ;
+    label : event -> measurement + adversary
 }.
