@@ -115,7 +115,7 @@ Proof.
 Qed.
 
 (* supports is transitive *)
-Theorem  supports_trans' : forall x y z, supports x y -> supports y z -> supports x z.
+Theorem  supports_trans : forall x y z, supports x y -> supports y z -> supports x z.
 Proof with intuition.
 Proof.
   intros. unfold supports in *.
