@@ -10,5 +10,7 @@ parameterized_graph_partial_order.v
 supports_facts.v
 set_equiv.v
 set_order.v
+parameterized_set_order.v
 set_reduce.v
+parameterized_set_reduce.v
 compare.v
