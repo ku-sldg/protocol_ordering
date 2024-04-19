@@ -8,14 +8,14 @@ Idea of supports motivated by Paul Rowe'e paper:
 Require Import Coq.Lists.List.
 
 Require Import Order.attack_graph.
-Require Import Order.graph_strict_partial_order.
+Require Import Order.parameterized_graph_strict_partial_order.
 Require Import Order.graph_normalization.
 Require Import Order.graph_equiv.
 Require Import Order.utilities.
-Require Import Order.graph_partial_order.
+Require Import Order.parameterized_graph_partial_order.
 Require Import Order.supports_facts.
 Require Import Order.set_equiv.
-Require Import Order.set_reduce.
+Require Import Order.parameterized_set_reduce.
 
 Require Import Coq.Program.Equality.
 
@@ -33,7 +33,7 @@ Require Import Coq.Program.Equality.
  * FOR LISTS OF ATTACK GRAPHS 
  *********************************)
 
-Section Supports_List. 
+Section Parameterized_Supports_List. 
 
 Context {measurement : Type}.
 Context {adversary : Type}.
@@ -42,6 +42,14 @@ Context {adversary : Type}.
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
  Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
+
+ Context {adv_event_spo : adversary -> adversary -> Prop}.
+ 
+Hypothesis adv_event_spo_irrefl : forall (x : adversary), ~ adv_event_spo x x.
+Hypothesis adv_event_spo_asym : forall (x y :adversary), adv_event_spo x y -> ~ adv_event_spo y x.
+Hypothesis adv_event_spo_trans : forall (x y z : adversary), adv_event_spo x y -> adv_event_spo y z -> adv_event_spo x z.
+
+Let strict_partial_order := @strict_partial_order measurement adversary adv_event_spo.
 
  (* if g1 < g2 then g1 cannot equal g2. Important sanity check that our definitions make sense. *)
  Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement adversary), strict_partial_order g1 g2 -> ~ isomorphism g1 g2.
@@ -58,7 +66,7 @@ Context {adversary : Type}.
             In (st1, st2) (edges measurement adversary g2) ->
             In (g st1, g st2) (edges measurement adversary g1)) as gste.
     { intros. apply gste'. auto. } clear gste'. clear ste. clear lab.
-     intuition.
+     unfold parameterized_graph_strict_partial_order.strict_partial_order in *. intuition.
     + destruct H0. intuition. apply H1.
       clear H1. clear H2. clear H. clear H0. 
       induction (edges measurement adversary g2).    
@@ -136,7 +144,7 @@ Qed.
 ********************************)
 
 Theorem getallchains_supports_y : forall x y y',
-  getAllChains y y y' -> 
+  (@getAllChains _ _ adv_event_spo y y y') -> 
   supports x y ->
   supports x y'.
 Proof.
@@ -145,7 +153,7 @@ Proof.
 Qed.
 
 Theorem getallchains_supports_x : forall x y x',
-  getAllChains x x x' ->
+  (@getAllChains _ _ adv_event_spo x x x') ->
   x <> nil ->
   supports x y ->
   supports x' y.
@@ -155,7 +163,7 @@ Proof.
   pose proof HInY as HSup.
   apply Sup in HSup. clear Sup.
   destruct HSup as [G HSup]. destruct HSup as [GInX HLeq].
-  pose proof (getallchains_result x x' HChains G GInX) as HRes.
+  pose proof (@getallchains_result _ _ adv_event_spo adv_event_spo_trans x x' HChains G GInX) as HRes.
   destruct HRes as [G' HRes]. destruct HRes as [G'InX' G'LeqG].
   exists G'. split; auto. eapply po_trans; eauto.
 Qed.
@@ -169,7 +177,7 @@ Qed.
 Theorem  supports_antisym : forall x y x' y', 
 y <> nil -> x <> nil -> 
 supports x y -> supports y x -> 
-getAllChains x x x' -> getAllChains y y y' -> set_eq x' y'.
+(@getAllChains _ _ adv_event_spo x x x') -> (@getAllChains _ _ adv_event_spo y y y') -> set_eq x' y'.
 Proof.
   intros X Y. intros X' Y'.
   intros YNil XNil supXY supYX.
@@ -189,7 +197,7 @@ Proof.
   -- pose proof (supY'X' G GInX'). destruct H0 as [F H0].
     destruct H0 as [FInY' FLeqG].
     destruct FLeqG as [FEqG | FLeG].
-  --- pose proof (po_trans_helper F G H).
+  --- pose proof (po_trans_helper adv_event_spo_trans F G H).
       assert (isomorphism F G /\ strict_partial_order G H) by auto.
       apply H0 in H1. clear H0.
       pose proof (getallchains_not_spo Y Y' chainsY' F FInY' H HInY'). contradiction.
@@ -203,7 +211,7 @@ Proof.
   -- pose proof (supX'Y' G GInY'). destruct H0 as [F H0].
      destruct H0 as [FInX' FLeqG].
      destruct FLeqG as [FEqG | FLeG].
-  --- pose proof (po_trans_helper F G H).
+  --- pose proof (po_trans_helper adv_event_spo_trans F G H).
       assert (isomorphism F G /\ strict_partial_order G H) by auto.
       apply H0 in H1. clear H0.
       pose proof (getallchains_not_spo X X' chainsX' F FInX' H HInX'). contradiction.
@@ -213,4 +221,4 @@ Proof.
 Qed.
  
 
-End Supports_List.
+End Parameterized_Supports_List.

@@ -13,11 +13,11 @@ Section Supports_Facts.
 Context {measurement : Type}.
 Context {adversary : Type}.
 
-(* prove supports is a bidirectional homomorphism when the graph equivalence 
+(* prove supports is a preorder when the graph equivalence 
   * relation is applied *) 
 Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
     forall (H : (attackgraph measurement adversary)), In H TT ->
-    (exists (G : (attackgraph measurement adversary)), In G SS /\ bidir_homo G H).
+    (exists (G : (attackgraph measurement adversary)), In G SS /\ isomorphism G H).
     
     (* Prove properties of supports_iso 
     * reflexive, and transitive *)
@@ -25,7 +25,7 @@ Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : li
     Proof.
     intros. unfold supports_iso. intros.
     exists H. intuition.
-    pose proof (bidir_homo_refl H). eauto.
+    pose proof (iso_refl H). eauto.
     Qed.
     
     Theorem  supports_iso_trans : forall x y z, supports_iso x y -> supports_iso y z -> supports_iso x z.
@@ -40,7 +40,7 @@ Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : li
     destruct H0 as [C H0].
     destruct H0 as [InCX H0]. 
     exists C; intuition.
-    eapply bidir_homo_trans; eauto.
+    eapply iso_trans; eauto.
     Qed.
     
     (* TODO *)

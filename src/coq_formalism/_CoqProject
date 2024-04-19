@@ -3,9 +3,14 @@ utilities.v
 attack_graph.v
 graph_normalization.v
 graph_strict_partial_order.v
+parameterized_graph_strict_partial_order.v
 graph_equiv.v
 graph_partial_order.v
+parameterized_graph_partial_order.v
 supports_facts.v
 set_equiv.v
 set_order.v
+parameterized_set_order.v
+set_reduce.v
+parameterized_set_reduce.v
 compare.v

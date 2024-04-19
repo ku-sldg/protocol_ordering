@@ -10,20 +10,32 @@
 Require Import Coq.Lists.List.
 
 Require Import Order.attack_graph.
-Require Import Order.graph_strict_partial_order.
+Require Import Order.parameterized_graph_strict_partial_order.
 Require Import Order.graph_normalization.
 Require Import Order.graph_equiv.
 Require Import Order.utilities.
 
-Section PO_Facts. 
+Section Parameterized_PO_Facts. 
 
 Context {measurement : Type}.
-Context {adversary : Type}.
-
+ Context {adversary : Type}.
+ (* need two attack graphs for comparison now 
+ Context {G : attackgraph measurement adversary}.
+ Context {G2 : attackgraph measurement adversary}. *)
+ 
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
  Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
+
+ (* Graph ordering is parameterized over an adversary event ordering *)
+Context {adv_event_spo : adversary -> adversary -> Prop}.
+ 
+Hypothesis adv_event_spo_irrefl : forall (x : adversary), ~ adv_event_spo x x.
+Hypothesis adv_event_spo_asym : forall (x y :adversary), adv_event_spo x y -> ~ adv_event_spo y x.
+Hypothesis adv_event_spo_trans : forall (x y z : adversary), adv_event_spo x y -> adv_event_spo y z -> adv_event_spo x z.
+
+Let strict_partial_order := @strict_partial_order measurement adversary adv_event_spo.
 
  (******* DEFINING PARTIAL ORDER (PO) ********
   **         =  \/  <   ->     <= *)
@@ -43,7 +55,7 @@ Proof.
   destruct H; eauto.
   destruct H0; eauto.
   eapply iso_sym. eauto.
-  pose proof (spo_asym G1 G2); intuition.
+  pose proof (@spo_asym _ _ adv_event_spo G1 G2); intuition.
 Qed. 
 
 (******* HELPER LEMMAS ********
@@ -51,7 +63,7 @@ Qed.
  ** helper lemmas which prove 
  ** useful for transitivity *)
 Lemma cor_meas_label_ : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary) 
-(l : (list (event measurement adversary G3 * event measurement adversary G3))) m (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  label measurement adversary G3 (fst a) = inl m -> cor_subset_ind l' (a :: l) -> cor_subset_ind l' l.
+(l : (list (event measurement adversary G3 * event measurement adversary G3))) m (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  label measurement adversary G3 (fst a) = inl m -> (@cor_subset_ind _ _ adv_event_spo _ _ l' (a :: l)) -> (@cor_subset_ind _ _ adv_event_spo _ _ l' l).
 Proof.
   intros. remember (a::l) as list1.   induction H0.
   + econstructor.   
@@ -62,13 +74,15 @@ Proof.
       unfold find_cor in *.
       rewrite lab_x in H0.  
       inversion H0; subst.
-  ++++ inversion H3. subst. destruct a. simpl in *. rewrite H in H2. inversion H2.
+  ++++ inversion H3. subst. destruct a. simpl in *. rewrite H in H2. destruct H2.
+  +++++ inversion H2.
+  +++++ simpl in H2. inversion H2.
   ++++ inversion H3. subst.  eauto.
   ++ intuition.
 Qed. 
 
 Lemma time_meas_label_ : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary) 
-(l : (list (event measurement adversary G3 * event measurement adversary G3))) m1 m2 c (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  ((label measurement adversary G3 (fst a) = inl m1 /\ label measurement adversary G3 (snd a) = inl m2) \/  (label measurement adversary G3 (fst a)) = inr c) -> time_subset_ind l' (a :: l) -> time_subset_ind l' l.
+(l : (list (event measurement adversary G3 * event measurement adversary G3))) m1 m2 c (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  ((label measurement adversary G3 (fst a) = inl m1 /\ label measurement adversary G3 (snd a) = inl m2) \/  (label measurement adversary G3 (fst a)) = inr c) -> (@time_subset_ind _ _ adv_event_spo _ _ l' (a :: l)) -> (@time_subset_ind _ _ adv_event_spo _ _ l' l).
 Proof.
   intros. remember (a::l) as list1. destruct H as [ms | cs].
   + induction H0.
@@ -79,7 +93,9 @@ Proof.
      destruct (label measurement adversary G2 (snd (x))) eqn:lab_x2; eauto.
      unfold find_time in H. destruct ms as [m1' m2'].
      rewrite lab_x1 in H. rewrite lab_x2 in H. inversion H; subst.
-  ++++ inversion H2; subst. destruct a. simpl in *. destruct H1. rewrite H1 in m2'. inversion m2'.
+  ++++ inversion H2; subst. destruct a. simpl in *. destruct H1. destruct H1.
+  +++++ rewrite H1 in m2'. inversion m2'.
+  +++++ rewrite m2' in H1. simpl in H1. inversion H1.
   ++++ inversion H2. subst. eauto.
   +++ intuition.
   + induction H0.
@@ -93,7 +109,7 @@ Proof.
 Qed. 
 
 Lemma cor_subset_not_nil_if_c : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary)  a (l : (list (event measurement adversary G3 * event measurement adversary G3))) (l' : (list (event measurement adversary G2 * event measurement adversary G2))) c, 
-l' = nil -> label measurement adversary G3 (fst a) = inr c -> cor_subset_ind (a :: l) l' -> False.
+l' = nil -> label measurement adversary G3 (fst a) = inr c -> (@cor_subset_ind _ _ adv_event_spo _ _ (a :: l) l') -> False.
 Proof.
   intros. subst. simpl in *. inversion H1; subst.
   unfold find_cor in H3. rewrite H0 in H3. inversion H3.
@@ -110,7 +126,7 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
           In (f st1, f st2) (edges measurement adversary G2)) as ste.
   { intros. apply ste'. auto. }
   clear ste'.
-  unfold strict_partial_order in *...
+  unfold strict_partial_order in *. unfold parameterized_graph_strict_partial_order.strict_partial_order in *...
   (* goal: cor subset *)
   + clear H. clear H2. 
     induction (edges measurement adversary G1); econstructor.
@@ -185,7 +201,7 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
       inversion H1.
       simpl in *.
       destruct H1.
-      destruct a. inversion H. apply ex_head. rewrite <- lab'. rewrite labs1. reflexivity.
+      destruct a. inversion H. apply ex_head. rewrite <- lab'. rewrite labs1. left. reflexivity.
       apply ex_tail. eapply IHl1...
   ++++ apply IHl0; auto with *.  
   +++ eapply IHl. inversion H0...
@@ -261,7 +277,7 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
        inversion H1. simpl in *. destruct H1.
   +++++ destruct a. inversion H.
         pose proof (lab e1) as labs1. pose proof (lab e2) as labs2.
-        apply ex_head... rewrite <- lab''. rewrite labs2. reflexivity.
+        apply ex_head... rewrite <- lab''. rewrite labs2. left. reflexivity.
         rewrite <- lab'. rewrite labs1...
   +++++ apply ex_tail. eapply IHl1...
   ++++ apply IHl0; auto with *.  
@@ -280,7 +296,7 @@ Proof with intuition.
           In (f st1, f st2) (edges measurement adversary G3)) as ste.
   { intros. apply ste'. auto. }
   clear ste'.
-  unfold strict_partial_order in *...
+  unfold strict_partial_order in *. unfold parameterized_graph_strict_partial_order.strict_partial_order in *...
   (* goal: cor subset *)
   + clear H. clear H2. 
     induction (edges measurement adversary G1); econstructor.
@@ -456,4 +472,4 @@ Proof with intuition.
 Qed. 
 
 
-End PO_Facts.
+End Parameterized_PO_Facts.

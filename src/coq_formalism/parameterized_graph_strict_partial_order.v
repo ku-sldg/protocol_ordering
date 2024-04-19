@@ -13,7 +13,7 @@ Require Import Coq.Lists.List.
 Require Export Order.attack_graph.
 Require Import Order.utilities.
 
- Section Strict_Partial_Order. 
+ Section Parameterized_Strict_Partial_Order. 
 
  Context {measurement : Type}.
  Context {adversary : Type}.
@@ -25,7 +25,22 @@ Require Import Order.utilities.
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
  Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
+
+ (* Graph ordering is parameterized over an adversary event ordering *)
+Context {adv_event_spo : adversary -> adversary -> Prop}.
  
+Hypothesis adv_event_spo_irrefl : forall (x : adversary), ~ adv_event_spo x x.
+Hypothesis adv_event_spo_asym : forall (x y :adversary), adv_event_spo x y -> ~ adv_event_spo y x.
+Hypothesis adv_event_spo_trans : forall (x y z : adversary), adv_event_spo x y -> adv_event_spo y z -> adv_event_spo x z.
+
+Definition event_spo (x y : measurement + adversary) : Prop :=
+    match x, y with
+    | inr c1, inr c2 => adv_event_spo c1 c2
+    | inl m, _ => False
+    | _, inl m => False
+    end.
+
+
  Fixpoint existsb ( A : Type) (f : A -> Prop) (l:list A) : Prop := 
      match l with 
        | nil => False
@@ -106,7 +121,7 @@ Require Import Order.utilities.
    | nil => True
    | x :: xs => match (G1.(label _ _) (fst(x))) with 
                       | inr c => (existsb _ (fun step => match step with 
-                                                        | (st2, _ ) => G2.(label _ _) st2 = inr c
+                                                        | (st2, _ ) => (G2.(label _ _) st2 = inr c) \/ (event_spo (G2.(label _ _) st2) (inr c))
                                                         end) y ) /\ cor_subset xs y              
                       | inl r => cor_subset xs y 
                       end
@@ -122,7 +137,7 @@ Require Import Order.utilities.
  Definition find_cor {G1 G2 : attackgraph measurement adversary} (st : G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
      match (G1.(label _ _) st) with 
      | inr c => existsb_ind _ (fun step => match step with 
-                                     | (st2, _ ) => G2.(label _ _) st2 = inr c
+                                     | (st2, _ ) => (G2.(label _ _) st2 = inr c) \/ (event_spo (G2.(label _ _) st2) (inr c))
                                      end) y                
      | inl r => True 
      end. 
@@ -161,13 +176,22 @@ Require Import Order.utilities.
      ++ inversion H.
      ++ inversion H; subst. 
      +++ unfold find_cor in H0. destruct (G2.(label _ _) (fst y)) eqn:contra; auto.
-     ++++ destruct y. simpl in *. 
-         rewrite H3 in contra.
+     ++++ destruct y. simpl in *. destruct H3.
+     +++++ rewrite H2 in contra.
          inversion contra.
-     ++++ destruct y. simpl in *. 
-     rewrite H3 in contra. inversion contra. subst. auto.
-     +++ apply IHcor_subset_ind. auto. 
- Qed.  
+     +++++ rewrite contra in H2. simpl in H2. inversion H2.
+     ++++ destruct y. simpl in *. destruct H3.
+     +++++ rewrite H2 in contra. inversion contra. subst. auto.
+     +++++ rewrite contra in H2. simpl in H2.  clear IHcor_subset_ind H1. induction H0; subst.
+     ++++++ destruct a1. destruct H0.
+     +++++++ eapply ex_head. rewrite H0. right. simpl. auto.
+     +++++++ eapply ex_head. destruct (label measurement adversary G3 e1).
+     ++++++++ simpl in H0. inversion H0.
+     ++++++++ simpl in *. right. eapply adv_event_spo_trans; eauto.
+     ++++++ eapply ex_tail. apply IHexistsb_ind.
+     +++ apply IHcor_subset_ind. auto.
+Qed. 
+
  
 Lemma cor_subset_ind_asym : forall G1 G2 (xs : list (G1.(event _ _) * G1.(event _ _))) (ys : list (G2.(event _ _) * G2.(event _ _))), cor_subset_ind xs ys -> ~ cor_subset_ind ys xs. 
 Proof.
@@ -254,7 +278,7 @@ Abort.
      | nil => True
      | (st1, st2 ) :: xs => match G1.(label _ _) st1 , G1.(label _ _) st2 with 
                          | inl m , inr c => ( existsb _ (fun step => match step with 
-                                                         | (st1', st2') => G2.(label _ _) st2' = inr c /\ G2.(label _ _) st1' = inl m
+                                                         | (st1', st2') => ((G2.(label _ _) st2' = inr c) \/ (event_spo (G2.(label _ _) st2') (inr c))) /\ G2.(label _ _) st1' = inl m
                                                          end) y ) /\ time_subset xs y               
                          | _ , _ => time_subset xs y 
                          end
@@ -265,7 +289,7 @@ Abort.
  Definition find_time {G1 G2 : attackgraph measurement adversary} (st1 : G1.(event _ _) *  G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
      match G1.(label _ _) (fst(st1)) , G1.(label _ _) (snd(st1))  with 
      | inl m , inr c => ( existsb_ind _ (fun step => match step with 
-                                     | (st1', st2') => G2.(label _ _) st2' = inr c /\ G2.(label _ _) st1' = inl m
+                                     | (st1', st2') => ((G2.(label _ _) st2' = inr c) \/ (event_spo (G2.(label _ _) st2') (inr c))) /\ G2.(label _ _) st1' = inl m
                                      end) y )                
      | _ , _ => True 
      end. 
@@ -326,16 +350,32 @@ Abort.
      (* fst y is a measurement event *)
      +++ destruct (G2.(label _ _) (snd y)) eqn:contra ; auto.
      (* snd y is a measurement  *)
-     ++++ destruct y. simpl in *. inversion H3. 
-         rewrite H in contra.
+     ++++ destruct y. simpl in *. inversion H3. destruct H3. destruct H3.
+     +++++ rewrite H3 in contra.
          inversion contra.
-     ++++ destruct y. simpl in *.
-          inversion H3. rewrite H in contra. inversion contra.
-          rewrite H2 in Hfst. inversion Hfst. subst. auto.
+     +++++ rewrite contra in H3. simpl in H3. inversion H3.
+     ++++ destruct y. simpl in *. destruct H3. destruct H.
+     +++++ rewrite H in contra. inversion contra. subst. rewrite H2 in Hfst.
+            inversion Hfst. subst. auto.
+     +++++ rewrite contra in H. clear IHtime_subset_ind H1. induction H0; subst.
+     ++++++ destruct a1. destruct H0. destruct H0.
+     +++++++ eapply ex_head. rewrite H0. split.
+     ++++++++ right. simpl. auto.
+     ++++++++ rewrite H1. rewrite <- H2. rewrite Hfst. auto.
+     +++++++ eapply ex_head. destruct (label measurement adversary G3 e2).
+     ++++++++ simpl in H0. inversion H0.
+     ++++++++ simpl in *. split.
+     +++++++++ right. eapply adv_event_spo_trans; eauto.
+     +++++++++ rewrite H1. rewrite <- H2. rewrite Hfst. auto.
+     ++++++ eapply ex_tail. apply IHexistsb_ind.
      (* fst y is a adversary event *)
      +++ destruct (G2.(label _ _) (snd y)) eqn:contra ; auto.
-     ++++ destruct y. intuition. simpl in *. rewrite Hfst in H2. inversion H2.
-     ++++ destruct y. intuition. simpl in *. rewrite Hfst in H2. inversion H2. 
+     ++++ destruct y. simpl in contra. destruct H3. destruct H.
+     +++++ simpl in *. rewrite H in contra. inversion contra.
+     +++++ rewrite contra in H. simpl in H. inversion H.
+     ++++ destruct y. simpl in contra. destruct H3. destruct H.
+     +++++ simpl in *. rewrite Hfst in H2. inversion H2.
+     +++++ simpl in *. rewrite Hfst in H2. inversion H2. 
      ++ apply IHtime_subset_ind. auto. 
  Qed.
  
@@ -421,4 +461,4 @@ Abort.
  
  (* We have proved the strict partial order is in fact a strict partial order *)
  
- End Strict_Partial_Order.
+ End Parameterized_Strict_Partial_Order.
