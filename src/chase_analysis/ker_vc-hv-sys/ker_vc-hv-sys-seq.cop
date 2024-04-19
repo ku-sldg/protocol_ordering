@@ -1,1 +1,1 @@
-*target: @p4 [(ker p4 vc) +<+ @p4 [(vc p4 hv) +<+ @p4 (vc p4 sys)]]
+*target: @p4 [(ker p4 hv) +<+ @p4 [(ker p4 vc) +<+ @p4 (vc p4 sys)]]

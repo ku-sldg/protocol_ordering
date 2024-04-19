@@ -26,7 +26,3 @@ m4_include(`ker_vc-hv-sys-seq.gli')m4_dnl
 m4_include(`ker_vc-hv-sys-seq_dist.gli')m4_dnl
 
 m4_include(`thy.gli')m4_dnl
-
-
-
-
