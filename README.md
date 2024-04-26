@@ -9,6 +9,6 @@ This repo contains documentation and code related to our Copland attestation pro
 
 ## src 
 
-1. the protocol_ordering folder contains the Coq specification
-2. the chase_analysis folder contains example Copland protocols and Chase output
-3. the automation folder contains an in-progress Python script for parsing attack trees in xhtml to Coq
+1. The `protocol_ordering` folder contains the Coq specification
+2. The `chase_analysis` folder contains example Copland protocols and Chase output
+3. The `automation` folder contains an in-progress Python script for parsing attack trees in xhtml to Coq
