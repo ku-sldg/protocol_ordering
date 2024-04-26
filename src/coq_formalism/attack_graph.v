@@ -3,7 +3,7 @@ Require Import Coq.Lists.List.
 (*************************
  ** ATTACK GRAPHS 
  ** Represented as a record type parameterized over 
- ** measurement and adversary events *)
+ ** measurement and adversary events labels *)
 Record attackgraph (measurement adversary : Type) : Type := 
 {
     event : Type ;

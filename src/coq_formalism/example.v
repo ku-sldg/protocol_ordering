@@ -14,14 +14,14 @@
  Require Import Order.utilities.
  Require Import Order.graph_partial_order.
  Require Import Order.set_order.
- Require Import Order.compare. 
+ 
  
  
  (* ******************* 
       sys & 
     ker-vc-sys-seq 
  ************************
-    Proving ker vc sys seq 
+    Proving ker-vc-sys-seq 
     supports sys 
   * ****************** *)
  Module vc_sys_seq_supports_sys. 
@@ -423,29 +423,19 @@
          subst. invc H0. subst. invc H1. invc H1.
   Qed.
  
-  (* TO DO... random example. Not part of dissertation. *)
-  (*
-  Theorem vc_sys_seq_set_reduced : reduce_set vc_sys_seq_all vc_sys_seq_all (m2b' :: nil).
-  Proof.
-     unfold vc_sys_seq_all. apply set_remove. 
-     + exists m2b'. split; auto with *.  admit.
-     + apply set_keep.
-     ++ intros. simp_int.
-     +++ subst. unfold strict_partial_order in H0. invc H0. admit.
-     +++ subst.  admit.
-     +++ admit. 
-     +++ admit.
-     ++  apply set_remove. 
-     +++ exists m2b'.  admit.
-     +++ apply set_remove. 
-     ++++ admit.
-     ++++ apply set_nil.     
- Admitted.
-*)
- 
  End vc_sys_seq_supports_sys. 
  
+
  
+
+
+
+ (* ***********************************
+    Attack tree normalization examples
+    ***********************************
+    ********************************* *)
+
+
  (* *********** *)
  (* Example m2c *)
  (* *********** *)
@@ -505,8 +495,6 @@
      destruct (eqDec_event st1 st2) as [H|H]; [clear H | contradiction].
      Ltac eqDec_event_right st1 st2 :=
      destruct (eqDec_event st1 st2) as [H|H]; [inversion H | clear H].
- 
-     Print reduce1.
  
      Lemma example_m3b : 
      (reduce1 eqDec_event m3b.(edges _ _)) =
@@ -654,31 +642,7 @@
      eqDec_event_right m4 m.
      reflexivity.
  Qed.
- 
- Print time_subset. 
- Lemma time_subset_m2a_m2c : time_subset m2a.(edges _ _) m2c.(edges _ _).
- Proof.
-     simpl. auto.
- Qed.
- 
- (* TODO: this proof?? *)
- Lemma not_time_subset_m2c_m2a : ~ time_subset m2c.(edges _ _) m2a.(edges _ _).
- Proof.
-     unfold not; intros.
-     inversion H. inversion H0.
-     inversion H2. clear H2.
- Abort.
- 
- (* TODO: this proof too? *)
- Lemma subset_nil : ~ cor_subset m2a.(edges _ _) m2a_nil.(edges _ _).
- Proof.
- Abort.
- 
- (* TODO *)
- Lemma subset_nil_with_meas : ~ cor_subset m2c.(edges _ _) m2a_nil.(edges _ _).
- Proof.
- Abort.
- 
+
  End m2c.
  
  (* *********** *)

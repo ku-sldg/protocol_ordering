@@ -17,9 +17,6 @@ Require Import Order.utilities.
 
  Context {measurement : Type}.
  Context {adversary : Type}.
- (* need two attack graphs for comparison now 
- Context {G : attackgraph measurement adversary}.
- Context {G2 : attackgraph measurement adversary}. *)
  
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
@@ -148,11 +145,6 @@ Definition event_spo (x y : measurement + adversary) : Prop :=
  | sub_nil : forall y, cor_subset_ind nil y
  | sub_head : forall x xs y, find_cor (fst x) y -> cor_subset_ind xs y -> cor_subset_ind (x::xs) y.
  
- (* prove if x is nonempty then it cannot be a subset of nil *)
- Lemma subset_not_nil : forall G1 G2 a (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))), y = nil -> ~ cor_subset_ind (a::x) y.
- Proof. 
- (* proof won't work bc (a::x) could be list of measurement events *)
- Abort.
  
  (* If adversary event is in xs then it is in (x::xs) *)
  Lemma find_cons : forall G1 (x0: (G1.(event _ _) * G1.(event _ _))) x (xs : list (G1.(event _ _) * G1.(event _ _))), 
@@ -193,10 +185,6 @@ Definition event_spo (x y : measurement + adversary) : Prop :=
 Qed. 
 
  
-Lemma cor_subset_ind_asym : forall G1 G2 (xs : list (G1.(event _ _) * G1.(event _ _))) (ys : list (G2.(event _ _) * G2.(event _ _))), cor_subset_ind xs ys -> ~ cor_subset_ind ys xs. 
-Proof.
-    intros. unfold not. intros. induction ys. destruct xs.
-Abort. 
 
  Lemma cor_subset_ind_trans : forall G1 G2 (xs : list (G1.(event _ _) * G1.(event _ _))) (ys : list (G2.(event _ _) * G2.(event _ _))), 
  cor_subset_ind xs ys -> 

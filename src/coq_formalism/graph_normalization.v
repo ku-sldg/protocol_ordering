@@ -24,7 +24,7 @@ Section Reducer.
     Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
     Hypothesis eqDec_event :  forall (x y : G.(event _ _)), {x = y} + {x <> y}.
 
-    (* edges are equivalent or not equivalent *)
+    (* edges are decidably equal *)
     Lemma eqDec_edge : forall (x y : (G.(event _ _) * G.(event _ _))), {x = y} + {x <> y}.
     Proof.
         intros x y;
@@ -82,16 +82,6 @@ Section Reducer.
     | nil => Alledges
     end.
 
-    (* finding measurement x in x should return x? *)
-    Lemma find_measurement_helper : forall (x : list(G.(event _ _) * G.(event _ _))), find_measurement x x = x.
-    Proof.
-        intros. induction x.
-        + auto.
-        + (* simpl. destruct a. destruct (G.(label _ _) s) eqn:l_a .
-        ++ destruct (G.(label _ _) s0) eqn:l_a2.
-        +++ simpl in *. destruct ((eqDec_edge G) (s, s0) (s, s0)).
-        ++++ simpl. unfold remove. unfold replace_measurement.*)
-    Abort.
 
     Definition reduce1 (edges : list (G.(event _ _) * G.(event _ _))) : list (G.(event _ _) * G.(event _ _)) :=
     find_measurement edges edges.
@@ -101,7 +91,7 @@ Section Reducer.
      * the list is getting smaller. Instead, we must write 
      * an inductively defined proposition to express that 
      * the graphs eventually reduce. This definition relies
-     * on reduce1 to event that if reduce1 returns itself 
+     * on reduce1. If reduce1 returns itself 
      * then the graph cannot be further reduced. If reduce1
      * does not return itself, then the reduction call is
      * recursed. *)

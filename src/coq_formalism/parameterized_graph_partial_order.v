@@ -19,9 +19,6 @@ Section Parameterized_PO_Facts.
 
 Context {measurement : Type}.
  Context {adversary : Type}.
- (* need two attack graphs for comparison now 
- Context {G : attackgraph measurement adversary}.
- Context {G2 : attackgraph measurement adversary}. *)
  
  (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.

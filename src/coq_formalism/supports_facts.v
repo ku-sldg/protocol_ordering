@@ -43,14 +43,6 @@ Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : li
     eapply iso_trans; eauto.
     Qed.
     
-    (* TODO *)
-    Theorem  supports_iso_dec : forall x y, x <> nil -> {supports_iso x y} + {~ supports_iso x y} .
-    Proof.
-    intros. destruct x.
-    + exfalso. apply H. intuition.
-    + clear H. generalize dependent a. generalize dependent y. induction x.
-    ++ intros. unfold supports_iso.
-    Abort. 
  
  (* prove supports is a strict partial order when the strict partial order
   * relation is applied 

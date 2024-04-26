@@ -4,7 +4,7 @@
     Date: Sept 10, 2023
  **************************)
 
- (* proved an isomomorphism between
+ (* Prove an isomomorphism over
   * attack graphs is an equivalence 
   * relation *)
 

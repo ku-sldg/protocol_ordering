@@ -9,7 +9,7 @@ Require Import Order.utilities.
 
 (********************************
  * Reduce a set of attack graphs
- * to its weakest elements
+ * to its easiest attacks
  *********************************)
 
 Section Set_Reduce. 
