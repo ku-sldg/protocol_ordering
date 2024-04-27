@@ -19,6 +19,9 @@ We divide this research into the following files.
 `graph_partial_order.v`
 - partial order over individual attack trees
 
+`set_reduce.v`
+- reduce set of attack trees to easiest attacks
+
 `set_equiv.v`
 - equivalence relation over sets of attack trees
 
