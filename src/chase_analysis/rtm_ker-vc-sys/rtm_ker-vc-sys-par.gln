@@ -6,20 +6,14 @@
 l(V) = msp(p4, M, p4, sys, X)
  => corrupt_at(p4, sys, V).
 
-% Assume dependencies
+% Assume sys and vc depends on kernel
 depends(p4, C, p4, sys) => C = ker.
 depends(p4, C, p4, vc) => C = ker.
-% depends(P1, C, p4, ker) => P1 = p1 /\ C = rtm.
-% depends(p1, C, p4, ker) => C = rtm.
+
+
 % rtm has no dependencies 
 depends(p1, C, p1, rtm) => false.
 
-% Assume no recent corruptions
-%prec(V, V1) & l(V1) = cor(P,C) & ms_evt(V)
-%=> false.
-
-% Assume no deep corruptions 
-l(V) = cor(p1, M) => false.
 
 m4_include(`rtm_ker-vc-sys-par.gli')m4_dnl
 
