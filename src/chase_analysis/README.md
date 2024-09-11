@@ -9,6 +9,16 @@ This folder contains examples related to virus checking measurements presented i
 3. Once installation is complete, navigate into any `protocol_ordering/src/chase_analysis` subdirectory.
 4. To run Chase on the Copland phrases written in `filename.cop`, type `make filename_chase.xhtml`. Alternatively, type `./run.sh` to use the premade script to run Chase on all Copland phrases present in the subdirectory.
 
+# Examples from An Ordering over Attestation Protocols
+
+The examples from "An Ordering over Attestation Protocols" can be found in:
+
+`ker_vc-sys`
+
+`rtm_ker-vc-sys`
+
+`ker_hv-vc-sys`
+
 # Target infrastructure 
 
 The target's system and virus checker depend on the kernel. The root of trust has no dependencies. This is written as follows in `filename.gln`:
