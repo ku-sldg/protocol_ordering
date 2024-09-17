@@ -2,7 +2,7 @@
 
 % Assume adversary avoids detection at 
 % our main measurement event. 
-% This is a measurement of sys. 
+% This is a measurement of sys.
 l(V) = msp(p4, M, p4, sys, X)
  => corrupt_at(p4, sys, V).
 
@@ -13,8 +13,8 @@ depends(P, C, p4, vc) => P = p4 & C = ker.
 % rtm has no dependencies 
 depends(p1, C, p1, rtm) => false.
 
-m4_include(`a1-vc-sys-par.gli')m4_dnl
+m4_include(`vc-sys.gli')m4_dnl
 
-m4_include(`a1-vc-sys-par_dist.gli')m4_dnl
+m4_include(`vc-sys_dist.gli')m4_dnl
 
 m4_include(`thy.gli')m4_dnl

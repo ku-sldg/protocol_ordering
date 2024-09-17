@@ -76,8 +76,6 @@ relevant(P, C, V1) & relevant(P, C, V2) & l(V1) = rep(P, C)
 % Rule 1
 l(V) = msp(P2, M, P1, T, X) & corrupt_at(P1, T, V)
   => corrupt_at(P2, M, V) | depends(P2, C, P2, M) & corrupt_at(P2, C, V).
-% l(V) = msp(P2, M, P1, T, X) & corrupt_at(P1, T, V)
-%  => corrupt_at(P2, M, V) | depends(P3, C, P2, M) & corrupt_at(P3, C, V).
 
 % Rule 2
 corrupt_at(P, C, V1)

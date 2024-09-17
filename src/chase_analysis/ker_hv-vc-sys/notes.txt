@@ -1,5 +1,0 @@
-The kernel measures the virus checker, the virus checker measures the hypervisor, and the virus checker measures the system.
-The hypervisor is not a part of the system's dependency chain.
-This protocol is the same as ker_vc-sys-seq but with an additional "random" measurement (i.e., the virus checker measures the hypervisor). 
-Hoping that this protocol is equivalent to ker_vc-sys-seq!
-

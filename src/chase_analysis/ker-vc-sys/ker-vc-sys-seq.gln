@@ -10,11 +10,12 @@ l(V) = msp(p4, M, p4, sys, X)
 depends(P, C, p4, sys) => P = p4 & C = ker.
 depends(P, C, p4, vc) => P = p4 & C = ker.
 
-% rtm has no dependencies 
+% Assume rtm has no dependencies 
 depends(p1, C, p1, rtm) => false.
 
-m4_include(`a1-vc-sys-par.gli')m4_dnl
 
-m4_include(`a1-vc-sys-par_dist.gli')m4_dnl
+m4_include(`ker-vc-sys-seq.gli')m4_dnl
+
+m4_include(`ker-vc-sys-seq_dist.gli')m4_dnl
 
 m4_include(`thy.gli')m4_dnl

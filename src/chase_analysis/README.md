@@ -13,11 +13,11 @@ This folder contains examples related to virus checking measurements presented i
 
 The examples from "An Ordering over Attestation Protocols" can be found in:
 
-`ker_vc-sys`
+`ker-vc-sys`
 
-`rtm_ker-vc-sys`
+`rtm-ker-vc-sys`
 
-`ker_hv-vc-sys`
+`ker-hv-vc-sys`
 
 # Target infrastructure 
 
@@ -26,6 +26,7 @@ The target's system and virus checker depend on the kernel. The root of trust ha
     % sys and vc depend on kernel
     depends(p4, C, p4, sys) => C = ker.
     depends(p4, C, p4, vc) => C = ker.
+    
     % rtm has no dependencies 
     depends(p1, C, p1, rtm) => false.
 
@@ -37,22 +38,17 @@ We assume the adversary goes undetected at the final measurement event. This is 
 
 `l(V) = msp(p4, M, p4, sys, X) => corrupt_at(p4, sys, V).`
 
-If we want to assume recently measured components cannot be corrupted, we would write the following line (we do not make this assumption):
-
-`prec(V, V1) & l(V1) = cor(P,C) & ms_evt(V) => false.`
-
-
 # Copland phrases 
 
-The directories are names according to the measurements present in the Copland phrase. For example, `sys` takes a measurement of the system. `vc-sys` takes a measurement of the virus checker and the system. 
+The directories are names according to the measurements present in the Copland phrase.
 
-## sys1
+## vc-sys
 
 This Copland phrase includes one remote call to the virus checker to take a measurement of the system. 
 
 Protocol: `*target: @p4 (vc p4 sys)`
 
-## vc-sys 
+## a1-vc-sys 
 
 These Copland phrases include a1 measuring the virus checker and the virus checker measuring the system. 
 
@@ -60,7 +56,7 @@ Protocol (seq) : `*target: @p3 [a1 p4 vc +<+ @p4 vc p4 sys]`
 
 Protocol (par) : `*target: @p3 [(a1 p4 vc) +~+ @p4 (vc p4 sys)]`
 
-## a1-vc-sys
+## rtm-a1-vc-sys
 
 These Copland phrases include the root of trust measuring a1, a1 measuring the virus checker, and the virus checker measuring the system.
 
@@ -68,7 +64,7 @@ Protocol (seq) : `*target: @p1 [(rtm p3 a1) +<+ @p3 [(a1 p4 vc) +<+ @p4 (vc p4 s
 
 Protocol (par) : `*target: @p1 [(rtm p3 a1) +~+ @p3 [(a1 p4 vc) +~+ @p4 (vc p4 sys)]]`
 
-## a2-ker-sys
+## rtm-a2-ker-sys
 
 These Copland phrases include the root of trust measuring a2, a2 measuring the kernel, and the virus checker measuring the system.
 
@@ -76,13 +72,13 @@ Protocol (seq): `*target: @p1 [rtm p3 a2 +<+ @p3 [a2 p4 ker +<+ @p4 (vc p4 sys)]
 
 Protocol (par): `*target: @p1 [(rtm p3 a2) +~+ @p3 [(a2 p4 ker) +~+ @p4 (vc p4 sys)]]`
 
-## a1-a2-vc-ker-sys 
+## rtm-a1-a2-vc-ker-sys 
 
-This Copland phrase combines the measurement operations in a1-vc-sys and a2-ker-sys. 
+This Copland phrase combines the measurement operations in rtm-a1-vc-sys and rtm-a2-ker-sys. 
 
 Protocol: `*target: @p1 ( rtm p3 a1 +~+ rtm p3 a2)  +<+ @p3 ( a1 p4 vc +~+ a2 p4 ker ) +<+ @p4 ((ker p4 vc) +<+ (vc p4 sys1 ))`
 
-## ker_vc-sys
+## ker-vc-sys
 
 These Copland phrases include the kernel measuring the virus checker and the virus checker measuring the system. This is different from the "Confining" paper where the virus checker was previously measured by a1. Here it is measured by the kernel.  
 
@@ -90,15 +86,7 @@ Protocol (seq): `*target: @p4 [ker p4 vc +<+ @p4 vc p4 sys]`
 
 Protocol (par): `*target: @p4 [(ker p4 vc) +~+ @p4 (vc p4 sys)]`
 
-## rtm_ker-sys
-
-These Copland phrases include the root of trust measuring the kernel and the virus checker measuring the system.
-
-Protocol (seq): `*target: @p1 [rtm p4 ker +<+ @p4 vc p4 sys]`
-
-Protocol (par): `*target: @p1 [rtm p4 ker +~+ @p4 vc p4 sys]`
-
-## rtm_ker-vc-sys
+## rtm-ker-vc-sys
 
 These Copland phrases include the root of trust measuring the kernel, the kernel measuring the virus checker, and the virus checker measuring the system. 
 
@@ -106,7 +94,7 @@ Protocol (seq): `*target: @p1 [(rtm p4 ker) +<+ @p4 [(ker p4 vc) +<+ @p4 (vc p4 
 
 Protocol (par): `*target: @p1 [(rtm p4 ker) +~+ @p4 [(ker p4 vc) +~+ @p4 (vc p4 sys)]]`
 
-## ker_hv-vc-sys
+## ker-hv-vc-sys
 
 This Copland phrase includes the kernel measuring the hypervisor, the kernel measuring the virus checker, and the virus checker measuring the system. 
 
