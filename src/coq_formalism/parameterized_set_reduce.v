@@ -8,36 +8,56 @@ Require Import Order.graph_equiv.
 Require Import Order.utilities.
 
 (********************************
- * Reduce a set of attack graphs
- * to its weakest elements
+ * Reduce a set of attack trees
+ * to its easiest attacks
+
+    parameterized over 
+    an arbitrary adversary 
+    event ordering
  *********************************)
 
 Section Parameterized_Set_Reduce. 
 
 Context {measurement : Type}.
 Context {adversary : Type}.
-
- (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
  Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
+ (* Attack tree ordering is parameterized over an adversary event ordering *)
  Context {adv_event_spo : adversary -> adversary -> Prop}.
 
+ (* The ordering is a strict partial order *)
  Hypothesis adv_event_spo_irrefl : forall (x : adversary), ~ adv_event_spo x x.
  Hypothesis adv_event_spo_asym : forall (x y : adversary), adv_event_spo x y -> ~ adv_event_spo y x.
  Hypothesis adv_event_spo_trans : forall (x y z : adversary), adv_event_spo x y -> adv_event_spo y z -> adv_event_spo x z.
  
  Let strict_partial_order := @strict_partial_order measurement adversary adv_event_spo.
 
+
+ (** Given the original set orig and an attack tree a,
+    find an attack tree in orig that is 
+        minimal with respect to orig and
+        less than a
+    Follows a chain of attack trees in orig
+        a > a' > a'' > ... > minimal element
+*)
+(* Called "minimal" in the paper *)
 Inductive getChain (orig : list (attackgraph measurement adversary)) (a : (attackgraph measurement adversary)) : (attackgraph measurement adversary) -> Prop :=
 | set_keep_chain : (forall a2, In a2 orig -> ~ strict_partial_order a2 a) -> getChain orig a a
 | set_remove_chain : forall a2 a', In a2 orig -> strict_partial_order a2 a -> getChain orig a2 a' -> getChain orig a a'.
 
+(** The nth attack tree of the resulting list is
+        less than the nth element of the input list and
+        minimal with respect to the original list
+*)
+(* Called "min" in the paper *)
 Inductive getAllChains (orig : list (attackgraph measurement adversary)): list (attackgraph measurement adversary) -> list (attackgraph measurement adversary) -> Prop :=
 | nil_case : getAllChains orig nil nil
 | cons_case : forall a a' l l', getChain orig a a' -> getAllChains orig l l' -> getAllChains orig (a :: l) (a'::l').
 
+
+(* Various helpful lemmas *)
 
 Lemma getchain_in : forall x a a',
   getChain x a a' ->

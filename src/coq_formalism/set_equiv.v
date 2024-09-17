@@ -1,8 +1,6 @@
 (******************************
 SET EQUIVALENCE   
-
-* Equivalence over sets of graphs 
-* We define this as each graph supports each other *)
+*)
 
 Require Import Coq.Lists.List.
 
@@ -47,14 +45,6 @@ Proof.
     + eapply supports_iso_trans; eauto.
     + eapply supports_iso_trans; eauto.
 Qed.
-
-(* TODO: Prove that our equivalence relation is decidable *)
-Theorem set_eq_dec : forall SS TT, TT <> nil -> {set_eq SS TT} + {~ set_eq SS TT}.
-Proof.
-    intros. destruct TT.
-    + exfalso. apply H. reflexivity.
-    + clear H. generalize dependent a. induction TT.
-    ++ intros. unfold set_eq. unfold supports_iso.
-Abort. 
+ 
 
 End Set_Equiv. 

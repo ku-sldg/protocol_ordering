@@ -1,8 +1,16 @@
-(**** Defining support to compare sets of attack graphs. 
+(**** 
+
+PARTIAL ORDER OVER SETS
+parameterized over 
+an arbitrary adversary 
+event ordering
+
+Defining support to compare sets of attack trees. 
+
 By: Anna Fritz and Sarah Johnson
 Date: July 18, 2023 
 
-Idea of supports motivated by Paul Rowe'e paper: 
+Idea of supports motivated by Paul Rowe's paper: 
 "On Orderings in Security Models" *)
 
 Require Import Coq.Lists.List.
@@ -23,28 +31,28 @@ Require Import Coq.Program.Equality.
     SUPPORTS 
    
     CHASE analysis of a Copland Protocol generates 
-    a set of graphs. We want to be able to compare 
-    these sets of graphs so we introduce the idea 
+    a set of trees. We want to be able to compare 
+    these sets of trees so we introduce the idea 
     of supports as motivated by Rowe'e paper.
     *********)
 
 (********************************
  * OUR IMPLEMENTATION OF SUPPORTS 
- * FOR LISTS OF ATTACK GRAPHS 
+ * FOR LISTS OF ATTACK TREES 
  *********************************)
 
 Section Parameterized_Supports_List. 
 
 Context {measurement : Type}.
 Context {adversary : Type}.
-
- (* Labels and States must have decidable equality *)
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
  Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
+ (* Attack tree ordering is parameterized over an adversary event ordering *)
  Context {adv_event_spo : adversary -> adversary -> Prop}.
  
+ (* The ordering is a strict partial order *)
 Hypothesis adv_event_spo_irrefl : forall (x : adversary), ~ adv_event_spo x x.
 Hypothesis adv_event_spo_asym : forall (x y :adversary), adv_event_spo x y -> ~ adv_event_spo y x.
 Hypothesis adv_event_spo_trans : forall (x y z : adversary), adv_event_spo x y -> adv_event_spo y z -> adv_event_spo x z.
@@ -72,7 +80,7 @@ Let strict_partial_order := @strict_partial_order measurement adversary adv_even
       induction (edges measurement adversary g2).    
     ++ econstructor.
     ++ econstructor.
-    +++ unfold find_cor. 
+    +++ unfold find_adv. 
         destruct (label measurement adversary g2 (fst a)) eqn:lab_g2; eauto. destruct a.
         specialize gste with e e0. simpl in *. intuition.
         clear H0. clear IHl.
@@ -122,7 +130,6 @@ Proof.
  eauto.  
 Qed.
 
-(* supports is transitive *)
 Theorem  supports_trans : forall x y z, supports x y -> supports y z -> supports x z.
 Proof with intuition.
 Proof.

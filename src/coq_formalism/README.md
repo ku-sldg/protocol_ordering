@@ -20,7 +20,7 @@ We divide this research into the following files.
 - partial order over individual attack trees
 
 `set_reduce.v`
-- reduce set of attack trees to easiest attacks
+- reduce set of attack trees to easiest attacks (i.e., min)
 
 `set_equiv.v`
 - equivalence relation over sets of attack trees

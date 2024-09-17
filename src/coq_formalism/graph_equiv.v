@@ -1,11 +1,11 @@
 (**************************
-    GRAPH EQUIVALENCE
+    ATTACK TREE EQUIVALENCE
     By: Anna Fritz and Sarah Johnson
     Date: Sept 10, 2023
  **************************)
 
  (* Prove an isomomorphism over
-  * attack graphs is an equivalence 
+  * attack trees is an equivalence 
   * relation *)
 
 Require Import Coq.Logic.Description.
@@ -19,63 +19,15 @@ Set Implicit Arguments.
 
 Section Graph_Equivalence. 
 
-(* We aim to say two graphs are equivalent if they are isomomorphic. 
- * We assume we are reasoning over the reduced graph form *)
+(* We say two attack trees are equivalent if they are isomomorphic. 
+ * We assume we are reasoning only over attack trees in their normal form *)
 
 Context {measurement : Type}.
 Context {adversary : Type}.
 
-(* Labels and States must have decidable equality *)
 Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
 Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
 Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
-
-
-(************************
- * DEFINING HOMOMORPHISM 
- * event condition and 
- * label condition *)
-Definition homomorphism (g1 : attackgraph measurement adversary) (g2: attackgraph measurement adversary) (f : g1.(event _ _) -> g2.(event _ _)) : Prop :=  
-    (forall st1 st2, In (st1,st2) g1.(edges _ _) -> In ((f st1) ,(f st2)) g2.(edges _ _))    
-    /\
-    (forall st1 st2, In (st1,st2) g1.(edges _ _) -> 
-        g1.(label _ _) st1 = g2.(label _ _) (f st1) /\ g1.(label _ _) st2 = g2.(label _ _) (f st2)).
-
-
-(* might be helpful to prove homomorphism is reflexive and transitive *)
-Lemma homomorphism_refl : forall g1, exists (f : g1.(event _ _) -> g1.(event _ _)), homomorphism g1 g1 f.
-Proof.
-    intros.
-    unfold homomorphism.
-    exists (fun g1 => g1). split; intros; eauto.
-Qed.
-
-Lemma  homomorphism_trans : forall g1 g2 g3, 
-    ( exists f12, (homomorphism g1 g2) f12 ) -> 
-    ( exists g23, (homomorphism g2 g3) g23 ) -> 
-    exists h13, (homomorphism g1 g3) h13.
-Proof.
-intros g1 g2 g3 f12 g23. 
-destruct f12 as [f12 g1g2]. 
-destruct g23 as [g23 g2g3].
-unfold homomorphism in *. 
-exists (fun x => g23 (f12 (x))).
-split; intros.
-+ (* step condition *)
-  intuition.
-+ (* label condition *)
-  intuition.
-++ specialize H1 with st1 st2. intuition.
-   specialize H0 with st1 st2. intuition.
-   specialize H2 with (f12 st1) (f12 st2); intuition.
-   specialize H3 with (f12 st1) (f12 st2); intuition.
-   rewrite  H1. eauto.
-++specialize H1 with st1 st2. intuition.
-specialize H0 with st1 st2. intuition.
-specialize H2 with (f12 st1) (f12 st2); intuition.
-specialize H3 with (f12 st1) (f12 st2); intuition.
-rewrite  H5. eauto.
-Qed. 
 
 Theorem in_dec_event : forall (G : attackgraph measurement adversary) (a : event measurement adversary G) (l : list (event measurement adversary G)), 
 (forall (x y : event measurement adversary G),
@@ -202,7 +154,7 @@ Definition isomorphism (g1 : attackgraph measurement adversary) (g2: attackgraph
 
 (****************************
   We want the isomorphism to be
-  and equivalence relation.
+  an equivalence relation.
 
   These are the properties:
 

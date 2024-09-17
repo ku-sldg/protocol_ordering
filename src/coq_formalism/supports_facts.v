@@ -13,14 +13,12 @@ Section Supports_Facts.
 Context {measurement : Type}.
 Context {adversary : Type}.
 
-(* prove supports is a preorder when the graph equivalence 
+(* Supports is a preorder when the attack tree equivalence 
   * relation is applied *) 
 Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
     forall (H : (attackgraph measurement adversary)), In H TT ->
     (exists (G : (attackgraph measurement adversary)), In G SS /\ isomorphism G H).
     
-    (* Prove properties of supports_iso 
-    * reflexive, and transitive *)
     Theorem supports_iso_refl: forall x, supports_iso x x.
     Proof.
     intros. unfold supports_iso. intros.
@@ -44,16 +42,14 @@ Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : li
     Qed.
     
  
- (* prove supports is a strict partial order when the strict partial order
-  * relation is applied 
-  
-  * strict partial order = irreflexive, asymmetric, transitive *)
+ (* Supports is a strict partial order when the strict partial order
+  * over attack trees is applied 
+ *)
   Definition supports_spo (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
     (forall (H : (attackgraph measurement adversary)), In H TT ->  
     (exists (G : (attackgraph measurement adversary)), In G SS /\ strict_partial_order G H)).
 
-  (* supports is irreflexive for everything except nil.
-   * need to disallow the first parameter to be nil  *)  
+  (* supports is irreflexive for everything except nil. *)  
   Theorem supports_spo_irrefl :forall a, a <> nil -> ~ supports_spo a a.
   Proof.
     unfold supports_spo.
