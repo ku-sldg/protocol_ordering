@@ -17,7 +17,7 @@ def parse_xhtml_to_coq(xhtml_file_path, coq_file_path):
 
     # Write the Coq code to a file
     with open(coq_file_path, 'w', encoding='utf-8') as coq_file:
-        coq_file.write("Module sys1. \n")
+        coq_file.write("Module sys. \n")
         coq_file.write(coq_code)
 
 def generate_svg_content(soup):
@@ -48,7 +48,7 @@ def extract_target_text(svg_tree):
     return target_texts
 
 # Example usage
-xhtml_file_path = '../chase_analysis/sys1/sys1_chase.xhtml'
+xhtml_file_path = '../chase_analysis/vc-sys1/vc-sys_chase.xhtml'
 coq_file_path = 'output.v'
 
 parse_xhtml_to_coq(xhtml_file_path, coq_file_path)
