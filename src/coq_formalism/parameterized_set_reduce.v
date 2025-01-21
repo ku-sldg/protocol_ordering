@@ -22,7 +22,7 @@ Context {measurement : Type}.
 Context {adversary : Type}.
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
- Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attacktree measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
  (* Attack tree ordering is parameterized over an adversary event ordering *)
  Context {adv_event_spo : adversary -> adversary -> Prop}.
@@ -43,7 +43,7 @@ Context {adversary : Type}.
         a > a' > a'' > ... > minimal element
 *)
 (* Called "minimal" in the paper *)
-Inductive getChain (orig : list (attackgraph measurement adversary)) (a : (attackgraph measurement adversary)) : (attackgraph measurement adversary) -> Prop :=
+Inductive getChain (orig : list (attacktree measurement adversary)) (a : (attacktree measurement adversary)) : (attacktree measurement adversary) -> Prop :=
 | set_keep_chain : (forall a2, In a2 orig -> ~ strict_partial_order a2 a) -> getChain orig a a
 | set_remove_chain : forall a2 a', In a2 orig -> strict_partial_order a2 a -> getChain orig a2 a' -> getChain orig a a'.
 
@@ -52,7 +52,7 @@ Inductive getChain (orig : list (attackgraph measurement adversary)) (a : (attac
         minimal with respect to the original list
 *)
 (* Called "min" in the paper *)
-Inductive getAllChains (orig : list (attackgraph measurement adversary)): list (attackgraph measurement adversary) -> list (attackgraph measurement adversary) -> Prop :=
+Inductive getAllChains (orig : list (attacktree measurement adversary)): list (attacktree measurement adversary) -> list (attacktree measurement adversary) -> Prop :=
 | nil_case : getAllChains orig nil nil
 | cons_case : forall a a' l l', getChain orig a a' -> getAllChains orig l l' -> getAllChains orig (a :: l) (a'::l').
 

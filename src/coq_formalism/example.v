@@ -69,7 +69,7 @@
       (P_ms, P_vc) ::
       nil.
   
-  Definition a1 : attackgraph measurement adversary := 
+  Definition a1 : attacktree measurement adversary := 
   {|
       event := states_P ;
       edges := steps_a1 ;
@@ -82,7 +82,7 @@
       (P_ms, P_ker) ::
       nil.
   
-  Definition a2 : attackgraph measurement adversary := 
+  Definition a2 : attacktree measurement adversary := 
   {|
       event := states_P ;
       edges := steps_a2 ;
@@ -95,7 +95,7 @@
       (P_ker, P_ms) ::
       nil.
   
-  Definition a3 : attackgraph measurement adversary := 
+  Definition a3 : attacktree measurement adversary := 
   {|
       event := states_P ;
       edges := steps_a3 ;
@@ -109,7 +109,7 @@
       (P_ker, P_ms) ::
       nil.
   
-  Definition a4 : attackgraph measurement adversary := 
+  Definition a4 : attacktree measurement adversary := 
   {|
       event := states_P ;
       edges := steps_a4 ;
@@ -123,7 +123,7 @@
       (P_c, P_ms) ::
       nil.
   
-  Definition a5 : attackgraph measurement adversary := 
+  Definition a5 : attacktree measurement adversary := 
   {|
       event := states_P ;
       edges := steps_a5 ;
@@ -138,7 +138,7 @@
     (P_ker, P_fin) ::
     nil.
 
-Definition a3' : attackgraph measurement adversary := 
+Definition a3' : attacktree measurement adversary := 
 {|
     event := states_P ;
     edges := steps_a3' ;
@@ -151,7 +151,7 @@ Definition steps_a4' : list (states_P * states_P) :=
     (P_ker, P_fin) ::
     nil.
 
-Definition a4' : attackgraph measurement adversary := 
+Definition a4' : attacktree measurement adversary := 
 {|
     event := states_P ;
     edges := steps_a4' ;
@@ -164,7 +164,7 @@ Definition steps_a5' : list (states_P * states_P) :=
     (P_c, P_fin) ::
     nil.
 
-Definition a5' : attackgraph measurement adversary := 
+Definition a5' : attacktree measurement adversary := 
 {|
     event := states_P ;
     edges := steps_a5' ;
@@ -294,7 +294,7 @@ Qed.
         (Q_ms, Q_vc) ::
         nil.
     
-    Definition b1 : attackgraph measurement adversary := 
+    Definition b1 : attacktree measurement adversary := 
     {|
         event := states_Q ;
         edges := steps_b1 ;
@@ -307,7 +307,7 @@ Qed.
         (Q_ms, Q_ker) ::
         nil.
     
-    Definition b2 : attackgraph measurement adversary := 
+    Definition b2 : attacktree measurement adversary := 
     {|
         event := states_Q ;
         edges := steps_b2 ;
@@ -320,7 +320,7 @@ Qed.
         (Q_ms, Q_ker) ::
         nil.
     
-    Definition b3 : attackgraph measurement adversary := 
+    Definition b3 : attacktree measurement adversary := 
     {|
         event := states_Q ;
         edges := steps_b3 ;
@@ -334,7 +334,7 @@ Qed.
         (Q_ms, Q_ker) ::
         nil.
     
-    Definition b4 : attackgraph measurement adversary := 
+    Definition b4 : attacktree measurement adversary := 
     {|
         event := states_Q ;
         edges := steps_b4 ;
@@ -347,7 +347,7 @@ Qed.
         (Q_c, Q_fin) ::
         nil.
     
-    Definition b5 : attackgraph measurement adversary := 
+    Definition b5 : attacktree measurement adversary := 
     {|
         event := states_Q ;
         edges := steps_b5 ;
@@ -539,7 +539,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (P_vc, P_fin) ::
          nil.
      
-     Definition a1 : attackgraph measurement adversary := 
+     Definition a1 : attacktree measurement adversary := 
      {|
          event := states_P ;
          edges := steps_a1 ;
@@ -551,7 +551,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (P_ker, P_fin) ::
          nil.
      
-     Definition a2 : attackgraph measurement adversary := 
+     Definition a2 : attacktree measurement adversary := 
      {|
          event := states_P ;
          edges := steps_a2 ;
@@ -588,7 +588,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (Q_sys, Q_fin) ::
          nil.
  
-     Definition b1 : attackgraph measurement adversary := 
+     Definition b1 : attacktree measurement adversary := 
      {|
          event := states_Q ;
          edges := steps_b1 ;
@@ -601,7 +601,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (Q_sys, Q_fin) ::
          nil.
  
-     Definition b2 : attackgraph measurement adversary := 
+     Definition b2 : attacktree measurement adversary := 
      {|
          event := states_Q ;
          edges := steps_b2 ;
@@ -615,7 +615,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (Q_sys, Q_fin) ::
          nil.
  
-     Definition b3 : attackgraph measurement adversary := 
+     Definition b3 : attacktree measurement adversary := 
      {|
          event := states_Q ;
          edges := steps_b3 ;
@@ -629,7 +629,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (Q_sys, Q_fin) ::
          nil.
  
-     Definition b4 : attackgraph measurement adversary := 
+     Definition b4 : attacktree measurement adversary := 
      {|
          event := states_Q ;
          edges := steps_b4 ;
@@ -643,7 +643,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (Q_sys, Q_fin) ::
          nil.
  
-     Definition b2' : attackgraph measurement adversary := 
+     Definition b2' : attacktree measurement adversary := 
      {|
          event := states_Q ;
          edges := steps_b2' ;
@@ -656,7 +656,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (Q_sys, Q_fin) ::
          nil.
  
-     Definition b3' : attackgraph measurement adversary := 
+     Definition b3' : attacktree measurement adversary := 
      {|
          event := states_Q ;
          edges := steps_b3' ;
@@ -669,7 +669,7 @@ End ker_vc_sys_leq_rtm_ker_vc_sys.
          (Q_sys, Q_fin) ::
          nil.
  
-     Definition b4' : attackgraph measurement adversary := 
+     Definition b4' : attacktree measurement adversary := 
      {|
          event := states_Q ;
          edges := steps_b4' ;

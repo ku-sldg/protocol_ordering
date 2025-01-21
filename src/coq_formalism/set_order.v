@@ -44,10 +44,10 @@ Context {measurement : Type}.
 Context {adversary : Type}.
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
- Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attacktree measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
  (* if g1 < g2 then g1 cannot equal g2. Important sanity check that our definitions make sense. *)
- Theorem order_impl_not_eq : forall (g1 g2: attackgraph measurement adversary), strict_partial_order g1 g2 -> ~ isomorphism g1 g2.
+ Theorem order_impl_not_eq : forall (g1 g2: attacktree measurement adversary), strict_partial_order g1 g2 -> ~ isomorphism g1 g2.
  Proof.
     intros. unfold strict_partial_order in *. intros H0.
     assert (isomorphism g2 g1).
@@ -106,9 +106,9 @@ Qed.
   SUPPORTS AS PREORDER 
 ********************************)
 
-Definition supports (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
-  forall (H : (attackgraph measurement adversary)), In H TT ->
-(exists (G : (attackgraph measurement adversary)), In G SS /\ (isomorphism G H \/ strict_partial_order G H)).
+Definition supports (SS : list (attacktree measurement adversary)) (TT : list (attacktree measurement adversary)) : Prop := 
+  forall (H : (attacktree measurement adversary)), In H TT ->
+(exists (G : (attacktree measurement adversary)), In G SS /\ (isomorphism G H \/ strict_partial_order G H)).
 
 Theorem supports_refl : forall SS,  supports SS SS.
 Proof.

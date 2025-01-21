@@ -15,9 +15,9 @@ Context {adversary : Type}.
 
 (* Supports is a preorder when the attack tree equivalence 
   * relation is applied *) 
-Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
-    forall (H : (attackgraph measurement adversary)), In H TT ->
-    (exists (G : (attackgraph measurement adversary)), In G SS /\ isomorphism G H).
+Definition supports_iso (SS : list (attacktree measurement adversary)) (TT : list (attacktree measurement adversary)) : Prop := 
+    forall (H : (attacktree measurement adversary)), In H TT ->
+    (exists (G : (attacktree measurement adversary)), In G SS /\ isomorphism G H).
     
     Theorem supports_iso_refl: forall x, supports_iso x x.
     Proof.
@@ -45,9 +45,9 @@ Definition supports_iso (SS : list (attackgraph measurement adversary)) (TT : li
  (* Supports is a strict partial order when the strict partial order
   * over attack trees is applied 
  *)
-  Definition supports_spo (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) : Prop := 
-    (forall (H : (attackgraph measurement adversary)), In H TT ->  
-    (exists (G : (attackgraph measurement adversary)), In G SS /\ strict_partial_order G H)).
+  Definition supports_spo (SS : list (attacktree measurement adversary)) (TT : list (attacktree measurement adversary)) : Prop := 
+    (forall (H : (attacktree measurement adversary)), In H TT ->  
+    (exists (G : (attacktree measurement adversary)), In G SS /\ strict_partial_order G H)).
 
   (* supports is irreflexive for everything except nil. *)  
   Theorem supports_spo_irrefl :forall a, a <> nil -> ~ supports_spo a a.

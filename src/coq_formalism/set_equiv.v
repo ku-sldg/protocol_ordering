@@ -19,7 +19,7 @@ Section Set_Equiv.
 Context {measurement : Type}.
 Context {adversary : Type}.
 
-Definition set_eq (SS : list (attackgraph measurement adversary)) (TT : list (attackgraph measurement adversary)) :=  supports_iso SS TT /\ supports_iso TT SS.
+Definition set_eq (SS : list (attacktree measurement adversary)) (TT : list (attacktree measurement adversary)) :=  supports_iso SS TT /\ supports_iso TT SS.
 
 (* Prove properties of equivalence relation 
 * reflexivity 

@@ -17,7 +17,7 @@ Require Import Order.utilities.
 
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
- Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attacktree measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
 (* Attack tree ordering is parameterized over an adversary event ordering *)
 Context {adv_event_spo : adversary -> adversary -> Prop}.
@@ -112,7 +112,7 @@ where
  (****** ADVERSARY EVENTS SUBSET *)
  
  (* adversary events of x are a subset of adversary events in y *)
- Fixpoint adv_subset {G1 G2 : attackgraph measurement adversary} 
+ Fixpoint adv_subset {G1 G2 : attacktree measurement adversary} 
                  (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop :=
    match x with 
    | nil => True
@@ -125,12 +125,12 @@ where
    end.
  
  (* Proper subset using the fixpoint definition *)
- Definition adv_proper_subset_fix {G1 G2 : attackgraph measurement adversary} 
+ Definition adv_proper_subset_fix {G1 G2 : attacktree measurement adversary} 
  (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) := adv_subset x y /\ ~ adv_subset y x. 
  
  (* Determine if an adversary event in G1 is present in y
   * input: one event in G1 (no need to recurse through G1) and list to search *)
- Definition find_adv {G1 G2 : attackgraph measurement adversary} (st : G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
+ Definition find_adv {G1 G2 : attacktree measurement adversary} (st : G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
      match (G1.(label _ _) st) with 
      | inr c => existsb_ind _ (fun step => match step with 
                                      | (st2, _ ) => (G2.(label _ _) st2 = inr c) \/ (event_spo (G2.(label _ _) st2) (inr c))
@@ -139,7 +139,7 @@ where
      end. 
  
  (* Inductively defined adversary subset *)
- Inductive adv_subset_ind {G1 G2 : attackgraph measurement adversary} : 
+ Inductive adv_subset_ind {G1 G2 : attacktree measurement adversary} : 
  list (G1.(event _ _) * G1.(event _ _)) -> (list (G2.(event _ _) * G2.(event _ _))) -> Prop :=
  | sub_nil : forall y, adv_subset_ind nil y
  | sub_head : forall x xs y, find_adv (fst x) y -> adv_subset_ind xs y -> adv_subset_ind (x::xs) y.
@@ -223,7 +223,7 @@ Qed.
  Qed.
  
  (* Proper subset using the inductive definition *)
- Definition adv_proper_subset {G1 G2 : attackgraph measurement adversary} 
+ Definition adv_proper_subset {G1 G2 : attacktree measurement adversary} 
  (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) := adv_subset_ind x y /\ ~ adv_subset_ind y x. 
  
  (*******************************************
@@ -236,17 +236,17 @@ Qed.
      transitive := forall a b c: X, R a b -> R b c -> R a c 
      }. *)
      
- Theorem adv_irr : forall (g1 : attackgraph measurement adversary) (x : list (g1.(event _ _) * g1.(event _ _)) ), ~ adv_proper_subset x x.
+ Theorem adv_irr : forall (g1 : attacktree measurement adversary) (x : list (g1.(event _ _) * g1.(event _ _)) ), ~ adv_proper_subset x x.
      Proof.
      intros. unfold adv_proper_subset. unfold not. intros. inversion H. contradiction.
      Qed.
  
- Theorem adv_asym : forall (g1 g2 : attackgraph measurement adversary)  (x : list (g1.(event _ _) * g1.(event _ _)) ) (y : list (g2.(event _ _) * g2.(event _ _)) ), adv_proper_subset x y -> ~ adv_proper_subset y x.
+ Theorem adv_asym : forall (g1 g2 : attacktree measurement adversary)  (x : list (g1.(event _ _) * g1.(event _ _)) ) (y : list (g2.(event _ _) * g2.(event _ _)) ), adv_proper_subset x y -> ~ adv_proper_subset y x.
      Proof.
      intros. unfold adv_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
      Qed.
  
- Theorem adv_trans : forall (g1 g2 g3 : attackgraph measurement adversary) (xs : list (g1.(event _ _) * g1.(event _ _)) ) (ys : list (g2.(event _ _) * g2.(event _ _)) ), 
+ Theorem adv_trans : forall (g1 g2 g3 : attacktree measurement adversary) (xs : list (g1.(event _ _) * g1.(event _ _)) ) (ys : list (g2.(event _ _) * g2.(event _ _)) ), 
  adv_proper_subset xs ys -> 
  forall (zs : list (g3.(event _ _) * g3.(event _ _)) ), adv_proper_subset ys zs -> 
  adv_proper_subset xs zs.
@@ -259,7 +259,7 @@ Qed.
  (****** TIME CONSTRAINED adversary EVENT SUBSET *)
  
  (* Adversary events of x are a subset of adversary events in y *)
- Fixpoint time_subset {G1 G2 : attackgraph measurement adversary} 
+ Fixpoint time_subset {G1 G2 : attacktree measurement adversary} 
                  (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop :=
      match x with 
      | nil => True
@@ -273,7 +273,7 @@ Qed.
  
  (* Determine if a time constrained adversary event in G1 is present in y
  * input: one step in G1 (no need to recurse through G1) and list to search (y) *)
- Definition find_time {G1 G2 : attackgraph measurement adversary} (st1 : G1.(event _ _) *  G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
+ Definition find_time {G1 G2 : attacktree measurement adversary} (st1 : G1.(event _ _) *  G1.(event _ _)) (y : list (G2.(event _ _) * G2.(event _ _))) : Prop := 
      match G1.(label _ _) (fst(st1)) , G1.(label _ _) (snd(st1))  with 
      | inl m , inr c => ( existsb_ind _ (fun step => match step with 
                                      | (st1', st2') => ((G2.(label _ _) st2' = inr c) \/ (event_spo (G2.(label _ _) st2') (inr c))) /\ G2.(label _ _) st1' = inl m
@@ -282,7 +282,7 @@ Qed.
      end. 
  
  (* Inductively defined adversary subset *)
- Inductive time_subset_ind {G1 G2 : attackgraph measurement adversary} : 
+ Inductive time_subset_ind {G1 G2 : attacktree measurement adversary} : 
  list (G1.(event _ _) * G1.(event _ _)) -> (list (G2.(event _ _) * G2.(event _ _))) -> Prop :=
  | time_nil : forall y, time_subset_ind nil y
  | time_head : forall x xs y, find_time x y -> time_subset_ind xs y -> time_subset_ind (x::xs) y.
@@ -380,20 +380,20 @@ Qed.
  Qed.
  
  (* Proper subset using the inductive definition *)
- Definition time_proper_subset {G1 G2 : attackgraph measurement adversary} 
+ Definition time_proper_subset {G1 G2 : attacktree measurement adversary} 
  (x : list (G1.(event _ _) * G1.(event _ _))) (y : list (G2.(event _ _) * G2.(event _ _))) := time_subset_ind x y /\ ~ time_subset_ind y x.
  
- Theorem time_irr : forall (g1 : attackgraph measurement adversary) (x : list (g1.(event _ _) * g1.(event _ _)) ), ~ time_proper_subset x x.
+ Theorem time_irr : forall (g1 : attacktree measurement adversary) (x : list (g1.(event _ _) * g1.(event _ _)) ), ~ time_proper_subset x x.
  Proof.
      intros. unfold time_proper_subset. unfold not. intros. inversion H. contradiction.
  Qed.
  
- Theorem time_asym : forall (g1 g2 : attackgraph measurement adversary)  (x : list (g1.(event _ _) * g1.(event _ _)) ) (y : list (g2.(event _ _) * g2.(event _ _)) ), time_proper_subset x y -> ~ time_proper_subset y x.
+ Theorem time_asym : forall (g1 g2 : attacktree measurement adversary)  (x : list (g1.(event _ _) * g1.(event _ _)) ) (y : list (g2.(event _ _) * g2.(event _ _)) ), time_proper_subset x y -> ~ time_proper_subset y x.
  Proof.
      intros. unfold time_proper_subset in *. inversion H. unfold not. intros. inversion H2. auto.
  Qed.
  
- Theorem time_trans : forall (g1 g2 g3 : attackgraph measurement adversary) (xs : list (g1.(event _ _) * g1.(event _ _)) ) (ys : list (g2.(event _ _) * g2.(event _ _)) ), 
+ Theorem time_trans : forall (g1 g2 g3 : attacktree measurement adversary) (xs : list (g1.(event _ _) * g1.(event _ _)) ) (ys : list (g2.(event _ _) * g2.(event _ _)) ), 
  time_proper_subset xs ys -> 
  forall (zs : list (g3.(event _ _) * g3.(event _ _)) ), time_proper_subset ys zs -> 
  time_proper_subset xs zs.
@@ -407,17 +407,17 @@ Qed.
   STRICT PARTIAL ORDER 
   ******************************)
 
- Definition strict_partial_order (g1 g2 : attackgraph measurement adversary) : Prop :=
+ Definition strict_partial_order (g1 g2 : attacktree measurement adversary) : Prop :=
     (adv_subset_ind (g1.(edges _ _)) (g2.(edges _ _)) /\ time_subset_ind (g1.(edges _ _)) (g2.(edges _ _))) /\ (adv_proper_subset (g1.(edges _ _)) (g2.(edges _ _)) \/ time_proper_subset (g1.(edges _ _)) (g2.(edges _ _))).
  
- Theorem spo_irr : forall (g1 : attackgraph measurement adversary), ~ strict_partial_order g1 g1.
+ Theorem spo_irr : forall (g1 : attacktree measurement adversary), ~ strict_partial_order g1 g1.
  Proof.
      intros. unfold strict_partial_order. unfold not. intros. intuition.
      + unfold adv_proper_subset in H0; invc H0; intuition.
      + unfold time_proper_subset in H0; invc H0; intuition.
  Qed.
  
- Theorem spo_asym : forall (g1 g2 : attackgraph measurement adversary), strict_partial_order g1 g2 -> ~ strict_partial_order g2 g1.
+ Theorem spo_asym : forall (g1 g2 : attacktree measurement adversary), strict_partial_order g1 g2 -> ~ strict_partial_order g2 g1.
  Proof.
      intros. unfold strict_partial_order in *. unfold not. intros. intuition.
      + unfold adv_proper_subset in H; invc H; intuition.
@@ -429,7 +429,7 @@ Qed.
  Ltac try_left := left; eapply adv_trans; eauto.
  Ltac try_right := right; eapply time_trans; eauto.
  
- Theorem spo_trans : forall (g1 g2 g3 : attackgraph measurement adversary), 
+ Theorem spo_trans : forall (g1 g2 g3 : attacktree measurement adversary), 
  strict_partial_order g1 g2 -> 
  forall g3, strict_partial_order g2 g3 -> 
  strict_partial_order g1 g3.

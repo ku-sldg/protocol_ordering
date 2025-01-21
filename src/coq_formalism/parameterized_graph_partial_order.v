@@ -20,7 +20,7 @@ Context {measurement : Type}.
  Context {adversary : Type}.
  Hypothesis eqDec_measurement : forall (x y : measurement), {x = y} + {x <> y}.
  Hypothesis eqDec_adversary : forall (x y : adversary), {x = y} + {x <> y}.
- Hypothesis eqDec_event : forall (G : attackgraph measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
+ Hypothesis eqDec_event : forall (G : attacktree measurement adversary) (x y : G.(event _ _)), {x = y} + {x <> y}.
 
  (* Attack tree ordering is parameterized over an adversary event ordering *)
 Context {adv_event_spo : adversary -> adversary -> Prop}.
@@ -34,7 +34,7 @@ Let strict_partial_order := @strict_partial_order measurement adversary adv_even
 
  (******* DEFINING PARTIAL ORDER (PO) ********
   **         =  \/  <   ->     <= *)
-Definition partial_order (G1 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary) := 
+Definition partial_order (G1 : attacktree measurement adversary) (G2 : attacktree measurement adversary) := 
     isomorphism G1 G2 \/ strict_partial_order G1 G2.
   
  (******* PROVE PO REFLEXIVE *********)
@@ -57,7 +57,7 @@ Qed.
  ** The following is a series of
  ** helper lemmas which prove 
  ** useful for transitivity *)
-Lemma adv_meas_label_ : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary) 
+Lemma adv_meas_label_ : forall  (G3 : attacktree measurement adversary) (G2 : attacktree measurement adversary) 
 (l : (list (event measurement adversary G3 * event measurement adversary G3))) m (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  label measurement adversary G3 (fst a) = inl m -> (@adv_subset_ind _ _ adv_event_spo _ _ l' (a :: l)) -> (@adv_subset_ind _ _ adv_event_spo _ _ l' l).
 Proof.
   intros. remember (a::l) as list1.   induction H0.
@@ -76,7 +76,7 @@ Proof.
   ++ intuition.
 Qed. 
 
-Lemma time_meas_label_ : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary) 
+Lemma time_meas_label_ : forall  (G3 : attacktree measurement adversary) (G2 : attacktree measurement adversary) 
 (l : (list (event measurement adversary G3 * event measurement adversary G3))) m1 m2 c (l' : list (event measurement adversary G2 * event measurement adversary G2)) a,  ((label measurement adversary G3 (fst a) = inl m1 /\ label measurement adversary G3 (snd a) = inl m2) \/  (label measurement adversary G3 (fst a)) = inr c) -> (@time_subset_ind _ _ adv_event_spo _ _ l' (a :: l)) -> (@time_subset_ind _ _ adv_event_spo _ _ l' l).
 Proof.
   intros. remember (a::l) as list1. destruct H as [ms | cs].
@@ -103,14 +103,14 @@ Proof.
   +++ inversion H3; subst. eauto.
 Qed. 
 
-Lemma adv_subset_not_nil_if_c : forall  (G3 : attackgraph measurement adversary) (G2 : attackgraph measurement adversary)  a (l : (list (event measurement adversary G3 * event measurement adversary G3))) (l' : (list (event measurement adversary G2 * event measurement adversary G2))) c, 
+Lemma adv_subset_not_nil_if_c : forall  (G3 : attacktree measurement adversary) (G2 : attacktree measurement adversary)  a (l : (list (event measurement adversary G3 * event measurement adversary G3))) (l' : (list (event measurement adversary G2 * event measurement adversary G2))) c, 
 l' = nil -> label measurement adversary G3 (fst a) = inr c -> (@adv_subset_ind _ _ adv_event_spo _ _ (a :: l) l') -> False.
 Proof.
   intros. subst. simpl in *. inversion H1; subst.
   unfold find_adv in H3. rewrite H0 in H3. inversion H3.
 Qed. 
 
-Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), isomorphism G1 G2 /\ strict_partial_order G2 G3 -> strict_partial_order G1 G3.
+Lemma po_trans_helper : forall (G1 G2 G3 : attacktree measurement adversary), isomorphism G1 G2 /\ strict_partial_order G2 G3 -> strict_partial_order G1 G3.
   Proof with intuition.
   intros... 
   unfold isomorphism in H0.
@@ -280,7 +280,7 @@ Lemma po_trans_helper : forall (G1 G2 G3 : attackgraph measurement adversary), i
 Qed.
 
 
-Lemma po_trans_helper' : forall (G1 G2 G3 : attackgraph measurement adversary), strict_partial_order G1 G2 /\ isomorphism G2 G3 -> strict_partial_order G1 G3.
+Lemma po_trans_helper' : forall (G1 G2 G3 : attacktree measurement adversary), strict_partial_order G1 G2 /\ isomorphism G2 G3 -> strict_partial_order G1 G3.
 Proof with intuition. 
   intros G1 G2 G3 H1. destruct H1 as [H1 H0]. 
   unfold isomorphism in H0.
