@@ -1,7 +1,19 @@
 -Q . Order
-utilities.v
+
+utilities/logics.v
+utilities/ltacs.v
+utilities/lists.v
+utilities/existsb.v
+utilities/labelSubsets.v
+utilities/supports.v
+
 attacktree.v
 attacktree_normalization.v
-attacktree_equivalence.v
-attacktree_strictPartialOrder.v
+attacktree_ordering.v
+set_minimization.v
+set_ordering.v
+
+
+
+
 

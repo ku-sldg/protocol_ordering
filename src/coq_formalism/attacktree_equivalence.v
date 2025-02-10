@@ -1,10 +1,23 @@
 
+(*************************
+ ** EQUIVALENCE 
+ ** OVER INDIVIDUAL ATTACK TREES 
+ ** $\simeq$
+ **
+ ** Attack trees are equivalent if they 
+ ** are isomorphic. *)
+
 Require Import Coq.Lists.List.
 Require Import Coq.Logic.Description.
 
+Require Import Order.utilities.ltacs.
+Require Import Order.utilities.lists.
+Require Import Order.utilities.existsb.
+Require Import Order.utilities.labelSubsets.
+
 Require Import Order.attacktree.
 Require Import Order.attacktree_normalization.
-Require Import Order.utilities.
+
 
 Set Implicit Arguments. 
 
@@ -93,9 +106,7 @@ Section AttackTreeEquivalence.
     isomorphism A B -> 
     isomorphism B A.
     Proof.
-        intros A B H; destruct H as [f H];
-        destruct H as [HBij H]; destruct HBij as [HInj HSur];
-        destruct H as [HEdg HLab].
+        intros A B HIso; destruct_iso HIso.
         assert (HInv : exists g, inverse f g).
         { apply bijective_inverse; auto. }
         destruct HInv as [g HInv]; pose proof HInv as HInv';
@@ -127,15 +138,7 @@ Section AttackTreeEquivalence.
         - apply HEdgBC; apply HEdgAB; auto.
         - apply HEdgBC in H; apply HEdgAB in H; auto.
         - autounfold; intros; rewrite HLabAB; rewrite HLabBC; auto.
-    Qed. 
-  
-  
-    Infix "==" := isomorphism (at level 80).
-    
-    Add Relation  _ (isomorphism)
-      reflexivity proved by isomorphism_reflexive
-      symmetry proved by isomorphism_symmetric
-      transitivity proved by isomorphism_transitive
-    as attacktreeEq.    
+    Qed.  
 
 End AttackTreeEquivalence.
+

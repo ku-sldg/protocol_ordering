@@ -1,12 +1,33 @@
+
 (*************************
-** SRICT PARTIAL ORDER OVER INDIVIDUAL ATTACK TREES $\prec$ *)
+ ** STRICT PARTIAL ORDER 
+ ** OVER INDIVIDUAL ATTACK TREES 
+ ** $\prec$
+ **
+ ** An attack tree is strictly worse than another
+ ** if it requires strictly less work to perform
+ ** by an adversary.
+ **
+ ** Defines and computes two sets: (1) the set of 
+ ** adversary events $\pi$ and (2) the set of time-
+ ** contrained adversary events $\tau$.
+ ** 
+ ** Only compare attack trees with common sets of both
+ ** adversary events and time-contrained adversary events. *)
+
+
 
 Require Import Coq.Lists.List.
+
+Require Import Order.utilities.ltacs.
+Require Import Order.utilities.lists.
+Require Import Order.utilities.existsb.
+Require Import Order.utilities.labelSubsets.
 
 Require Import Order.attacktree.
 Require Import Order.attacktree_normalization.
 Require Import Order.attacktree_equivalence.
-Require Import Order.utilities.
+
 
 Section AttackTreeStrictPartialOrder. 
     Context {components : Type}.
@@ -70,6 +91,22 @@ Section AttackTreeStrictPartialOrder.
     Qed.
 
 
+    Lemma pi_isomorphism : forall A B,
+        isomorphism A B ->
+        piSubset A B.
+    Proof.
+        intros A B HIso; destruct_iso HIso;
+        unfold injective, surjective, edgePreserving, labelPreserving in *;
+        intros a H; exists (f a); split.
+        - apply pi_fact; apply pi_fact in H;
+          destruct H as [HIn HAdv]; destruct HIn as [ev' HIn];
+          split.
+        -- exists (f ev'); destruct HIn; [left|right]; apply HEdg; auto.
+        -- destruct HAdv as [adv HAdv]; exists adv; rewrite <- HLab; auto.
+        - apply HLab.
+    Qed.
+        
+
     (** tau
     ** 
     ** The set of time-constrained adversary events in an attack tree. *)
@@ -128,6 +165,23 @@ Section AttackTreeStrictPartialOrder.
     Qed.
 
 
+    Lemma tau_isomorphism : forall A B,
+        isomorphism A B ->
+        tauSubset A B.
+    Proof.
+        intros A B HIso; destruct_iso HIso;
+        unfold injective, surjective, edgePreserving, labelPreserving in *;
+        intros a H; exists (f a); split.
+        - apply tau_fact; apply tau_fact in H.
+          destruct H as [HIn HAdv]; 
+          destruct HIn as [ev' HIn]; destruct HIn as [meas HIn];
+          split.
+        -- exists (f ev'), meas; rewrite <- HEdg; rewrite <- HLab; auto.
+        -- destruct HAdv as [adv HAdv]; exists adv; rewrite <- HLab; auto.
+        - apply HLab.
+    Qed.
+
+
 (** Tau is a subset of Pi *)
 
     Lemma tau_pi : forall A ev,
@@ -144,6 +198,8 @@ Section AttackTreeStrictPartialOrder.
     Qed.
 
 
+
+
 (** strictlyLessWork *)
 
     Definition strictlyLessWork (A B : attacktree components) : Prop :=
@@ -152,36 +208,21 @@ Section AttackTreeStrictPartialOrder.
         (piProperSubset_fix A B /\ tauSubset_fix A B) \/ (piSubset_fix A B /\ tauProperSubset_fix A B).
 
 
+
+
+
 (** Strictly Less Work is a strict partial order. *)
 
     Theorem strictlyLessWork_irreflexive : forall (A B : attacktree components),
         isomorphism A B ->
         ~ strictlyLessWork A B.
     Proof.
-        intros A B HIso HSub; 
-        destruct HIso as [f HIso]; destruct HIso as [HBij HIso]; destruct HIso as [HEdg HLab];
-        apply bijective_inverse in HBij; destruct HBij as [g HInv]; destruct HInv as [HL HR];
+        intros A B H HSub;
+        pose proof isomorphism_symmetric H as H0;
+        pose proof H as H1; pose proof H0 as H2;
+        apply pi_isomorphism in H, H0; apply tau_isomorphism in H1, H2;
         destruct HSub as [HSub|HSub]; destruct HSub as [HPi HTau];
-        [ destruct HPi as [HPi contra] | destruct HTau as [HTau contra]]; 
-        apply contra; clear contra;
-        [ clear HPi | clear HTau ];
-        autounfold in *; unfold edgePreserving, labelPreserving in *;
-        intros b H; exists (g b); split;
-        try (rewrite HLab; rewrite HR; auto; fail).
-        - apply pi_fact; apply pi_fact in H;
-          destruct H as [HIn HAdv]; destruct HIn as [b' HIn];
-          destruct HAdv as [adv HAdv];
-          destruct HIn as [HIn|HIn]; split;
-          try (exists adv; rewrite HLab; rewrite HR; auto);
-          exists (g b'); [ left | right ];
-          apply HEdg; repeat rewrite HR; auto.
-        - apply tau_fact; apply tau_fact in H;
-          destruct H as [HIn HAdv];
-          destruct HAdv as [adv HAdv];
-          destruct HIn as [b' HIn]; destruct HIn as [meas HIn]; destruct HIn as [HIn Hl];
-          split; try (exists adv; rewrite HLab; rewrite HR; auto);
-          exists (g b'), meas; split;
-          [ apply HEdg | rewrite HLab]; repeat rewrite HR; auto.
+        [ destruct HPi | destruct HTau ]; contradiction.
     Qed.
 
 
@@ -202,26 +243,26 @@ Section AttackTreeStrictPartialOrder.
         strictlyLessWork B C ->
         strictlyLessWork A C.
     Proof.
-        unfold strictlyLessWork; intros A B C HAB HBC. 
+        unfold strictlyLessWork; intros A B C HAB HBC;
         destruct HAB as [HAB|HAB], HBC as [HBC|HBC];
         destruct HAB as [H1 H2], HBC as [H3 H4];
         try destruct H1; try destruct H2; try destruct H3; try destruct H4.
         - left; repeat split;
-          try (eapply labelSubset_trans; eauto);
-          eapply labelProperSubset_trans; eauto.
+          try (eapply labelSubset_transitive; eauto);
+          eapply labelProperSubset_transitive1; eauto.
         - left; repeat split;
-          try (eapply labelSubset_trans; eauto);
+          try (eapply labelSubset_transitive; eauto);
           intros H5; assert (piSubset B A).
-          { eapply labelSubset_trans; eauto. }
+          { eapply labelSubset_transitive; eauto. }
           contradiction.
         - left; repeat split;
-          try (eapply labelSubset_trans; eauto);
+          try (eapply labelSubset_transitive; eauto);
           intros H5; assert (piSubset C B).
-          { eapply labelSubset_trans; eauto. }
+          { eapply labelSubset_transitive; eauto. }
           contradiction.
         - right; repeat split; 
-          try (eapply labelSubset_trans; eauto);
-          eapply labelProperSubset_trans; eauto.
+          try (eapply labelSubset_transitive; eauto);
+          eapply labelProperSubset_transitive1; eauto.
     Qed.
 
  

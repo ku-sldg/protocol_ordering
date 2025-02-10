@@ -45,4 +45,23 @@ Section Notations.
     Definition eventT (A : attacktree components) := A.(event _).
     Definition edgesT (A : attacktree components) := list (eventT A * eventT A).
     Definition labelT (A : attacktree components) := (eventT A) -> (measLabel components) + (advLabel components).
+
+    Lemma myEqDec_labels : forall (A : attacktree components),
+        forall (x y : (measLabel components) + (advLabel components)),
+        {x = y} + {x <> y}.
+    Proof.
+        intros A x y. destruct x as [m|a], y as [m'|a'];
+        try (right; intros contra; inversion contra; contradiction).
+        - destruct m as [c1 c2|], m' as [c1' c2'|];
+          try (right; intros contra; inversion contra; contradiction);
+          try (destruct (myEqDec_components A c1 c1'), (myEqDec_components A c2 c2'); subst);
+          try (right; intros contra; inversion contra; contradiction);
+          left; auto.
+        - destruct a as [c|c], a' as [c'|c'];
+          try (right; intros contra; inversion contra; contradiction);
+          destruct (myEqDec_components A c c'); subst;
+          try (right; intros contra; inversion contra; contradiction);
+          left; auto.
+    Qed.
+    
 End Notations.

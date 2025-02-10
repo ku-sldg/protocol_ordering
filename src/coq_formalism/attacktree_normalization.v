@@ -6,7 +6,6 @@
  ** events relevant to determining the difficulty
  ** of the adversary's attack.
  **
- **
  ** An attack tree is in its normal form when
  ** all sequences of consecutive measurement
  ** events are reduced to a single measurement
@@ -16,8 +15,13 @@
 Require Import Coq.Lists.List.
 Require Import Coq.Init.Datatypes.
 
+Require Import Order.utilities.ltacs.
+Require Import Order.utilities.lists.
+Require Import Order.utilities.existsb.
+Require Import Order.utilities.labelSubsets.
+
 Require Export Order.attacktree.
-Require Import Order.utilities.
+
 
 
 
@@ -217,10 +221,10 @@ Section Normalization.
         left; auto.
         - apply IHfindConsecutiveMeasEvent_ind; auto. 
         destruct HApp as [l HApp]; rewrite <- HApp. 
-        exists (l ++ ((ev1, ev2) :: nil)); rewrite app_ass; auto.
+        exists (l ++ ((ev1, ev2) :: nil)); rewrite <- app_assoc; auto.
         - apply IHfindConsecutiveMeasEvent_ind; auto. 
         destruct HApp as [l HApp]; rewrite <- HApp. 
-        exists (l ++ ((ev1, ev2) :: nil)); rewrite app_ass; auto.
+        exists (l ++ ((ev1, ev2) :: nil)); rewrite <- app_assoc; auto.
         - exfalso; apply Heq; auto.
     Qed.
 
@@ -242,7 +246,7 @@ Section Normalization.
         rewrite removeFirst_lengthSub in H1.
         -- intros contra; apply listEq_length in contra;
             rewrite <- contra in H1; clear contra.
-            rewrite app_length in H1; simpl in H1;
+            rewrite length_app in H1; simpl in H1;
             rewrite <- plus_n_Sm in H1; simpl in H1;
             rewrite PeanoNat.Nat.sub_0_r in H1.
             pose proof (PeanoNat.Nat.neq_succ_diag_l (length l + length edges'));
@@ -517,7 +521,7 @@ Section Normalization.
     Qed.
     
     (** The reduction procedure is transitive. *)
-    Lemma reduce_trans : forall A x y, 
+    Lemma reduce_transitive : forall A x y, 
         @reduce_fix A x y -> 
         forall z, reduce_fix y z -> 
         @reduce_fix A x z.
