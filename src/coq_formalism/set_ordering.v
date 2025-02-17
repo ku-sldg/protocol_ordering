@@ -15,47 +15,110 @@ Require Import Order.set_minimization.
 Section SetOrdering. 
     Context {components : Type}.
 
+(** equal
+ **
+ ** Sets of attack trees P and Q are equal (i.e., P = Q)
+ ** if and only if they are the same set under the simeq relation. *)
+
+    Definition equal (P Q : list (attacktree components)) : Prop :=
+        supports simeq P Q /\ supports simeq Q P.
+
+    Definition equal_fix (P Q : list (attacktree components)) : Prop :=
+        if (supportsDec simeq_fix simeqDec P Q)
+        then if (supportsDec simeq_fix simeqDec Q P)
+             then True
+             else False
+        else False.
+
+    Hint Unfold equal : core.
+
+    Lemma equal_same : forall P Q,
+        equal_fix P Q <->
+        equal P Q.
+    Proof.
+        unfold equal_fix; intros P Q; split; intros HEq.
+        - destruct (supportsDec simeq_fix simeqDec P Q) as [HST|HST], 
+                   (supportsDec simeq_fix simeqDec Q P) as [HTS|HTS];
+          try (inversion HEq; fail);
+          split; intros B HIn; apply supports_same in HST; apply supports_same in HTS;
+          [ apply HST in HIn | apply HTS in HIn ]; 
+          destruct HIn as [A]; exists A; rewrite <- simeq_same; auto.
+        - destruct (supportsDec simeq_fix simeqDec P Q) as [HST|HST], 
+                   (supportsDec simeq_fix simeqDec Q P) as [HTS|HTS];
+          auto; destruct HEq as [HST' HTS'];
+          try apply HST; try apply HTS; apply supports_same; 
+          intros B HIn; try apply HST' in HIn; try apply HTS' in HIn;
+          destruct HIn as [A]; exists A; rewrite simeq_same; auto.
+    Qed.
+
+    Lemma equalDec : forall P Q,
+        {equal_fix P Q} + {~ equal_fix P Q}.
+    Proof.
+        unfold equal_fix; intros P Q; 
+        destruct (supportsDec simeq_fix simeqDec P Q), (supportsDec simeq_fix simeqDec Q P);
+        auto.
+    Defined.
+
+    Theorem equal_reflexive : forall P,
+        equal P P.
+    Proof.
+        intros; split; apply supports_reflexive; apply simeq_reflexive.
+    Qed. 
+
+    Theorem equal_symmetric : forall P Q,
+        equal P Q ->
+        equal Q P.
+    Proof.
+        intros P Q HEq; destruct HEq; split; auto.
+    Qed.
+
+    Theorem equal_transitive : forall P Q R,
+        equal P Q ->
+        equal Q R ->
+        equal P R.
+    Proof.
+        intros P Q R HST HTU; destruct HST, HTU; split; 
+        eapply supports_transitive; eauto; apply simeq_transitive.
+    Qed.
+
+
 (** equiv (Equivalence)
  **
  ** Sets of attack trees P and Q are equivalent (i.e., P \equiv Q)
- ** if and only if they are the same set. *)
+ ** if and only if min(P) = min(Q). *)
 
     Definition equiv (P Q : list (attacktree components)) : Prop :=
-        supports simeq P Q /\ supports simeq Q P.
-
-    Hint Unfold equiv : core.
+        equal (min_fix P P) (min_fix Q Q).
 
     Definition equiv_fix (P Q : list (attacktree components)) : Prop :=
-        supports_fix simeq_fix simeqDec P Q /\ supports_fix simeq_fix simeqDec Q P.
+        equal_fix (min_fix P P) (min_fix Q Q).
 
+    Hint Unfold equiv : core.
 
     Lemma equiv_same : forall P Q,
         equiv_fix P Q <->
         equiv P Q.
     Proof.
-        intros P Q; split; intros HEq;
-        destruct HEq as [HST HTS].
-        - split; intros B HIn;
-          apply supports_same in HST, HTS;  
-          [ apply HST in HIn | apply HTS in HIn ];
-          destruct HIn as [A]; exists A; rewrite <- simeq_same; auto.
-        - split; apply supports_same; intros B HIn;
-          [ apply HST in HIn | apply HTS in HIn ];
-          destruct HIn as [A]; exists A; rewrite simeq_same; auto.
+        intros; apply equal_same.
     Qed.
 
+    Lemma equivDec : forall P Q,
+        {equiv_fix P Q} + {~equiv_fix P Q}.
+    Proof.
+        intros; apply equalDec.
+    Defined.
 
     Theorem equiv_reflexive : forall P,
         equiv P P.
     Proof.
-        intros; split; apply supports_reflexive; apply simeq_reflexive.
+        intros; apply equal_reflexive.
     Qed. 
 
     Theorem equiv_symmetric : forall P Q,
         equiv P Q ->
         equiv Q P.
     Proof.
-        intros P Q HEq; destruct HEq; split; auto.
+        intros; apply equal_symmetric; auto.
     Qed.
 
     Theorem equiv_transitive : forall P Q R,
@@ -63,8 +126,7 @@ Section SetOrdering.
         equiv Q R ->
         equiv P R.
     Proof.
-        intros P Q R HST HTU; destruct HST, HTU; split; 
-        eapply supports_transitive; eauto; apply simeq_transitive.
+        intros; eapply equal_transitive; eauto.
     Qed.
 
 
@@ -93,14 +155,27 @@ Section SetOrdering.
         exists A; [ rewrite <- preceq_same | rewrite preceq_same ]; auto.
     Qed.
 
+    Lemma leqDec : forall P Q,
+        {leq_fix P Q} + {~ leq_fix P Q}.
+    Proof.
+        intros; apply supportsDec.
+    Defined.
 
-    Theorem leq_reflexive : forall P Q,
+
+    Theorem leq_reflexive' : forall P Q,
         equiv P Q ->
         leq P Q.
     Proof.
-        intros P Q HEq B HIn; destruct HEq as [HST];
-        apply HST in HIn; destruct HIn as [A HIn]; destruct HIn;
-        exists A; split; auto; apply preceq_reflexive; auto.
+        intros P Q HEq B HIn; destruct HEq as [HPQ HQP]; 
+        remember (min_fix P P) as P'; remember (min_fix Q Q) as Q';
+        symmetry in HeqP', HeqQ'; apply min_same in HeqP', HeqQ';
+        pose proof (min_preceq Q Q' HeqQ' B HIn) as H;
+        destruct H as [A' H]; destruct H as [HIn' H];
+        apply HPQ in HIn'; destruct HIn' as [A HIn']; destruct HIn';
+        exists A; split;
+        [ eapply min_in; eauto | ];
+        apply preceq_preceq; apply preceq_preceq in H; destruct H; 
+        [ left; eapply prec_simeq1 | right; eapply simeq_transitive ]; eauto.
     Qed.
 
     Theorem leq_transitive : forall P Q R,
@@ -145,15 +220,14 @@ Section SetOrdering.
         intros P Q Q' HLeq HMin B HIn; apply HLeq; eapply min_in; eauto.
     Qed.
 
-
-    Theorem leq_antisymmetric : forall P Q P' Q',
+    Theorem leq_antisymmetric : forall P Q,
         leq P Q ->
         leq Q P ->
-        min_ind P P P' ->
-        min_ind Q Q Q' ->
-        equiv P' Q'.
+        equiv P Q.
     Proof.
-        intros P Q P' Q' HLeqPQ HLeqQP HMinP HMinQ;
+        intros P Q HLeqPQ HLeqQP; unfold equiv;
+        remember (min_fix P P) as P' eqn:HMinP; remember (min_fix Q Q) as Q' eqn:HMinQ;
+        symmetry in HMinP, HMinQ; apply min_same in HMinP, HMinQ.
         assert (leq P' Q') as HPQ by
         ( pose proof (min_leq1 P P' HMinP); pose proof (min_leq2 Q Q' HMinQ);
           eapply leq_transitive; eauto; eapply leq_transitive; eauto );
@@ -186,6 +260,8 @@ Section SetOrdering.
           eapply HMin; eauto; eapply min_in; eauto.
         - exists B'; auto.
     Qed.
+
+
     
 
 End SetOrdering. 

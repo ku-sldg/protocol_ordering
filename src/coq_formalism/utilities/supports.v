@@ -2,18 +2,6 @@ Require Import Coq.Lists.List.
 
 
 Section Supports.
-(*
-    Context {X : Type}.
-    Context {preorder : X -> X -> Prop}.
-
-    Hypothesis preorder_reflexive : 
-        forall x, preorder x x.
-    Hypothesis preorder_transitive : 
-        forall x y z, preorder x y -> preorder y z -> preorder x z.
-
-    Hypothesis preorderDec : 
-        forall x y, {preorder x y} + {~ preorder x y}.
-*)
 
     Definition supports {X : Type} (order : X -> X -> Prop) (S T : list X) : Prop :=
         forall H, In H T ->
@@ -55,21 +43,68 @@ Section Supports.
     | nil => False
     end.
 
-(*
-How does this differ from the previous function??
-Particularly if order is a fixpoint?
-*)
+    Lemma getRelatedElementDec : forall {X} (order : X -> X -> Prop) orderDec H S,
+        {getRelatedElement_fix order orderDec H S} + {~ getRelatedElement_fix order orderDec H S}.
+    Proof.
+        intros X order orderDec H S; 
+        induction S as [|G S']; simpl; auto;
+        destruct (orderDec G H); auto.
+    Defined.
+    
 
-    Fixpoint getRelatedElement_fix'
-            {X : Type} (order_fix : X -> X -> Prop) H S : 
+    Fixpoint supports_fix 
+            {X : Type} (order : X -> X -> Prop) (orderDec : forall x y, {order x y} + {~ order x y}) S T : 
         Prop :=
-    match S with 
-    | G::S' => order_fix G H \/ getRelatedElement_fix' order_fix H S'
-    | nil => False
+    match T with
+    | H::T' => if (getRelatedElementDec order orderDec H S)
+               then supports_fix order orderDec S T'
+               else False
+    | nil => True
     end.
 
+    Lemma getRelatedElement_exists : forall X (order : X -> X -> Prop) orderDec H S,
+        getRelatedElement_fix order orderDec H S <->
+        exists G, In G S /\ order G H.
+    Proof.
+        intros X order orderDec H S; split; intros HRel.
+        - induction S; simpl in HRel; try (inversion HRel; fail);
+          destruct (orderDec a H).
+        -- exists a; split; simpl; auto.
+        -- apply IHS in HRel; destruct HRel as [G HRel]; destruct HRel;
+           exists G; split; simpl; auto.
+        - induction S; simpl; destruct HRel as [G HRel]; destruct HRel as [HIn HOrd];
+          try (inversion HIn; fail);
+          destruct (orderDec a H); auto;
+          destruct HIn; subst; try contradiction;
+          apply IHS; exists G; split; auto.
+    Qed.
 
 
+    Lemma supports_same : forall X (order : X -> X -> Prop) orderDec S T,
+        supports_fix order orderDec S T <->
+        supports order S T.
+    Proof.
+        intros X order orderDec S T; split; intros HSup.
+        - intros H HIn; induction T; try (inversion HIn; fail);
+          simpl in HSup; destruct (getRelatedElementDec order orderDec a S);
+          try (inversion HSup; fail);
+          destruct HIn; subst;
+          [ eapply getRelatedElement_exists | apply IHT ]; eauto.
+        - induction T; simpl; auto.
+          destruct (getRelatedElementDec order orderDec a S);
+          [ apply IHT; intros H HIn | apply n; apply getRelatedElement_exists ];
+          apply HSup; simpl; auto.
+    Qed.
+
+    Lemma supportsDec : forall {X} (order : X -> X -> Prop) orderDec S T,
+        {supports_fix order orderDec S T} + {~ supports_fix order orderDec S T}.
+    Proof.
+        intros X order orderDec S T; 
+        induction T; simpl; auto;
+        destruct (getRelatedElementDec order orderDec a S); auto.
+    Defined.
+
+(*
     Fixpoint supports_fix 
             {X : Type} (order : X -> X -> Prop) (orderDec : forall x y, {order x y} + {~ order x y}) S T : 
         Prop :=
@@ -109,5 +144,5 @@ Particularly if order is a fixpoint?
           | apply IHT; intros H HIn ];
           apply HSup; simpl; auto.
     Qed.
-
+*)
 End Supports.

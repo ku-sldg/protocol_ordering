@@ -9,9 +9,15 @@ utilities/supports.v
 
 attacktree.v
 attacktree_normalization.v
+pi.v
+tau.v
 attacktree_ordering.v
 set_minimization.v
 set_ordering.v
+protocol_ordering.v
+
+examples/events.v
+examples/labels.v
 
 
 

@@ -37,11 +37,11 @@ Section Normalization.
         destruct (myEqDec_event A ev1 ev2); destruct (myEqDec_event A ev1' ev2'); subst;
         try (left; auto; fail);
         right; intros contra; inversion contra; subst; auto.
-    Qed.
+    Defined.
     Lemma myEqDec_edges : forall (A : attacktree components) (x y : edgesT A), {x = y} + {x <> y}.
     Proof.
         intros; apply list_eq_dec; apply myEqDec_edge.
-    Qed.
+    Defined.
 
 
 (** replaceMeasEvent 
@@ -330,7 +330,9 @@ Section Normalization.
         intros A edges reducedEdges H HDiff; 
         inversion H; subst.
         - apply replaceMeasEvent_length in H2; rewrite H2.
-        simpl; destruct (myEqDec_edge A (ev1, ev2) (ev1, ev2)) as [Heq|Heq].
+         unfold removeFirst. 
+          
+         destruct (myEqDec_edge A (ev1, ev2) (ev1, ev2)) as [Heq|Heq].
         -- rewrite PeanoNat.Nat.add_1_r; auto.
         -- exfalso; apply Heq; auto.
         - eapply findConsecutiveMeasEvent_length; eauto.
@@ -438,8 +440,8 @@ Section Normalization.
     Proof.
         autounfold. intros A edges normEdges; split; intros H.
         - induction H; destruct edges; simpl.
-        -- rewrite H; destruct (myEqDec_edges A nil nil) as [Heq|Heq]; auto.
-           exfalso; apply Heq; auto.
+        -- auto.
+           
         -- rewrite H; destruct (myEqDec_edges A (p::edges) (p::edges)) as [Heq|Heq]; auto.
            exfalso; apply Heq; auto.
         -- simpl in H; exfalso; apply H; auto.
@@ -558,7 +560,7 @@ Section Normalization.
                                 edges := normEdges ;
                                 label := constantMeasLabel ;
                                 eqDec_event := myEqDec_event A ;
-                                eqDec_components := myEqDec_components A |}
+                                eqDec_component := myEqDec_component A |}
     | None => None
     end.
 

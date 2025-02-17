@@ -6,9 +6,7 @@ Proof.
     intros P Q PDec QDec; destruct PDec, QDec;
     try (right; intros contra; destruct contra; contradiction);
     left; split; auto.
-Qed.
-
-
+Defined.
 
 Lemma disjunctionDec : forall (P Q : Prop),
     {P} + {~P} ->
@@ -18,7 +16,7 @@ Proof.
     intros P Q PDec QDec; destruct PDec, QDec;
     try (left; auto; fail);
     right; intros contra; destruct contra; contradiction.
-Qed.
+Defined.
 
 
 Lemma negationDec : forall (P : Prop),
@@ -28,4 +26,4 @@ Proof.
     intros P PDec; destruct PDec;
     [ right; intros contra; contradiction
     | left; auto].
-Qed.
+Defined.
